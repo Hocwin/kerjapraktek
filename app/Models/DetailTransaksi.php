@@ -34,4 +34,26 @@ class DetailTransaksi extends Model
     {
         return $this->belongsTo(Gudang::class, 'idGudang');
     }
+
+    public function getHargaCorrectAttribute()
+    {
+        // Return the appropriate price based on the payment type
+        if ($this->transaksi->tipePembayaran === 'cash') {
+            return $this->produk->harga_cash;  // Using harga_cash directly
+        } else if ($this->transaksi->tipePembayaran === 'tempo') {
+            return $this->produk->harga_tempo;  // Using harga_tempo directly
+        }
+
+        return 0;  // Return 0 if no payment type is found (should never happen)
+    }
+
+    /**
+     * Get the total price based on the correct unit price and quantity.
+     *
+     * @return float
+     */
+    public function getTotalHargaAttribute()
+    {
+        return $this->getHargaCorrectAttribute() * $this->jumlahProduk;
+    }
 }

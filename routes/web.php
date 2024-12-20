@@ -7,6 +7,7 @@ use App\Http\Controllers\GudangController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\DetailTransaksiController;
+use App\Http\Controllers\PerformaBisnisController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -84,6 +85,5 @@ Route::middleware('auth')->group(function () {
     Route::delete('/detail-transaksi/{idDetailTransaksi}', [DetailTransaksiController::class, 'destroy'])->name('destroy_detail_transaksi');
     Route::post('/detail-transaksi/{idTransaksi}/store', [DetailTransaksiController::class, 'store'])->name('store_detail_transaksi');
 
-
+    Route::get('/performa_bisnis', [PerformaBisnisController::class, 'index'])->name('performa_bisnis');
 });
-

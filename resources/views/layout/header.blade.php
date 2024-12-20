@@ -74,6 +74,12 @@
           <li class="nav-item">
             <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('transaksi')}}">Transaksi</a>
           </li>
+          <!-- Conditionally display "Performa Bisnis" only for admin or manager -->
+          @if (Auth::check() && (Auth::user()->rolePengguna == 'admin' || Auth::user()->rolePengguna == 'manager'))
+            <li class="nav-item">
+              <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('performa_bisnis')}}">Performa Bisnis</a>
+            </li>
+          @endif
           <form class="d-flex mt-2" role="search" action="{{ route('search') }}" method="POST">
             @csrf
             @if (isset($search))
