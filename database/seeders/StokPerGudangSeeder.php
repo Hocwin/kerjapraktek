@@ -16,76 +16,76 @@ class StokPerGudangSeeder extends Seeder
         StokPerGudang::create([
             'idGudang' => 1,  // Gudang TAA
             'idProduk' => 1,  // Produk ID 1
-            'stok' => 100,
+            'stok' => 1000,
         ]);
 
         StokPerGudang::create([
             'idGudang' => 1,  // Gudang TAA
             'idProduk' => 2,  // Produk ID 2
-            'stok' => 150,
+            'stok' => 1000,
         ]);
 
         StokPerGudang::create([
             'idGudang' => 1,  // Gudang TAA
             'idProduk' => 3,  // Produk ID 3
-            'stok' => 200,
+            'stok' => 1000,
         ]);
 
         // Stok untuk Gudang dengan idGudang = 2
         StokPerGudang::create([
             'idGudang' => 2,  // Gudang KM12
             'idProduk' => 1,  // Produk ID 1
-            'stok' => 50,
+            'stok' => 1000,
         ]);
 
         StokPerGudang::create([
             'idGudang' => 2,  // Gudang KM12
             'idProduk' => 2,  // Produk ID 2
-            'stok' => 120,
+            'stok' => 1000,
         ]);
 
         StokPerGudang::create([
             'idGudang' => 2,  // Gudang KM12
             'idProduk' => 3,  // Produk ID 3
-            'stok' => 80,
+            'stok' => 1000,
         ]);
 
          // Stok untuk Gudang dengan idGudang = 3
         StokPerGudang::create([
             'idGudang' => 3,  // Gudang KM12
             'idProduk' => 1,  // Produk ID 1
-            'stok' => 50,
+            'stok' => 1000,
         ]);
 
         StokPerGudang::create([
             'idGudang' => 3,  // Gudang KM12
             'idProduk' => 2,  // Produk ID 2
-            'stok' => 120,
+            'stok' => 1000,
         ]);
 
         StokPerGudang::create([
             'idGudang' => 3,  // Gudang KM12
             'idProduk' => 3,  // Produk ID 3
-            'stok' => 80,
+            'stok' => 1000,
         ]);
 
          // Stok untuk Gudang dengan idGudang = 4
          StokPerGudang::create([
             'idGudang' => 4,  // Gudang KM12
             'idProduk' => 1,  // Produk ID 1
-            'stok' => 50,
+            'stok' => 1000,
         ]);
 
         StokPerGudang::create([
             'idGudang' => 4,  // Gudang KM12
             'idProduk' => 2,  // Produk ID 2
-            'stok' => 120,
+            'stok' => 1000,
         ]);
 
         StokPerGudang::create([
             'idGudang' => 4,  // Gudang KM12
             'idProduk' => 3,  // Produk ID 3
-            'stok' => 80,
+            'stok' => 1000,
         ]);
     }
 }

@@ -22,6 +22,11 @@
     font-weight: bold;
   }
 
+  .harga-beli {
+    color:rgb(38, 178, 183);
+    font-weight: bold;
+  }
+
   .aksi-btn {
     display: flex;
     flex-direction: column;
@@ -93,6 +98,7 @@
         <th>Nama Produk</th>
         <th>Harga Cash</th>
         <th>Harga Tempo</th>
+        <th>Harga Beli</th>
         @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
           <th>Aksi</th>
         @endif
@@ -105,6 +111,7 @@
           <td>{{ $item->namaProduk }}</td>
           <td class="harga-cash">Rp. {{ number_format($item->hargaCash, 0, ',', '.') }}</td>
           <td class="harga-tempo">Rp. {{ number_format($item->hargaTempo, 0, ',', '.') }}</td>
+          <td class="harga-beli">Rp. {{ number_format($item->hargaBeli, 0, ',', '.') }}</td>
           @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
           <td class="aksi-btn">
             <form method="GET" action="{{ route('edit_product', ['idProduk' => $item->idProduk]) }}">
@@ -132,6 +139,7 @@
         <th>Nama Produk</th>
         <th>Harga Cash</th>
         <th>Harga Tempo</th>
+        <th>Harga Beli</th>
         <th>Aksi</th>
       </tr>
     </thead>
@@ -142,6 +150,7 @@
           <td>{{ $item->namaProduk }}</td>
           <td class="harga-cash">Rp. {{ number_format($item->hargaCash, 0, ',', '.') }}</td>
           <td class="harga-tempo">Rp. {{ number_format($item->hargaTempo, 0, ',', '.') }}</td>
+          <td class="harga-beli">Rp. {{ number_format($item->hargaBeli, 0, ',', '.') }}</td>
           <td class="aksi-btn">
             <form method="POST" action="{{ route('restore_product', ['idProduk' => $item->idProduk]) }}">
               @csrf

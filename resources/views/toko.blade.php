@@ -13,7 +13,7 @@
   /* Main content container, allowing it to grow and take up available space */
   .toko-container {
     flex: 1;
-    padding-top: 150px;
+    padding-top: 125px;
     overflow: auto; /* To avoid content overflow issues */
   }
 
@@ -47,11 +47,6 @@
     transform: scale(1.1);
   }
 
-  .lokasi-toko {
-    color: #007bff;
-    font-weight: bold;
-  }
-
   .aksi-btn {
     text-align: center; /* Align buttons horizontally */
     justify-content: center;
@@ -62,7 +57,7 @@
   }
 
   .edit-btn,
-  .delete-btn {
+  .delete-btn, .detail-btn {
     background-color: transparent;
     border: none;
     font-weight: bold;
@@ -127,14 +122,15 @@
   <!-- Tombol Add -->
   <div class="add-btn-container">
     <!-- Tombol Add (Only visible to admins) -->
-  @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-  <div class="add-btn-container">
-    <form method="GET" action="{{ route('add_toko') }}">
-      @csrf
-      <button type="submit" class="add-btn">Add</button>
-    </form>
+    @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
+    <div class="add-btn-container">
+      <form method="GET" action="{{ route('add_toko') }}">
+        @csrf
+        <button type="submit" class="add-btn">Add</button>
+      </form>
+    </div>
+    @endif
   </div>
-  @endif
 
   <!-- Tabel Daftar Toko -->
   <table class="table table-striped table-hover">
@@ -146,9 +142,7 @@
         <th>Nomor Telepon</th>
         <th>Jam Operasional</th>
         <th>Nama Sopir</th>
-        @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-          <th>Aksi</th>
-        @endif
+        <th>Aksi</th>
       </tr>
     </thead>
     <tbody>
@@ -158,25 +152,32 @@
             <img src="{{ asset('storage/images/' . $item->imageAsset) }}" alt="{{ $item->namaToko }}" class="toko-img">
           </td>
           <td>{{ $item->namaToko }}</td>
-          <td class="lokasi-toko">{{ $item->alamatToko }}</td>
+          <td>{{ $item->alamatToko }}</td>
           <td>{{ $item->nomorTelepon }}</td>
-          <td>{{ $item->namaSopir }}</td>
           <td>{{ $item->jamOperasional }}</td>
-          @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-            <td class="aksi-btn">
-              <!-- Tombol Edit -->
+          <td>{{ $item->namaSopir }}</td>
+          <td class="aksi-btn">
+              <!-- Tombol Detail -->
+              <form method="GET" action="{{ route('detail_toko', ['idToko' => $item->idToko]) }}">
+                @csrf
+                <button type="submit" class="detail-btn">Detail</button>
+              </form>
+
+              @if (Auth::user()->rolePengguna == 'admin')
+              <!-- Tombol Edit (Only for Admin) -->
               <form method="GET" action="{{ route('edit_toko', ['idToko' => $item->idToko]) }}">
                 @csrf
                 <button type="submit" class="edit-btn">Edit</button>
               </form>
-              <!-- Tombol Delete -->
+
+              <!-- Tombol Delete (Only for Admin) -->
               <form method="POST" action="{{ route('delete_toko', ['idToko' => $item->idToko]) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus toko ini?');">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="delete-btn">Delete</button>
               </form>
-            </td>
-          @endif
+              @endif
+          </td>
         </tr>
       @endforeach
     </tbody>

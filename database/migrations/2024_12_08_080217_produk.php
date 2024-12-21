@@ -18,6 +18,7 @@ class Produk extends Migration
             $table->string('namaProduk');
             $table->integer('hargaCash');
             $table->integer('hargaTempo');
+            $table->integer('hargaBeli');
             $table->softDeletes();
             $table->string('imageAsset');
             $table->timestamps();

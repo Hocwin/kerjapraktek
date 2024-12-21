@@ -17,71 +17,111 @@ class DetailTransaksiSeeder extends Seeder
      */
     public function run(): void
     {
-         // Ambil transaksi yang akan diisi detailnya
-        // Kita ambil transaksi pertama yang belum memiliki detail transaksi
-        $transaksi = Transaksi::whereDoesntHave('detailTransaksi') // Pastikan transaksi belum memiliki detail
-                              ->first(); // Ambil transaksi pertama yang memenuhi kondisi
+         // Apakah ingin menggunakan input manual? Set ke true jika ya.
+         $manualInput = false;
 
-        // Pastikan transaksi ditemukan
-        if (!$transaksi) {
-            $this->command->info('Tidak ada transaksi yang belum memiliki detail.');
+         if ($manualInput) {
+             // Data manual untuk detail transaksi
+             $manualData = [
+                 [
+                     'idTransaksi' => 1,
+                     'idProduk' => 1,
+                     'idGudang' => 1,
+                     'jumlahProduk' => 90,
+                 ],
+                 [
+                     'idTransaksi' => 1,
+                     'idProduk' => 2,
+                     'idGudang' => 1,
+                     'jumlahProduk' => 85,
+                 ],
+             ];
+ 
+             foreach ($manualData as $data) {
+                 $this->createDetailTransaksi($data);
+             }
+         } else {
+             // Ambil transaksi yang belum memiliki detail
+             $transaksi = Transaksi::whereDoesntHave('detailTransaksi')->first();
+ 
+             if (!$transaksi) {
+                 $this->command->info('Tidak ada transaksi yang belum memiliki detail.');
+                 return;
+             }
+ 
+             // Data produk untuk diisi secara otomatis
+             $produkData = [
+                 [
+                    'idProduk' => 1,
+                    'idGudang' => 1,
+                    'jumlahProduk' => 20,
+                 ],
+                 [
+                    'idProduk' => 2,
+                    'idGudang' => 1,
+                    'jumlahProduk' => 10,
+                ],
+            ];
+ 
+             foreach ($produkData as $produkInput) {
+                 $data = [
+                    'idTransaksi' => $transaksi->idTransaksi,
+                    'idProduk' => $produkInput['idProduk'],
+                    'idGudang' => $produkInput['idGudang'],
+                    'jumlahProduk' => $produkInput['jumlahProduk'],
+                ];
+                $this->createDetailTransaksi($data);
+            }
+        }
+ 
+        $this->command->info('Detail transaksi berhasil ditambahkan.');
+
+    }
+
+    private function createDetailTransaksi(array $data)
+    {
+        // Ambil data produk
+        $produk = Produk::find($data['idProduk']);
+        if (!$produk) {
+            $this->command->warn("Produk dengan ID {$data['idProduk']} tidak ditemukan.");
             return;
         }
 
-        // Contoh data produk yang digunakan untuk detail transaksi
-        $produkData = [
-            [
-                'idProduk' => 1,
-                'idGudang' => 1,
-                'jumlahProduk' => 20,
-            ],
-            [
-                'idProduk' => 2,
-                'idGudang' => 1,
-                'jumlahProduk' => 10,
-            ],
-        ];
+        // Ambil gudang
+        $gudang = Gudang::find($data['idGudang']);
+        $namaGudang = $gudang ? $gudang->namaGudang : '';
 
-        // Loop untuk memasukkan data detail transaksi
-        foreach ($produkData as $produkInput) {
-            // Ambil produk berdasarkan ID
-            $produk = Produk::find($produkInput['idProduk']);
-
-            // Jika produk tidak ditemukan, lanjutkan ke produk berikutnya
-            if (!$produk) {
-                continue;
-            }
-
-            // Ambil nama gudang berdasarkan idGudang
-            $gudang = Gudang::find($produkInput['idGudang']);
-            $namaGudang = $gudang ? $gudang->namaGudang : '';  // Ensure default is empty if not found
-
-            // Tentukan harga sesuai tipe pembayaran
-            $harga = ($transaksi->tipePembayaran == 'cash') ? $produk->hargaCash : $produk->hargaTempo;
-
-            // Simpan detail transaksi
-            $detailTransaksi = DetailTransaksi::create([
-                'idTransaksi' => $transaksi->idTransaksi,
-                'idProduk' => $produk->idProduk,
-                'idGudang' => $produkInput['idGudang'],
-                'namaGudang' => $namaGudang,  // Use the populated name
-                'jumlahProduk' => $produkInput['jumlahProduk'],
-                'harga' => $harga,
-            ]);
-
-            // Ambil stok produk di gudang tertentu berdasarkan idProduk dan idGudang
-            $stokGudang = StokPerGudang::where('idProduk', $produk->idProduk)
-                                        ->where('idGudang', $produkInput['idGudang']) // Mengambil stok di gudang yang sesuai
-                                        ->first();
-
-            if ($stokGudang) {
-                // Kurangi stok produk di gudang setelah transaksi
-                $stokGudang->stok -= $produkInput['jumlahProduk'];
-                $stokGudang->save();
-            }
+        // Ambil transaksi
+        $transaksi = Transaksi::find($data['idTransaksi']);
+        if (!$transaksi) {
+            $this->command->warn("Transaksi dengan ID {$data['idTransaksi']} tidak ditemukan.");
+            return;
         }
 
-        $this->command->info('Detail transaksi berhasil ditambahkan.');
+        // Tentukan harga berdasarkan tipe pembayaran
+        $harga = ($transaksi->tipePembayaran === 'cash') ? $produk->hargaCash : $produk->hargaTempo;
 
+        // Simpan detail transaksi
+        DetailTransaksi::create([
+            'idTransaksi' => $data['idTransaksi'],
+            'idProduk' => $data['idProduk'],
+            'idGudang' => $data['idGudang'],
+            'namaGudang' => $namaGudang,
+            'jumlahProduk' => $data['jumlahProduk'],
+            'harga' => $harga,
+        ]);
+
+        // Kurangi stok di gudang
+        $stokGudang = StokPerGudang::where('idProduk', $data['idProduk'])
+                                ->where('idGudang', $data['idGudang'])
+                                ->first();
+
+        if ($stokGudang) {
+            $stokGudang->stok -= $data['jumlahProduk'];
+            $stokGudang->save();
+            $this->command->info("Stok produk dengan ID {$data['idProduk']} di gudang {$data['idGudang']} berhasil dikurangi.");
+        } else {
+            $this->command->warn("Stok untuk produk dengan ID {$data['idProduk']} di gudang {$data['idGudang']} tidak ditemukan.");
+        }
     }
 }

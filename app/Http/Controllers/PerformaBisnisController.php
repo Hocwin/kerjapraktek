@@ -27,8 +27,8 @@ class PerformaBisnisController extends Controller
         $keuntungan = Transaksi::with('toko')
             ->selectRaw('idToko, SUM(detail_transaksi.jumlahProduk * 
                 CASE 
-                    WHEN transaksi.tipePembayaran = "cash" THEN produk.hargaCash
-                    WHEN transaksi.tipePembayaran = "tempo" THEN produk.hargaTempo
+                    WHEN transaksi.tipePembayaran = "cash" THEN (produk.hargaCash - produk.hargaBeli)
+                    WHEN transaksi.tipePembayaran = "tempo" THEN (produk.hargaTempo - produk.hargaBeli)
                 END) AS totalKeuntungan')
             ->join('detail_transaksi', 'transaksi.idTransaksi', '=', 'detail_transaksi.idTransaksi')
             ->join('produk', 'detail_transaksi.idProduk', '=', 'produk.idProduk')

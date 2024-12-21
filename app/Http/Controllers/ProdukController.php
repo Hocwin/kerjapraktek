@@ -52,6 +52,7 @@ class ProdukController extends Controller
             'namaProduk' => 'required|string|max:255',
             'hargaCash' => 'required',
             'hargaTempo' => 'required',
+            'hargaBeli' => 'required',
             'imageAsset' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi gambar
         ]);
     
@@ -59,6 +60,7 @@ class ProdukController extends Controller
         $produk->namaProduk = $request->namaProduk;
         $produk->hargaCash = $request->hargaCash;
         $produk->hargaTempo = $request->hargaTempo;
+        $produk->hargaBeli = $request->hargaBeli;
     
         if ($request->hasFile('imageAsset')) {
             $file = $request->file('imageAsset');
@@ -136,6 +138,7 @@ class ProdukController extends Controller
             'namaProduk' => 'required|max:255',
             'hargaCash' => 'required',
             'hargaTempo' => 'required',
+            'hargaBeli' => 'required',
         ]);
 
         $produk = Produk::find($idProduk);
@@ -148,6 +151,9 @@ class ProdukController extends Controller
 
         if ($produk->hargaTempo != $request->hargaTempo) {
             $produk->hargaTempo = $request->hargaTempo;
+        }
+        if ($produk->hargaBeli != $request->hargaBeli) {
+            $produk->hargaBeli = $request->hargaBeli;
         }
 
         if ($request->hasFile('imageAsset')) {

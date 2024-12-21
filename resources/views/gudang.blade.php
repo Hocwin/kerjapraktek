@@ -23,6 +23,7 @@
 
   table th, table td {
     vertical-align: middle; /* Menyelaraskan semua konten di tengah secara vertikal */
+    text-align: center; /* Menyelaraskan konten ke tengah secara horizontal */
   }
 
   .aksi-btn {
@@ -63,21 +64,29 @@
     text-decoration: underline;
   }
 
-  .stok-list {
-    padding-left: 0;
-    margin: 0;
-  }
+  .stok-table {
+  background-color: transparent !important; /* Set background to fully transparent */
+  margin: 0 auto; /* Center the table */
+  text-align: center; /* Center the text */
+  border: none; /* Remove borders */
+}
 
-  .stok-list li {
-    list-style-type: none;
-    margin-bottom: 5px;
-  }
+.stok-table th, .stok-table td {
+  padding: 4px 8px; /* Keep padding for content spacing */
+  border: none !important; /* Remove borders in table headers and cells */
+  background-color: transparent !important; /* Make table cell background transparent */
+}
+
+.stok-empty {
+  font-style: italic;
+  color: #6c757d; /* Gray color for "No stock data" text */
+}
 </style>
 
 @section('content')
 
 <div class="container gudang-container">
-<div class="add-btn-container">
+  <div class="add-btn-container">
     @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
     <form method="GET" action="{{ route('add_gudang') }}">
       @csrf
@@ -93,7 +102,7 @@
         <th>Nama Gudang</th>
         <th>Lokasi</th>
         <th>Stok</th>
-        @if (Auth::user() && Auth::user()->rolePengguna == 'admin')  <!-- Tampilkan kolom aksi hanya untuk admin -->
+        @if (Auth::user() && Auth::user()->rolePengguna == 'admin')
           <th>Aksi</th>
         @endif
       </tr>
@@ -107,17 +116,28 @@
           <td>{{ $item->namaGudang }}</td>
           <td class="lokasi-gudang">{{ $item->lokasi }}</td>
           <td>
-          <ul class="stok-list">
-  @if($item->stokPerGudang->isEmpty())
-    <li>Tidak ada data stok</li>
-  @else
-    @foreach ($item->stokPerGudang as $stok)
-      <li>{{ $stok->produk->namaProduk }}: {{ $stok->stok }} sak</li>
-    @endforeach
-  @endif
-</ul>
+            @if($item->stokPerGudang->isEmpty())
+              <span class="stok-empty">Tidak ada data stok</span>
+            @else
+            <table class="table table-borderless table-sm stok-table">
+              <thead>
+                <tr>
+                  <th>Produk</th>
+                  <th>Stok</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach ($item->stokPerGudang as $stok)
+                <tr>
+                  <td>{{ $stok->produk->namaProduk }}</td>
+                  <td>{{ $stok->stok }} sak</td>
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
+            @endif
           </td>
-          @if (Auth::user() && Auth::user()->rolePengguna == 'admin')  <!-- Kolom aksi hanya untuk admin -->
+          @if (Auth::user() && Auth::user()->rolePengguna == 'admin')
             <td class="aksi-btn">
               <form method="GET" action="{{ route('edit-gudang', ['idGudang' => $item->idGudang]) }}">
                 @csrf
@@ -125,12 +145,12 @@
               </form>
 
               <form action="{{ route('destroy_gudang', ['idGudang' => $item->idGudang]) }}" method="POST" style="display:inline;">
-    @csrf
-    @method('DELETE') <!-- HTTP DELETE method -->
-    <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus gudang ini?')">
-        Hapus
-    </button>
-</form>
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus gudang ini?')">
+                    Hapus
+                </button>
+              </form>
             </td>
           @endif
         </tr>

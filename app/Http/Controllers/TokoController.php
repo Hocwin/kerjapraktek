@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Toko;
+use App\Models\Transaksi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -176,5 +177,13 @@ class TokoController extends Controller
     }
 
     return redirect()->route('toko')->with('error', 'Toko tidak ditemukan.');
+    }
+
+    public function showDetails($idToko)
+    {
+        $toko = Toko::findOrFail($idToko);
+        $transaksi = Transaksi::where('idToko', $idToko)->with('detailTransaksi')->get();
+
+        return view('detail_toko', compact('toko', 'transaksi'));
     }
 }

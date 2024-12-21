@@ -19,18 +19,21 @@ class ProdukSeeder extends Seeder
                 'namaProduk' => 'Semen Baturaja',
                 'hargaCash' => 62000,
                 'hargaTempo' => 63000,
+                'hargaBeli' => 61000,
                 'imageAsset' => 'baturaja.jpg'
             ], [
                 'idProduk' => '2',
                 'namaProduk' => 'Semen Dynamix',
                 'hargaCash' => 58000,
                 'hargaTempo' => 59000,
+                'hargaBeli' => 57000,
                 'imageAsset' => 'dynamix.jpeg'
             ], [
                 'idProduk' => '3',
                 'namaProduk' => 'Semen Merdeka',
                 'hargaCash' => 54000,
                 'hargaTempo' => 55000,
+                'hargaBeli' => 53000,
                 'imageAsset' => 'merdeka.jpeg'
             ]
             ];

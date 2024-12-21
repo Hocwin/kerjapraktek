@@ -4,6 +4,7 @@
 <style>
   .transaksi-container {
     padding-top: 150px; /* Padding atas untuk memberikan ruang antara header dan tabel */
+    padding-bottom: 70px; /* Ensure space at the bottom to prevent overlap with the button */
   }
 
   .aksi-btn {
@@ -14,7 +15,7 @@
     gap: 5px; /* Jarak antara tombol */
   }
 
-  .detail-btn, .delete-btn, .add-btn {
+  .detail-btn, .delete-btn, .add-btn, .back-btn {
     background-color: transparent;
     border: none;
     color: #007bff;
@@ -24,7 +25,7 @@
     text-decoration: underline;
   }
 
-  .detail-btn:hover, .delete-btn:hover, .add-btn:hover {
+  .detail-btn:hover, .delete-btn:hover, .add-btn:hover, .back-btn:hover {
     color: #0056b3;
     text-decoration: none;
   }
@@ -75,6 +76,25 @@
   .table td.aksi-btn {
     padding-top: 10px; /* Add some space between button and row */
   }
+
+  /* Position the "Back to Toko" button below the table */
+  .back-btn-container {
+    text-align: left;
+    margin-top: 20px; /* Space above the button */
+  }
+
+  .back-btn {
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  .back-btn:hover {
+    color: #0056b3;
+    text-decoration: none;
+  }
 </style>
 
 @section('content')
@@ -98,7 +118,9 @@
         <th>Tipe Pembayaran</th>
         <th>Status</th>
         <th>Tanggal Transaksi</th>
+        @if (Auth::check() && Auth::user()->rolePengguna == 'admin') 
           <th>Aksi</th>
+        @endif
       </tr>
     </thead>
     <tbody>
@@ -129,6 +151,15 @@
       @endforeach
     </tbody>
   </table>
+
+  <!-- Tombol Back ke Halaman Toko -->
+  <div class="back-btn-container">
+    <form method="GET" action="{{ route('toko') }}"> <!-- Adjust the route to point to your Toko page -->
+      @csrf
+      <button type="submit" class="back-btn">Kembali</button>
+    </form>
   </div>
+
+</div>
 
 @endsection

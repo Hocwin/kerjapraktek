@@ -18,6 +18,7 @@ class Produk extends Model
         'namaProduk',
         'hargaCash',
         'hargaTempo',
+        'hargaBeli',
         'imageAsset',
     ];
 

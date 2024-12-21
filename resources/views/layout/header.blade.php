@@ -82,11 +82,7 @@
           @endif
           <form class="d-flex mt-2" role="search" action="{{ route('search') }}" method="POST">
             @csrf
-            @if (isset($search))
-              <input class="form-control me-1" type="search" placeholder="Search" aria-label="Search" id="search" name="search" value="{{$search}}">
-            @else
-              <input class="form-control me-1" type="search" placeholder="Search" aria-label="Search" id="search" name="search">
-            @endif
+            <input type="text" name="search" placeholder="Cari..." required>
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
           </ul>

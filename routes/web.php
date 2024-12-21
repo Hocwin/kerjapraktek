@@ -8,6 +8,7 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\DetailTransaksiController;
 use App\Http\Controllers\PerformaBisnisController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -30,15 +31,13 @@ Route::get('/produk', [ProdukController::class, 'index'])->name('produk');
 
 Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');
 
-Route::post('/gudang', [GudangController::class, 'index'])->name('search');
-
-Route::post('/produk', [ProdukController::class, 'index'])->name('search');
-
 Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
 
 Route::get('/toko', [TokoController::class, 'index'])->name('toko');
 
 Route::get('/transaksi/{idTransaksi}/detail', [DetailTransaksiController::class, 'index'])->name('detail_transaksi');
+
+Route::post('/search', [SearchController::class, 'search'])->name('search');
 
 
 Route::middleware('auth')->group(function () {
@@ -77,6 +76,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/toko/delete/{idToko}', [TokoController::class, 'destroy'])->name('delete_toko');
     Route::post('/toko/store', [TokoController::class, 'store'])->name('store_toko');
     Route::get('/toko/add', [TokoController::class, 'create'])->name('add_toko');
+    Route::get('/toko/{idToko}/detail', [TokoController::class, 'showDetails'])->name('detail_toko');
+
 
     Route::get('/transaksi/{idTransaksi}/detail/add', [DetailTransaksiController::class, 'create'])->name('add_detail_transaksi');
     
@@ -86,4 +87,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/detail-transaksi/{idTransaksi}/store', [DetailTransaksiController::class, 'store'])->name('store_detail_transaksi');
 
     Route::get('/performa_bisnis', [PerformaBisnisController::class, 'index'])->name('performa_bisnis');
+
 });
