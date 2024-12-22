@@ -55,16 +55,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/produk/edit/{idProduk}', [ProdukController::class, 'edit'])->name('edit_product');
     Route::post('/produk/edit/{idProduk}', [ProdukController::class, 'update'])->name('proses_editproduct');
     Route::get('/produk/add', [ProdukController::class, 'create'])->name('add_produk');
-    Route::get('/produk/store', [ProdukController::class, 'store'])->name('store_product');
+    Route::post('/produk/store', [ProdukController::class, 'store'])->name('store_product');
     Route::delete('/produk/hapus/{idProduk}', [ProdukController::class, 'destroy'])->name('destroy_product');
     Route::put('/produk/restore/{idProduk}', [ProdukController::class, 'restore'])->name('restore_product');
-    Route::delete('/produk/force-destroy/{idProduk}', [ProdukController::class, 'forceDestroy'])->name('force_destroy_product');
 
     Route::get('/gudang/edit/{idGudang}', [GudangController::class, 'edit'])->name('edit-gudang');
     Route::post('/gudang/edit/{idGudang}', [GudangController::class, 'update'])->name('proses-editgudang');
     Route::get('/gudang/add', [GudangController::class, 'create'])->name('add_gudang');
     Route::post('gudang', [GudangController::class, 'store'])->name('store_gudang');
     Route::delete('/gudang/{idGudang}', [GudangController::class, 'destroy'])->name('destroy_gudang');
+    Route::put('/gudang/restore/{idGudang}', [GudangController::class, 'restore'])->name('restore_gudang');
 
 
     Route::get('/transaksi/add', [TransaksiController::class, 'create'])->name('add_transaksi');
@@ -77,15 +77,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/toko/store', [TokoController::class, 'store'])->name('store_toko');
     Route::get('/toko/add', [TokoController::class, 'create'])->name('add_toko');
     Route::get('/toko/{idToko}/detail', [TokoController::class, 'showDetails'])->name('detail_toko');
+    Route::put('/toko/restore/{idToko}', [TokoController::class, 'restore'])->name('restore_toko');
 
 
     Route::get('/transaksi/{idTransaksi}/detail/add', [DetailTransaksiController::class, 'create'])->name('add_detail_transaksi');
-    
+
     Route::get('/detail-transaksi/{idDetailTransaksi}/edit', [DetailTransaksiController::class, 'edit'])->name('edit_detail_transaksi');
     Route::put('/detail-transaksi/{idDetailTransaksi}', [DetailTransaksiController::class, 'update'])->name('update_detail_transaksi');
     Route::delete('/detail-transaksi/{idDetailTransaksi}', [DetailTransaksiController::class, 'destroy'])->name('destroy_detail_transaksi');
     Route::post('/detail-transaksi/{idTransaksi}/store', [DetailTransaksiController::class, 'store'])->name('store_detail_transaksi');
 
     Route::get('/performa_bisnis', [PerformaBisnisController::class, 'index'])->name('performa_bisnis');
-
 });

@@ -19,7 +19,8 @@ class GudangSeeder extends Seeder
                 'namaGudang' => 'Gudang TAA',
                 'lokasi' => 'Jl. Letjen Harun Sohar Komplek Pergudangan Palembang Star No. B11 Tanjung Api - Api Palembang',
                 'imageAsset' => 'taa.jpeg'
-            ],  [
+            ],
+            [
                 'idGudang' => '2',
                 'namaGudang' => 'Gudang KM12',
                 'lokasi' => 'Jl. Palembang Betung Alang - Alang Lebar Palembang KM.12',
@@ -37,10 +38,10 @@ class GudangSeeder extends Seeder
                 'lokasi' => 'Jl. Perintis Kemerdekaan Lr. Buntu RT.012 RW.04 Lawang Kidul Ilir Timur II Palembang',
                 'imageAsset' => 'perintis.jpeg'
             ]
-            ];
+        ];
 
-            foreach ($gudang as $key => $value){
-                Gudang::create($value);
-            }
+        foreach ($gudang as $key => $value) {
+            Gudang::create($value);
+        }
     }
 }

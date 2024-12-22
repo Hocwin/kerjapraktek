@@ -77,7 +77,7 @@
                 <label for="idProduk">Produk</label>
                 <select name="produk[0][idProduk]" required class="form-control mb-3">
                     @foreach($produk as $item)
-                        <option value="{{ $item->idProduk }}">{{ $item->namaProduk }}</option>
+                    <option value="{{ $item->idProduk }}">{{ $item->namaProduk }}</option>
                     @endforeach
                 </select>
                 <label for="jumlahProduk">Jumlah</label>
@@ -85,7 +85,7 @@
                 <label for="idGudang">Gudang</label>
                 <select name="produk[0][idGudang]" required class="form-control mb-3">
                     @foreach($gudang as $item)
-                        <option value="{{ $item->idGudang }}">{{ $item->namaGudang }}</option>
+                    <option value="{{ $item->idGudang }}">{{ $item->namaGudang }}</option>
                     @endforeach
                 </select>
                 <button type="button" class="btn btn-danger" onclick="removeProductRow(0)">Hapus</button>

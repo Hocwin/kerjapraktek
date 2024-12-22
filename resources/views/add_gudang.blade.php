@@ -5,13 +5,13 @@
     <h1 class="mb-4">Tambah Gudang Baru</h1>
 
     @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
     @endif
 
     <form action="{{ route('store_gudang') }}" method="POST" enctype="multipart/form-data">
@@ -35,10 +35,10 @@
         <h3 class="mt-4">Stok Produk</h3>
 
         @foreach($produk as $item)
-            <div class="form-group mb-3">
-                <label for="stok_{{ $item->idProduk }}">Stok untuk {{ $item->namaProduk }}</label>
-                <input type="number" name="stok[{{ $item->idProduk }}]" id="stok_{{ $item->idProduk }}" class="form-control" min="0" value="0">
-            </div>
+        <div class="form-group mb-3">
+            <label for="stok_{{ $item->idProduk }}">Stok untuk {{ $item->namaProduk }}</label>
+            <input type="number" name="stok[{{ $item->idProduk }}]" id="stok_{{ $item->idProduk }}" class="form-control" min="0" value="0">
+        </div>
         @endforeach
 
         <button type="submit" class="btn btn-primary">Simpan Gudang</button>

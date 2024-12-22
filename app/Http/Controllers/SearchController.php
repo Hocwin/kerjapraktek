@@ -31,11 +31,11 @@ class SearchController extends Controller
             ->get();
 
         // Cari di tabel Gudang
-       
+
 
         $gudang = Gudang::select('idGudang', 'namaGudang', 'lokasi', 'imageAsset')
             ->where('namaGudang', 'like', "%{$query}%")
-            ->orWhereHas('stokPerGudang.produk', function($q) use ($query) {
+            ->orWhereHas('stokPerGudang.produk', function ($q) use ($query) {
                 $q->where('namaProduk', 'like', "%{$query}%");
             })
             ->with(['stokPerGudang.produk'])

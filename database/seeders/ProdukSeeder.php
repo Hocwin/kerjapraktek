@@ -21,14 +21,16 @@ class ProdukSeeder extends Seeder
                 'hargaTempo' => 63000,
                 'hargaBeli' => 61000,
                 'imageAsset' => 'baturaja.jpg'
-            ], [
+            ],
+            [
                 'idProduk' => '2',
                 'namaProduk' => 'Semen Dynamix',
                 'hargaCash' => 58000,
                 'hargaTempo' => 59000,
                 'hargaBeli' => 57000,
                 'imageAsset' => 'dynamix.jpeg'
-            ], [
+            ],
+            [
                 'idProduk' => '3',
                 'namaProduk' => 'Semen Merdeka',
                 'hargaCash' => 54000,
@@ -36,10 +38,10 @@ class ProdukSeeder extends Seeder
                 'hargaBeli' => 53000,
                 'imageAsset' => 'merdeka.jpeg'
             ]
-            ];
+        ];
 
-            foreach ($produk as $key => $value){
-                Produk::create($value);
-            }
+        foreach ($produk as $key => $value) {
+            Produk::create($value);
+        }
     }
 }

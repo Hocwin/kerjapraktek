@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -68,85 +69,109 @@
         .btn-back:hover {
             background-color: #0056b3;
         }
+
+        /* Style untuk form */
+        form {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            align-items: center;
+        }
+
+        label {
+            font-size: 1rem;
+        }
+
+        select,
+        button {
+            padding: 5px 10px;
+            font-size: 1rem;
+        }
     </style>
 </head>
+
 <body>
     @if(auth()->user()->rolePengguna == 'admin' || auth()->user()->rolePengguna == 'manager')
-        <h1>Performa Bisnis</h1>
+    <h1>Performa Bisnis</h1>
 
-        <!-- Form untuk memilih bulan dan tahun -->
-        <div class="filter-container">
-            <form method="GET" action="{{ route('performa_bisnis') }}">
-                <label for="bulan">Bulan:</label>
-                <select name="bulan" id="bulan">
-                    @for ($i = 1; $i <= 12; $i++)
-                        <option value="{{ $i }}" {{ $i == $bulan ? 'selected' : '' }}>
-                            {{ \Carbon\Carbon::create()->month($i)->format('F') }}
-                        </option>
+    <!-- Form untuk memilih bulan, tahun, dan jenis tampilan -->
+    <div class="filter-container">
+        <form method="GET" action="{{ route('performa_bisnis') }}">
+            <label for="view_type">Tampilan:</label>
+            <select name="view_type" id="view_type">
+                <option value="monthly" {{ $viewType == 'monthly' ? 'selected' : '' }}>Bulanan</option>
+                <option value="yearly" {{ $viewType == 'yearly' ? 'selected' : '' }}>Tahunan</option>
+            </select>
+
+            <label for="bulan">Bulan:</label>
+            <select name="bulan" id="bulan" {{ $viewType == 'yearly' ? 'disabled' : '' }}>
+                @for ($i = 1; $i <= 12; $i++)
+                    <option value="{{ $i }}" {{ $i == $bulan ? 'selected' : '' }}>
+                    {{ \Carbon\Carbon::create()->month($i)->format('F') }}
+                    </option>
                     @endfor
-                </select>
+            </select>
 
-                <label for="tahun">Tahun:</label>
-                <select name="tahun" id="tahun">
-                    @for ($i = 2020; $i <= 2024; $i++)
-                        <option value="{{ $i }}" {{ $i == $tahun ? 'selected' : '' }}>
-                            {{ $i }}
-                        </option>
+            <label for="tahun">Tahun:</label>
+            <select name="tahun" id="tahun">
+                @for ($i = 2020; $i <= 2024; $i++)
+                    <option value="{{ $i }}" {{ $i == $tahun ? 'selected' : '' }}>{{ $i }}</option>
                     @endfor
-                </select>
+            </select>
 
-                <button type="submit">Terapkan</button>
-            </form>
+            <button type="submit">Terapkan</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <!-- Grafik Keuntungan Per Toko -->
+        <div class="chart-container">
+            <h2>Keuntungan Per Toko</h2>
+            <canvas id="keuntunganChart"></canvas>
         </div>
 
-        <div class="container">
-            <!-- Grafik Keuntungan Per Toko -->
-            <div class="chart-container">
-                <h2>Keuntungan Per Toko</h2>
-                <canvas id="keuntunganChart"></canvas>
-            </div>
-
-            <!-- Grafik Produk Terbanyak Terjual -->
-            <div class="chart-container">
-                <h2>Produk Terbanyak Terjual</h2>
-                <canvas id="produkTerlarisChart"></canvas>
-            </div>
-
-            <!-- Grafik Toko dengan Pembelian Terbanyak -->
-            <div class="chart-container">
-                <h2>Toko dengan Pembelian Terbanyak</h2>
-                <canvas id="tokoBanyakPembelianChart"></canvas>
-            </div>
+        <!-- Grafik Produk Terbanyak Terjual -->
+        <div class="chart-container">
+            <h2>Produk Terbanyak Terjual</h2>
+            <canvas id="produkTerlarisChart"></canvas>
         </div>
 
-        <!-- Tombol Back ke Halaman Produk -->
-        <div class="filter-container">
-            <a href="{{ route('produk') }}" class="btn-back">Kembali ke Halaman Produk</a>
+        <!-- Grafik Toko dengan Pembelian Terbanyak -->
+        <div class="chart-container">
+            <h2>Toko dengan Pembelian Terbanyak</h2>
+            <canvas id="tokoBanyakPembelianChart"></canvas>
         </div>
+    </div>
 
-        <script>
-            var keuntunganData = @json($keuntungan);
-            var produkTerlarisData = @json($produkTerlaris);
-            var tokoBanyakPembelianData = @json($tokoBanyakPembelian);
+    <!-- Tombol Back ke Halaman Produk -->
+    <div class="filter-container">
+        <a href="{{ route('produk') }}" class="btn-back">Kembali ke Halaman Produk</a>
+    </div>
 
-            // Grafik Keuntungan Per Toko
-            var ctx1 = document.getElementById('keuntunganChart').getContext('2d');
-            new Chart(ctx1, {
-                type: 'bar',
-                data: {
-                    labels: keuntunganData.map(item => item.toko.namaToko),
-                    datasets: [{
-                        label: 'Total Keuntungan',
-                        data: keuntunganData.map(item => item.totalKeuntungan),
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
-                }
-            });
+    <script>
+        var keuntunganData = @json($keuntungan);
+        var produkTerlarisData = @json($produkTerlaris);
+        var tokoBanyakPembelianData = @json($tokoBanyakPembelian);
 
-            // Grafik Produk Terbanyak Terjual
-            var ctx2 = document.getElementById('produkTerlarisChart').getContext('2d');
+        // Grafik Keuntungan Per Toko
+        var ctx1 = document.getElementById('keuntunganChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: keuntunganData.map(item => item.toko.namaToko),
+                datasets: [{
+                    label: 'Total Keuntungan',
+                    data: keuntunganData.map(item => item.totalKeuntungan),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        // Grafik Produk Terbanyak Terjual
+        var ctx2 = document.getElementById('produkTerlarisChart').getContext('2d');
+        if (produkTerlarisData.length > 0) {
             new Chart(ctx2, {
                 type: 'pie',
                 data: {
@@ -158,9 +183,14 @@
                     }]
                 }
             });
+        } else {
+            // Handle the case where no valid products are available (soft-deleted)
+            document.getElementById('produkTerlarisChart').parentNode.innerHTML = '<p>Data produk tidak tersedia.</p>';
+        }
 
-            // Grafik Toko dengan Pembelian Terbanyak
-            var ctx3 = document.getElementById('tokoBanyakPembelianChart').getContext('2d');
+        // Grafik Toko dengan Pembelian Terbanyak
+        var ctx3 = document.getElementById('tokoBanyakPembelianChart').getContext('2d');
+        if (tokoBanyakPembelianData.length > 0) {
             new Chart(ctx3, {
                 type: 'bar',
                 data: {
@@ -174,9 +204,14 @@
                     }]
                 }
             });
-        </script>
+        } else {
+            // Handle the case where no valid stores are available (soft-deleted)
+            document.getElementById('tokoBanyakPembelianChart').parentNode.innerHTML = '<p>Data toko tidak tersedia.</p>';
+        }
+    </script>
     @else
-        <h1>Anda tidak memiliki akses untuk melihat performa bisnis.</h1>
+    <h1>Anda tidak memiliki akses untuk melihat performa bisnis.</h1>
     @endif
 </body>
+
 </html>

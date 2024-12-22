@@ -65,6 +65,5 @@ class TransaksiSeeder extends Seeder
                 'tanggalTransaksi' => $value['tanggalTransaksi'],
             ]);
         }
-
     }
 }

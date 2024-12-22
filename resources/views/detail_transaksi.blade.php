@@ -4,16 +4,16 @@
 @section('content')
 <div class="container" style="padding-top: 100px;">
     <h1 class="mb-4 text-center">Detail Transaksi</h1>
-    
+
     <!-- Display Flash Message -->
     @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
     @elseif (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
     @endif
 
     <div class="mb-4">
@@ -46,43 +46,44 @@
             </thead>
             <tbody>
                 @forelse ($detailTransaksi as $detail)
-                    <tr>
-                        <td>{{ $detail->produk->namaProduk }}</td>
-                        <td>{{ $detail->jumlahProduk }}</td>
-                        <td>
-                            @if ($transaksi->tipePembayaran == 'cash')
-                                {{ number_format($detail->produk->hargaCash, 0, ',', '.') }}
-                            @else
-                                {{ number_format($detail->produk->hargaTempo, 0, ',', '.') }}
-                            @endif
-                        </td>
-                        <td>
-                            @if ($transaksi->tipePembayaran == 'cash')
-                                {{ number_format($detail->jumlahProduk * $detail->produk->hargaCash, 0, ',', '.') }}
-                            @else
-                                {{ number_format($detail->jumlahProduk * $detail->produk->hargaTempo, 0, ',', '.') }}
-                            @endif
-                        </td>
-                        <td>{{ $detail->namaGudang }}</td>
-                        @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-                        <td>
-                            <!-- Tombol Edit (Only for admins) -->
-                            <a href="{{ route('edit_detail_transaksi', ['idDetailTransaksi' => $detail->idDetailTransaksi]) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <!-- Form untuk Delete (Only for admins) -->
-                            <form action="{{ route('destroy_detail_transaksi', ['idDetailTransaksi' => $detail->idDetailTransaksi]) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus detail ini?')">Hapus</button>
-                            </form>
-                        </td>
+                @if ($detail->produk && !$detail->produk->trashed())
+                <tr>
+                    <td>{{ $detail->produk->namaProduk }}</td>
+                    <td>{{ $detail->jumlahProduk }}</td>
+                    <td>
+                        @if ($transaksi->tipePembayaran == 'cash')
+                        {{ number_format($detail->produk->hargaCash, 0, ',', '.') }}
+                        @else
+                        {{ number_format($detail->produk->hargaTempo, 0, ',', '.') }}
                         @endif
-                    </tr>
+                    </td>
+                    <td>
+                        @if ($transaksi->tipePembayaran == 'cash')
+                        {{ number_format($detail->jumlahProduk * $detail->produk->hargaCash, 0, ',', '.') }}
+                        @else
+                        {{ number_format($detail->jumlahProduk * $detail->produk->hargaTempo, 0, ',', '.') }}
+                        @endif
+                    </td>
+                    <td>{{ $detail->namaGudang }}</td>
+                    @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
+                    <td>
+                        <a href="{{ route('edit_detail_transaksi', ['idDetailTransaksi' => $detail->idDetailTransaksi]) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="{{ route('destroy_detail_transaksi', ['idDetailTransaksi' => $detail->idDetailTransaksi]) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus detail ini?')">Hapus</button>
+                        </form>
+                    </td>
+                    @endif
+                </tr>
+                @endif
                 @empty
-                    <tr>
-                        <td colspan="6" class="text-center">Tidak ada detail transaksi.</td>
-                    </tr>
+                <tr>
+                    <td colspan="6" class="text-center">Tidak ada detail transaksi.</td>
+                </tr>
                 @endforelse
             </tbody>
+
         </table>
     </div>
 

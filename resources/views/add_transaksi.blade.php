@@ -17,11 +17,11 @@
             <label for="idToko">Toko</label>
             <select name="idToko" class="form-control" required>
                 @foreach ($toko as $item)
-                    <option value="{{ $item->idToko }}">{{ $item->namaToko }}</option>
+                <option value="{{ $item->idToko }}">{{ $item->namaToko }}</option>
                 @endforeach
             </select>
         </div>
-        
+
         <div class="form-group">
             <label for="tipePembayaran">Tipe Pembayaran</label>
             <select name="tipePembayaran" class="form-control" required>

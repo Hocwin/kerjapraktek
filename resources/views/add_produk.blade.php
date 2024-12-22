@@ -3,7 +3,8 @@
 
 <style>
   .add-product-container {
-    padding-top: 150px; /* Memberi ruang dari header */
+    padding-top: 150px;
+    /* Memberi ruang dari header */
     max-width: 600px;
     margin: 0 auto;
   }
@@ -44,31 +45,35 @@
   <form method="POST" action="{{ route('store_product') }}" enctype="multipart/form-data">
     @csrf
     <div class="form-group">
-        <label for="namaProduk">Nama Produk</label>
-        <input type="text" name="namaProduk" class="form-control" required>
+      <label for="namaProduk">Nama Produk</label>
+      <input type="text" name="namaProduk" class="form-control" required>
     </div>
     <div class="form-group">
-        <label for="hargaCash">Harga Cash</label>
-        <input type="number" name="hargaCash" class="form-control" required>
+      <label for="hargaCash">Harga Cash</label>
+      <input type="number" name="hargaCash" class="form-control" required>
     </div>
     <div class="form-group">
-        <label for="hargaTempo">Harga Tempo</label>
-        <input type="number" name="hargaTempo" class="form-control" required>
+      <label for="hargaTempo">Harga Tempo</label>
+      <input type="number" name="hargaTempo" class="form-control" required>
     </div>
     <div class="form-group">
-        <label for="imageAsset">Image</label>
-        <input type="file" name="imageAsset" class="form-control" required>
+      <label for="hargaBeli">Harga Beli</label>
+      <input type="number" name="hargaBeli" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="imageAsset">Image</label>
+      <input type="file" name="imageAsset" class="form-control" required>
     </div>
 
     <h5>Stok per Gudang</h5>
     @foreach($gudangs as $gudang)
-        <div class="form-group">
-            <label for="stok_{{ $gudang->idGudang }}">{{ $gudang->namaGudang }} - Stok</label>
-            <input type="number" name="stok[{{ $gudang->idGudang }}]" class="form-control" min="0" value="0">
-        </div>
+    <div class="form-group">
+      <label for="stok_{{ $gudang->idGudang }}">{{ $gudang->namaGudang }} - Stok</label>
+      <input type="number" name="stok[{{ $gudang->idGudang }}]" class="form-control" min="0" value="0">
+    </div>
     @endforeach
 
     <button type="submit" class="btn btn-primary">Simpan Produk</button>
-</form>
+  </form>
 </div>
 @endsection

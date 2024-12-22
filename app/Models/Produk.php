@@ -13,6 +13,7 @@ class Produk extends Model
     protected $primaryKey = 'idProduk';
 
     use SoftDeletes;
+    protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'namaProduk',
@@ -29,6 +30,6 @@ class Produk extends Model
 
     public function detailTransaksi()
     {
-    return $this->hasMany(DetailTransaksi::class, 'idProduk');
+        return $this->hasMany(DetailTransaksi::class, 'idProduk');
     }
 }

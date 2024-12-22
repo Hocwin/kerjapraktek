@@ -47,13 +47,16 @@
         .form-container {
             margin: 0 10px;
         }
+
         .container {
             padding-left: 0;
             padding-right: 0;
         }
+
         .col-4 {
             display: none;
         }
+
         .col-8 {
             width: 100%;
         }
@@ -70,7 +73,7 @@
 
                 <!-- Menampilkan Error -->
                 @foreach($errors->all() as $error)
-                    <div class="alert alert-danger">{{ $error }}</div>
+                <div class="alert alert-danger">{{ $error }}</div>
                 @endforeach
 
                 <!-- Nama Toko -->
@@ -89,8 +92,8 @@
                 <label for="jamOperasional">Jam Operasional</label>
                 <input type="text" name="jamOperasional" id="jamOperasional" class="form-control" value="{{ $toko->jamOperasional }}" required>
 
-                 <!-- Jam Operasional Toko -->
-                 <label for="namaSopir">Nama Sopir</label>
+                <!-- Jam Operasional Toko -->
+                <label for="namaSopir">Nama Sopir</label>
                 <input type="text" name="namaSopir" id="namaSopir" class="form-control" value="{{ $toko->namaSopir }}" required>
 
                 <!-- Gambar Toko -->

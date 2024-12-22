@@ -23,7 +23,8 @@ class PenggunaSeeder extends Seeder
                 'alamatPengguna' => 'Jalan Bunga 123',
                 'jenisKelamin' => 'L',
                 'rolePengguna' => 'admin'
-            ],[
+            ],
+            [
                 'idPengguna' => '2',
                 'namaPengguna' => 'Rayvin',
                 'emailPengguna' => 'rayvin@gmail.com',
@@ -43,9 +44,8 @@ class PenggunaSeeder extends Seeder
             ],
         ];
 
-        foreach ($pengguna as $key => $value){
+        foreach ($pengguna as $key => $value) {
             Pengguna::create($value);
         }
     }
 }
-

@@ -17,54 +17,54 @@ class DetailTransaksiSeeder extends Seeder
      */
     public function run(): void
     {
-         // Apakah ingin menggunakan input manual? Set ke true jika ya.
-         $manualInput = false;
+        // Apakah ingin menggunakan input manual? Set ke true jika ya.
+        $manualInput = false;
 
-         if ($manualInput) {
-             // Data manual untuk detail transaksi
-             $manualData = [
-                 [
-                     'idTransaksi' => 1,
-                     'idProduk' => 1,
-                     'idGudang' => 1,
-                     'jumlahProduk' => 90,
-                 ],
-                 [
-                     'idTransaksi' => 1,
-                     'idProduk' => 2,
-                     'idGudang' => 1,
-                     'jumlahProduk' => 85,
-                 ],
-             ];
- 
-             foreach ($manualData as $data) {
-                 $this->createDetailTransaksi($data);
-             }
-         } else {
-             // Ambil transaksi yang belum memiliki detail
-             $transaksi = Transaksi::whereDoesntHave('detailTransaksi')->first();
- 
-             if (!$transaksi) {
-                 $this->command->info('Tidak ada transaksi yang belum memiliki detail.');
-                 return;
-             }
- 
-             // Data produk untuk diisi secara otomatis
-             $produkData = [
-                 [
+        if ($manualInput) {
+            // Data manual untuk detail transaksi
+            $manualData = [
+                [
+                    'idTransaksi' => 1,
+                    'idProduk' => 1,
+                    'idGudang' => 1,
+                    'jumlahProduk' => 90,
+                ],
+                [
+                    'idTransaksi' => 1,
+                    'idProduk' => 2,
+                    'idGudang' => 1,
+                    'jumlahProduk' => 85,
+                ],
+            ];
+
+            foreach ($manualData as $data) {
+                $this->createDetailTransaksi($data);
+            }
+        } else {
+            // Ambil transaksi yang belum memiliki detail
+            $transaksi = Transaksi::whereDoesntHave('detailTransaksi')->first();
+
+            if (!$transaksi) {
+                $this->command->info('Tidak ada transaksi yang belum memiliki detail.');
+                return;
+            }
+
+            // Data produk untuk diisi secara otomatis
+            $produkData = [
+                [
                     'idProduk' => 1,
                     'idGudang' => 1,
                     'jumlahProduk' => 20,
-                 ],
-                 [
+                ],
+                [
                     'idProduk' => 2,
                     'idGudang' => 1,
                     'jumlahProduk' => 10,
                 ],
             ];
- 
-             foreach ($produkData as $produkInput) {
-                 $data = [
+
+            foreach ($produkData as $produkInput) {
+                $data = [
                     'idTransaksi' => $transaksi->idTransaksi,
                     'idProduk' => $produkInput['idProduk'],
                     'idGudang' => $produkInput['idGudang'],
@@ -73,9 +73,8 @@ class DetailTransaksiSeeder extends Seeder
                 $this->createDetailTransaksi($data);
             }
         }
- 
-        $this->command->info('Detail transaksi berhasil ditambahkan.');
 
+        $this->command->info('Detail transaksi berhasil ditambahkan.');
     }
 
     private function createDetailTransaksi(array $data)
@@ -113,8 +112,8 @@ class DetailTransaksiSeeder extends Seeder
 
         // Kurangi stok di gudang
         $stokGudang = StokPerGudang::where('idProduk', $data['idProduk'])
-                                ->where('idGudang', $data['idGudang'])
-                                ->first();
+            ->where('idGudang', $data['idGudang'])
+            ->first();
 
         if ($stokGudang) {
             $stokGudang->stok -= $data['jumlahProduk'];

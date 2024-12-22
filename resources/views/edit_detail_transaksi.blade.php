@@ -19,9 +19,9 @@
             <label for="produk">Produk</label>
             <select name="idProduk" class="form-control" required>
                 @foreach ($produk as $item)
-                    <option value="{{ $item->idProduk }}" {{ old('idProduk', $detailTransaksi->idProduk) == $item->idProduk ? 'selected' : '' }}>
-                        {{ $item->namaProduk }}
-                    </option>
+                <option value="{{ $item->idProduk }}" {{ old('idProduk', $detailTransaksi->idProduk) == $item->idProduk ? 'selected' : '' }}>
+                    {{ $item->namaProduk }}
+                </option>
                 @endforeach
             </select>
         </div>
@@ -35,9 +35,9 @@
             <label for="idGudang">Gudang</label>
             <select name="idGudang" class="form-control" required>
                 @foreach ($gudang as $item)
-                    <option value="{{ $item->idGudang }}" {{ old('idGudang', $detailTransaksi->idGudang) == $item->idGudang ? 'selected' : '' }}>
-                        {{ $item->namaGudang }}
-                    </option>
+                <option value="{{ $item->idGudang }}" {{ old('idGudang', $detailTransaksi->idGudang) == $item->idGudang ? 'selected' : '' }}>
+                    {{ $item->namaGudang }}
+                </option>
                 @endforeach
             </select>
         </div>

@@ -15,18 +15,18 @@ class ProdukController extends Controller
     public function index(Request $request)
     {
         $produkAktif = Produk::where('namaProduk', 'like', '%' . $request->search . '%')
-        ->whereNull('deleted_at') // Mengambil produk yang tidak dihapus
-        ->get();
+            ->whereNull('deleted_at') // Mengambil produk yang tidak dihapus
+            ->get();
 
-    $produkTerhapus = Produk::onlyTrashed()
-        ->where('namaProduk', 'like', '%' . $request->search . '%')
-        ->get();
+        $produkTerhapus = Produk::onlyTrashed()
+            ->where('namaProduk', 'like', '%' . $request->search . '%')
+            ->get();
 
-    return view('produk', [
-        'produkAktif' => $produkAktif,
-        'produkTerhapus' => $produkTerhapus,
-        'search' => $request->search
-    ]);
+        return view('produk', [
+            'produkAktif' => $produkAktif,
+            'produkTerhapus' => $produkTerhapus,
+            'search' => $request->search
+        ]);
     }
 
     /**
@@ -34,8 +34,8 @@ class ProdukController extends Controller
      */
     public function create()
     {
-        $gudangs = \App\Models\Gudang::all(); 
-        return view('add_produk', compact('gudangs')); 
+        $gudangs = \App\Models\Gudang::all();
+        return view('add_produk', compact('gudangs'));
     }
 
     /**
@@ -46,7 +46,7 @@ class ProdukController extends Controller
         if (!Auth::user() || Auth::user()->rolePengguna != 'admin') {
             return redirect()->route('toko')->with('error', 'Access denied');
         }
-    
+
         // Validasi input
         $request->validate([
             'namaProduk' => 'required|string|max:255',
@@ -55,13 +55,13 @@ class ProdukController extends Controller
             'hargaBeli' => 'required',
             'imageAsset' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi gambar
         ]);
-    
+
         $produk = new Produk();
         $produk->namaProduk = $request->namaProduk;
         $produk->hargaCash = $request->hargaCash;
         $produk->hargaTempo = $request->hargaTempo;
         $produk->hargaBeli = $request->hargaBeli;
-    
+
         if ($request->hasFile('imageAsset')) {
             $file = $request->file('imageAsset');
             $extension = $file->getClientOriginalExtension();
@@ -70,19 +70,19 @@ class ProdukController extends Controller
             $produk->imageAsset = $filename;
         }
         $produk->save();
-    
+
         // Tambahkan stok untuk setiap gudang
         $gudangList = \App\Models\Gudang::all(); // Ambil semua gudang
-    foreach ($gudangList as $gudang) {
-        // Periksa apakah ada stok yang dikirimkan untuk gudang ini
-        $stok = $request->stok[$gudang->idGudang] ?? 0; // Jika tidak ada stok, set ke 0
-        \App\Models\StokPerGudang::create([
-            'idGudang' => $gudang->idGudang,
-            'idProduk' => $produk->idProduk,
-            'stok' => $stok, // Simpan stok sesuai input
-        ]);
-    }
-    
+        foreach ($gudangList as $gudang) {
+            // Periksa apakah ada stok yang dikirimkan untuk gudang ini
+            $stok = $request->stok[$gudang->idGudang] ?? 0; // Jika tidak ada stok, set ke 0
+            \App\Models\StokPerGudang::create([
+                'idGudang' => $gudang->idGudang,
+                'idProduk' => $produk->idProduk,
+                'stok' => $stok, // Simpan stok sesuai input
+            ]);
+        }
+
         return redirect()->route('produk')->with('success', 'Produk berhasil ditambahkan.');
     }
 
@@ -92,22 +92,22 @@ class ProdukController extends Controller
     public function show(string $idProduk)
     {
         // Cek apakah produk ada, termasuk produk yang dihapus (soft delete)
-    $produk = Produk::withTrashed()->find($idProduk);
+        $produk = Produk::withTrashed()->find($idProduk);
 
-    // Jika produk tidak ditemukan
-    if (!$produk) {
-        return redirect()->route('produk')->with('error', 'Produk tidak ditemukan.');
-    }
+        // Jika produk tidak ditemukan
+        if (!$produk) {
+            return redirect()->route('produk')->with('error', 'Produk tidak ditemukan.');
+        }
 
-    // Periksa jika produk sudah dihapus
-    if ($produk->trashed()) {
-        return view('detail_produk', [
-            'produk' => $produk,
-            'isTrashed' => true, // Menandakan bahwa produk sudah dihapus
-        ]);
-    }
+        // Periksa jika produk sudah dihapus
+        if ($produk->trashed()) {
+            return view('detail_produk', [
+                'produk' => $produk,
+                'isTrashed' => true, // Menandakan bahwa produk sudah dihapus
+            ]);
+        }
 
-    return view('detail_produk', ['produk' => $produk]);
+        return view('detail_produk', ['produk' => $produk]);
     }
 
     /**
@@ -177,59 +177,39 @@ class ProdukController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(string $idProduk)
-    {// Periksa hak akses (hanya admin yang boleh menghapus)
-       // Periksa hak akses (hanya admin yang boleh menghapus)
-    if (!Auth::check() || Auth::user()->rolePengguna !== 'admin') {
-        return redirect()->route('produk')->with('error', 'Access denied');
-    }
+    { // Periksa hak akses (hanya admin yang boleh menghapus)
+        // Periksa hak akses (hanya admin yang boleh menghapus)
+        if (!Auth::check() || Auth::user()->rolePengguna !== 'admin') {
+            return redirect()->route('produk')->with('error', 'Access denied');
+        }
 
-    // Cari produk berdasarkan id
-    $produk = Produk::find($idProduk);
+        // Cari produk berdasarkan id
+        $produk = Produk::find($idProduk);
 
-    // Jika produk tidak ditemukan
-    if (!$produk) {
-        return redirect()->route('produk')->with('error', 'Produk tidak ditemukan.');
-    }
+        // Jika produk tidak ditemukan
+        if (!$produk) {
+            return redirect()->route('produk')->with('error', 'Produk tidak ditemukan.');
+        }
 
-    // Soft delete produk
-    $produk->delete();
+        // Soft delete produk
+        $produk->delete();
 
-    return redirect()->route('produk')->with('success', 'Produk berhasil dihapus.');
+        return redirect()->route('produk')->with('success', 'Produk berhasil dihapus.');
     }
 
     public function restore(string $idProduk)
     {
-    // Cari produk yang sudah dihapus
-    $produk = Produk::onlyTrashed()->find($idProduk);
+        // Cari produk yang sudah dihapus
+        $produk = Produk::onlyTrashed()->find($idProduk);
 
-    // Jika produk tidak ditemukan
-    if (!$produk) {
-        return redirect()->route('produk')->with('error', 'Produk tidak ditemukan atau belum dihapus.');
+        // Jika produk tidak ditemukan
+        if (!$produk) {
+            return redirect()->route('produk')->with('error', 'Produk tidak ditemukan atau belum dihapus.');
+        }
+
+        // Pulihkan produk
+        $produk->restore();
+
+        return redirect()->route('produk')->with('success', 'Produk berhasil dipulihkan.');
     }
-
-    // Pulihkan produk
-    $produk->restore();
-
-    return redirect()->route('produk')->with('success', 'Produk berhasil dipulihkan.');
-    }
-
-    public function forceDestroy(string $idProduk)
-    {
-     // Cari produk yang sudah dihapus
-     $produk = Produk::onlyTrashed()->find($idProduk);
-
-     // Jika produk tidak ditemukan
-     if (!$produk) {
-         return redirect()->route('produk')->with('error', 'Produk tidak ditemukan atau belum dihapus.');
-     }
- 
-     // Hapus data terkait (Stok per Gudang)
-     \App\Models\StokPerGudang::where('idProduk', $produk->idProduk)->delete();
- 
-     // Hapus permanen produk
-     $produk->forceDelete();
- 
-     return redirect()->route('produk')->with('success', 'Produk berhasil dihapus secara permanen.');
-    }
-
 }

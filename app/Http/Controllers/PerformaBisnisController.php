@@ -16,51 +16,100 @@ class PerformaBisnisController extends Controller
      */
     public function index(Request $request)
     {
-        if (!Auth::user() || Auth::user()->rolePengguna != 'admin' && Auth::user()->rolePengguna != 'manager') {
+        if (!Auth::user() || (Auth::user()->rolePengguna != 'admin' && Auth::user()->rolePengguna != 'manager')) {
             return redirect()->route('produk')->with('error', 'Access denied');
         }
-        // Mengambil bulan dan tahun dari request atau menggunakan nilai default (bulan dan tahun saat ini)
+
+        // Mendapatkan bulan, tahun, dan jenis tampilan dari request
         $bulan = $request->input('bulan', Carbon::now()->month);
         $tahun = $request->input('tahun', Carbon::now()->year);
+        $viewType = $request->input('view_type', 'monthly'); // Pilihan tampilan (monthly / yearly)
 
-        // Keuntungan per toko
-        $keuntungan = Transaksi::with('toko')
-            ->selectRaw('idToko, SUM(detail_transaksi.jumlahProduk * 
+        if ($viewType == 'yearly') {
+            // Keuntungan per toko untuk seluruh tahun
+            $keuntungan = Transaksi::with('toko')
+                ->selectRaw('idToko, SUM(detail_transaksi.jumlahProduk * 
+                    CASE 
+                        WHEN transaksi.tipePembayaran = "cash" THEN (produk.hargaCash - produk.hargaBeli)
+                        WHEN transaksi.tipePembayaran = "tempo" THEN (produk.hargaTempo - produk.hargaBeli)
+                    END) AS totalKeuntungan')
+                ->join('detail_transaksi', 'transaksi.idTransaksi', '=', 'detail_transaksi.idTransaksi')
+                ->join('produk', 'detail_transaksi.idProduk', '=', 'produk.idProduk')
+                ->whereYear('transaksi.tanggalTransaksi', $tahun)
+                ->whereNull('transaksi.deleted_at')  // Menambahkan pengecekan untuk transaksi yang tidak dihapus
+                ->groupBy('idToko')
+                ->get();
+
+            // Produk terlaris untuk seluruh tahun
+            $produkTerlaris = DetailTransaksi::with('produk')
+                ->selectRaw('idProduk, SUM(jumlahProduk) AS totalTerjual')
+                ->whereHas('transaksi', function ($query) use ($tahun) {
+                    $query->whereYear('tanggalTransaksi', $tahun)
+                        ->whereNull('transaksi.deleted_at');  // Menambahkan pengecekan untuk transaksi yang tidak dihapus
+                })
+                ->groupBy('idProduk')
+                ->orderBy('totalTerjual', 'desc')
+                ->limit(10)
+                ->get();
+
+            // Toko dengan pembelian terbanyak untuk seluruh tahun
+            $tokoBanyakPembelian = Transaksi::selectRaw('transaksi.idToko, toko.namaToko, SUM(detail_transaksi.jumlahProduk) AS totalPembelian')
+                ->join('detail_transaksi', 'transaksi.idTransaksi', '=', 'detail_transaksi.idTransaksi')
+                ->join('toko', 'transaksi.idToko', '=', 'toko.idToko')
+                ->whereYear('transaksi.tanggalTransaksi', $tahun)
+                ->whereNull('transaksi.deleted_at')  // Menambahkan pengecekan untuk transaksi yang tidak dihapus
+                ->groupBy('transaksi.idToko', 'toko.namaToko')
+                ->orderBy('totalPembelian', 'desc')
+                ->limit(10)
+                ->get();
+        } else {
+            // Keuntungan per toko berdasarkan bulan dan tahun
+            $keuntungan = Transaksi::with('toko')
+                ->selectRaw('idToko, SUM(detail_transaksi.jumlahProduk * 
                 CASE 
                     WHEN transaksi.tipePembayaran = "cash" THEN (produk.hargaCash - produk.hargaBeli)
                     WHEN transaksi.tipePembayaran = "tempo" THEN (produk.hargaTempo - produk.hargaBeli)
                 END) AS totalKeuntungan')
-            ->join('detail_transaksi', 'transaksi.idTransaksi', '=', 'detail_transaksi.idTransaksi')
-            ->join('produk', 'detail_transaksi.idProduk', '=', 'produk.idProduk')
-            ->whereYear('transaksi.tanggalTransaksi', $tahun)
-            ->whereMonth('transaksi.tanggalTransaksi', $bulan)
-            ->groupBy('idToko')
-            ->get();
+                ->join('detail_transaksi', 'transaksi.idTransaksi', '=', 'detail_transaksi.idTransaksi')
+                ->join('produk', 'detail_transaksi.idProduk', '=', 'produk.idProduk')
+                ->whereYear('transaksi.tanggalTransaksi', $tahun)
+                ->whereMonth('transaksi.tanggalTransaksi', $bulan)
+                ->whereNull('produk.deleted_at')  // Pastikan produk tidak terhapus secara soft delete
+                ->groupBy('idToko')
+                ->get();
 
-        // Produk terlaris
-        $produkTerlaris = DetailTransaksi::with('produk')
-            ->selectRaw('idProduk, SUM(jumlahProduk) AS totalTerjual')
-            ->whereHas('transaksi', function($query) use ($bulan, $tahun) {
-                $query->whereYear('tanggalTransaksi', $tahun)
-                    ->whereMonth('tanggalTransaksi', $bulan);
-            })
-            ->groupBy('idProduk')
-            ->orderBy('totalTerjual', 'desc')
-            ->limit(10)
-            ->get();
+            // Produk terlaris berdasarkan bulan dan tahun
+            $produkTerlaris = DetailTransaksi::with('produk')
+                ->selectRaw('idProduk, SUM(jumlahProduk) AS totalTerjual')
+                ->whereHas('transaksi', function ($query) use ($bulan, $tahun) {
+                    $query->whereYear('tanggalTransaksi', $tahun)
+                        ->whereMonth('tanggalTransaksi', $bulan)
+                        ->whereNull('transaksi.deleted_at');  // Pengecekan transaksi yang belum dihapus secara soft delete
+                })
+                ->whereHas('produk', function ($query) {
+                    $query->whereNull('deleted_at'); // Pastikan produk tidak terhapus secara soft delete
+                })
+                ->groupBy('idProduk')
+                ->orderBy('totalTerjual', 'desc')
+                ->limit(10)
+                ->get();
 
-        // Toko dengan pembelian terbanyak (limit 10)
-        $tokoBanyakPembelian = Transaksi::selectRaw('transaksi.idToko, toko.namaToko, SUM(detail_transaksi.jumlahProduk) AS totalPembelian')
-            ->join('detail_transaksi', 'transaksi.idTransaksi', '=', 'detail_transaksi.idTransaksi')
-            ->join('toko', 'transaksi.idToko', '=', 'toko.idToko')  // Join dengan tabel toko untuk mendapatkan nama toko
-            ->whereYear('transaksi.tanggalTransaksi', $tahun)
-            ->whereMonth('transaksi.tanggalTransaksi', $bulan)
-            ->groupBy('transaksi.idToko', 'toko.namaToko')
-            ->orderBy('totalPembelian', 'desc')
-            ->limit(10)  // Hanya ambil 10 toko teratas
-            ->get();
+            $tokoBanyakPembelian = Transaksi::selectRaw('transaksi.idToko, toko.namaToko, SUM(detail_transaksi.jumlahProduk) AS totalPembelian')
+                ->join('detail_transaksi', 'transaksi.idTransaksi', '=', 'detail_transaksi.idTransaksi')
+                ->join('toko', 'transaksi.idToko', '=', 'toko.idToko')
+                ->join('produk', 'detail_transaksi.idProduk', '=', 'produk.idProduk') // Join produk to check if it's deleted
+                ->whereYear('transaksi.tanggalTransaksi', $tahun)
+                ->whereMonth('transaksi.tanggalTransaksi', $bulan)
+                ->whereNull('toko.deleted_at') // Pastikan toko tidak terhapus secara soft delete
+                ->whereNull('produk.deleted_at') // Pastikan produk tidak terhapus secara soft delete
+                ->groupBy('transaksi.idToko', 'toko.namaToko')
+                ->orderBy('totalPembelian', 'desc')
+                ->limit(10)
+                ->get();
+        }
 
-        return view('performa_bisnis', compact('keuntungan', 'produkTerlaris', 'tokoBanyakPembelian', 'bulan', 'tahun'));
+        // Menampilkan data pada view
+        return view('performa_bisnis', compact('keuntungan', 'produkTerlaris', 'tokoBanyakPembelian', 'bulan', 'tahun', 'viewType'));
     }
 
     /**

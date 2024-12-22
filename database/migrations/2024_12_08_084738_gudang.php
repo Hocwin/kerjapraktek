@@ -18,6 +18,7 @@ class Gudang extends Migration
             $table->string('namaGudang');
             $table->string('lokasi');
             $table->string('imageAsset');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

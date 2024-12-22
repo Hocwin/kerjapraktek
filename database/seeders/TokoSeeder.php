@@ -115,7 +115,7 @@ class TokoSeeder extends Seeder
             ]
         ];
 
-        foreach ($toko as $key => $value){
+        foreach ($toko as $key => $value) {
             Toko::create($value);
         }
     }

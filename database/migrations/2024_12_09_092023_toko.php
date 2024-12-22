@@ -20,6 +20,7 @@ class Toko extends Migration
             $table->string('nomorTelepon');
             $table->string('jamOperasional');
             $table->string('namaSopir');
+            $table->softDeletes();
             $table->string('imageAsset');
             $table->timestamps();
         });

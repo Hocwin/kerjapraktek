@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('namaGudang')->nullable()->default('');
             $table->integer('jumlahProduk');
             $table->integer('harga');
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('idProduk')->references('idProduk')->on('produk');

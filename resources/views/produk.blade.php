@@ -23,14 +23,16 @@
   }
 
   .harga-beli {
-    color:rgb(38, 178, 183);
+    color: rgb(38, 178, 183);
     font-weight: bold;
   }
 
   .aksi-btn {
-    display: flex;
+    display: column;
     flex-direction: column;
     gap: 5px;
+    justify-content: center;
+    align-items: center;
   }
 
   .add-btn-container {
@@ -38,7 +40,10 @@
     margin-bottom: 20px;
   }
 
-  .add-btn, .edit-btn, .delete-btn, .restore-btn, .force-delete-btn {
+  .add-btn,
+  .edit-btn,
+  .delete-btn,
+  .restore-btn {
     background-color: transparent;
     border: none;
     color: #007bff;
@@ -56,10 +61,6 @@
     color: #28a745;
   }
 
-  .force-delete-btn {
-    color: #6c757d;
-  }
-
   .delete-btn:hover {
     color: #b02a37;
   }
@@ -68,13 +69,28 @@
     color: #218838;
   }
 
-  .force-delete-btn:hover {
-    color: #343a40;
-  }
-
-  table th, table td {
+  table th,
+  table td {
     text-align: center;
     vertical-align: middle;
+  }
+
+  /* Styling for the restore button container */
+  .restore-btn-container {
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+  }
+
+  /* Adjustments for responsive view */
+  @media (max-width: 768px) {
+    .produk-img {
+      width: 80px;
+    }
+
+    .restore-btn-container {
+      gap: 5px;
+    }
   }
 </style>
 
@@ -100,32 +116,32 @@
         <th>Harga Tempo</th>
         <th>Harga Beli</th>
         @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-          <th>Aksi</th>
+        <th>Aksi</th>
         @endif
       </tr>
     </thead>
     <tbody>
       @foreach ($produkAktif as $item)
-        <tr>
-          <td><img src="{{ asset('storage/images/' . $item->imageAsset) }}" alt="{{ $item->namaProduk }}" class="produk-img"></td>
-          <td>{{ $item->namaProduk }}</td>
-          <td class="harga-cash">Rp. {{ number_format($item->hargaCash, 0, ',', '.') }}</td>
-          <td class="harga-tempo">Rp. {{ number_format($item->hargaTempo, 0, ',', '.') }}</td>
-          <td class="harga-beli">Rp. {{ number_format($item->hargaBeli, 0, ',', '.') }}</td>
-          @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-          <td class="aksi-btn">
-            <form method="GET" action="{{ route('edit_product', ['idProduk' => $item->idProduk]) }}">
-              @csrf
-              <button type="submit" class="edit-btn">Edit</button>
-            </form>
-            <form method="POST" action="{{ route('destroy_product', ['idProduk' => $item->idProduk]) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
-              @csrf
-              @method('DELETE')
-              <button type="submit" class="delete-btn">Delete</button>
-            </form>
-          </td>
-          @endif
-        </tr>
+      <tr>
+        <td><img src="{{ asset('storage/images/' . $item->imageAsset) }}" alt="{{ $item->namaProduk }}" class="produk-img"></td>
+        <td>{{ $item->namaProduk }}</td>
+        <td class="harga-cash">Rp. {{ number_format($item->hargaCash, 0, ',', '.') }}</td>
+        <td class="harga-tempo">Rp. {{ number_format($item->hargaTempo, 0, ',', '.') }}</td>
+        <td class="harga-beli">Rp. {{ number_format($item->hargaBeli, 0, ',', '.') }}</td>
+        @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
+        <td class="aksi-btn">
+          <form method="GET" action="{{ route('edit_product', ['idProduk' => $item->idProduk]) }}">
+            @csrf
+            <button type="submit" class="edit-btn">Edit</button>
+          </form>
+          <form method="POST" action="{{ route('destroy_product', ['idProduk' => $item->idProduk]) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="delete-btn">Delete</button>
+          </form>
+        </td>
+        @endif
+      </tr>
       @endforeach
     </tbody>
   </table>
@@ -145,25 +161,20 @@
     </thead>
     <tbody>
       @foreach ($produkTerhapus as $item)
-        <tr>
-          <td><img src="{{ asset('storage/images/' . $item->imageAsset) }}" alt="{{ $item->namaProduk }}" class="produk-img"></td>
-          <td>{{ $item->namaProduk }}</td>
-          <td class="harga-cash">Rp. {{ number_format($item->hargaCash, 0, ',', '.') }}</td>
-          <td class="harga-tempo">Rp. {{ number_format($item->hargaTempo, 0, ',', '.') }}</td>
-          <td class="harga-beli">Rp. {{ number_format($item->hargaBeli, 0, ',', '.') }}</td>
-          <td class="aksi-btn">
-            <form method="POST" action="{{ route('restore_product', ['idProduk' => $item->idProduk]) }}">
-              @csrf
-              @method('PUT')
-              <button type="submit" class="restore-btn">Restore</button>
-            </form>
-            <form method="POST" action="{{ route('force_destroy_product', ['idProduk' => $item->idProduk]) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini secara permanen?');">
-              @csrf
-              @method('DELETE')
-              <button type="submit" class="force-delete-btn">Force Delete</button>
-            </form>
-          </td>
-        </tr>
+      <tr>
+        <td><img src="{{ asset('storage/images/' . $item->imageAsset) }}" alt="{{ $item->namaProduk }}" class="produk-img"></td>
+        <td>{{ $item->namaProduk }}</td>
+        <td class="harga-cash">Rp. {{ number_format($item->hargaCash, 0, ',', '.') }}</td>
+        <td class="harga-tempo">Rp. {{ number_format($item->hargaTempo, 0, ',', '.') }}</td>
+        <td class="harga-beli">Rp. {{ number_format($item->hargaBeli, 0, ',', '.') }}</td>
+        <td class="aksi-btn restore-btn-container">
+          <form method="POST" action="{{ route('restore_product', ['idProduk' => $item->idProduk]) }}">
+            @csrf
+            @method('PUT')
+            <button type="submit" class="restore-btn">Restore</button>
+          </form>
+        </td>
+      </tr>
       @endforeach
     </tbody>
   </table>

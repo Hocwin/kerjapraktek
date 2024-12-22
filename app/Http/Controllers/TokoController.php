@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Toko;
 use App\Models\Transaksi;
+use App\Models\DetailTransaksi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,12 +14,21 @@ class TokoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(request $request)
     {
-        $toko = Toko::all();
+        $tokoAktif = Toko::where('namaToko', 'like', '%' . $request->search . '%')
+            ->whereNull('deleted_at') // Mengambil produk yang tidak dihapus
+            ->get();
 
-        // Kirim data toko ke view
-        return view('toko', compact('toko'));
+        $tokoTerhapus = Toko::onlyTrashed()
+            ->where('namaToko', 'like', '%' . $request->search . '%')
+            ->get();
+
+        return view('toko', [
+            'tokoAktif' => $tokoAktif,
+            'tokoTerhapus' => $tokoTerhapus,
+            'search' => $request->search
+        ]);
     }
 
     /**
@@ -39,7 +49,7 @@ class TokoController extends Controller
             return redirect()->route('toko')->with('error', 'Access denied');
         }
 
-         // Validasi input
+        // Validasi input
         $request->validate([
             'namaToko' => 'required|string|max:255',
             'alamatToko' => 'required|string|max:255',
@@ -142,7 +152,7 @@ class TokoController extends Controller
         }
 
         $toko->save();
-        
+
         return redirect()->route('toko', ['idToko' => $toko->idToko]);
     }
 
@@ -151,32 +161,32 @@ class TokoController extends Controller
      */
     public function destroy($idToko)
     {
-     // Retrieve the Toko and eager load the related transactions
-    $toko = Toko::with('transaksi')->find($idToko);
+        // Retrieve the Toko and eager load the related transactions
+        $toko = Toko::with('transaksi')->find($idToko);
 
-    if ($toko) {
-        // Manually delete related transactions and their details
-        foreach ($toko->transaksi as $transaction) {
-            // Delete related details of each transaction
-            foreach ($transaction->detailTransaksi as $detailTransaction) {
-                $detailTransaction->delete();
+        if ($toko) {
+            // Manually delete related transactions and their details
+            foreach ($toko->transaksi as $transaction) {
+                // Delete related details of each transaction
+                foreach ($transaction->detailTransaksi as $detailTransaction) {
+                    $detailTransaction->delete();
+                }
+                // Delete the transaction itself
+                $transaction->delete();
             }
-            // Delete the transaction itself
-            $transaction->delete();
+
+            // Delete the image file if it exists
+            if ($toko->imageAsset && Storage::exists('public/' . $toko->imageAsset)) {
+                Storage::delete('public/' . $toko->imageAsset);
+            }
+
+            // Now delete the Toko record
+            $toko->delete();
+
+            return redirect()->route('toko')->with('success', 'Toko dan semua transaksi terkait berhasil dihapus!');
         }
 
-        // Delete the image file if it exists
-        if ($toko->imageAsset && Storage::exists('public/' . $toko->imageAsset)) {
-            Storage::delete('public/' . $toko->imageAsset);
-        }
-
-        // Now delete the Toko record
-        $toko->delete();
-
-        return redirect()->route('toko')->with('success', 'Toko dan semua transaksi terkait berhasil dihapus!');
-    }
-
-    return redirect()->route('toko')->with('error', 'Toko tidak ditemukan.');
+        return redirect()->route('toko')->with('error', 'Toko tidak ditemukan.');
     }
 
     public function showDetails($idToko)
@@ -185,5 +195,31 @@ class TokoController extends Controller
         $transaksi = Transaksi::where('idToko', $idToko)->with('detailTransaksi')->get();
 
         return view('detail_toko', compact('toko', 'transaksi'));
+    }
+
+    public function restore(string $idToko)
+    {
+        // Cari produk yang sudah dihapus
+        $toko = Toko::onlyTrashed()->find($idToko);
+
+        // Jika produk tidak ditemukan
+        if (!$toko) {
+            return redirect()->route('toko')->with('error', 'Toko tidak ditemukan atau belum dihapus.');
+        }
+
+        // Pulihkan produk
+        $toko->restore();
+
+        // Pulihkan transaksi yang terkait dengan toko ini
+        // Pulihkan transaksi yang terkait dengan toko ini
+        $transaksi = Transaksi::onlyTrashed()->where('idToko', $idToko)->get();
+        foreach ($transaksi as $trx) {
+            $trx->restore();
+
+            // Pulihkan detail transaksi yang terkait dengan transaksi ini
+            DetailTransaksi::onlyTrashed()->where('idTransaksi', $trx->idTransaksi)->restore();
+        }
+
+        return redirect()->route('toko')->with('success', 'Toko berhasil dipulihkan.');
     }
 }

@@ -19,10 +19,10 @@ class Transaksi extends Migration
             $table->enum('tipePembayaran', ['cash', 'tempo']);
             $table->enum('status', ['lunas', 'belum lunas'])->default('belum lunas');
             $table->timestamp('tanggalTransaksi')->useCurrent();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('idToko')->references('idToko')->on('toko')->onDelete('cascade');
-
         });
     }
 

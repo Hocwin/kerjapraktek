@@ -14,7 +14,11 @@ class PerformaBisnis extends Model
     protected $primaryKey = 'idLaporan';
 
     protected $fillable = [
-        'idToko', 'total_penjualan', 'total_profit', 'produk_terlaris', 'periode',
+        'idToko',
+        'total_penjualan',
+        'total_profit',
+        'produk_terlaris',
+        'periode',
     ];
 
     // Define the relationship with Toko (Store)
@@ -72,32 +76,32 @@ class PerformaBisnis extends Model
     // Store performance report data for a specific period
     public static function storePerformanceReport($storeId, $startDate, $endDate)
     {
-         // Get total sales and profit for the store
-    $salesData = self::getTotalSalesByProduct($startDate, $endDate);
-    $profitData = self::getTotalProfitByProduct($startDate, $endDate);
-    $topSellingProduct = self::getTopSellingProduct($startDate, $endDate);
-    $topStore = self::getTopStore($startDate, $endDate);
+        // Get total sales and profit for the store
+        $salesData = self::getTotalSalesByProduct($startDate, $endDate);
+        $profitData = self::getTotalProfitByProduct($startDate, $endDate);
+        $topSellingProduct = self::getTopSellingProduct($startDate, $endDate);
+        $topStore = self::getTopStore($startDate, $endDate);
 
-    // Calculate the total sales and profit for the store
-    $totalSales = 0;
-    foreach ($salesData as $sale) {
-        $totalSales += $sale->total_terjual * $sale->harga_correct;  // Use the correct price based on payment type
-    }
+        // Calculate the total sales and profit for the store
+        $totalSales = 0;
+        foreach ($salesData as $sale) {
+            $totalSales += $sale->total_terjual * $sale->harga_correct;  // Use the correct price based on payment type
+        }
 
-    $totalProfit = 0;
-    foreach ($profitData as $profit) {
-        $totalProfit += $profit->total_profit;
-    }
+        $totalProfit = 0;
+        foreach ($profitData as $profit) {
+            $totalProfit += $profit->total_profit;
+        }
 
-    // Store the report
-    $report = self::create([
-        'idToko' => $storeId,
-        'total_penjualan' => $totalSales,
-        'total_profit' => $totalProfit,
-        'produk_terlaris' => $topSellingProduct ? $topSellingProduct->namaProduk : 'None',
-        'periode' => now()->toDateString(),
-    ]);
+        // Store the report
+        $report = self::create([
+            'idToko' => $storeId,
+            'total_penjualan' => $totalSales,
+            'total_profit' => $totalProfit,
+            'produk_terlaris' => $topSellingProduct ? $topSellingProduct->namaProduk : 'None',
+            'periode' => now()->toDateString(),
+        ]);
 
-    return $report;
+        return $report;
     }
 }

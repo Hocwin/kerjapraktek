@@ -16,15 +16,15 @@ class DetailTransaksiController extends Controller
      */
     public function index(string $idTransaksi)
     {
-        $detailTransaksi = DetailTransaksi::with(['produk' => function($query) {
+        $detailTransaksi = DetailTransaksi::with(['produk' => function ($query) {
             $query->withTrashed(); // Include soft-deleted products
         }])
-        ->where('idTransaksi', $idTransaksi)
-        ->get();
-    
+            ->where('idTransaksi', $idTransaksi)
+            ->get();
+
         // Ambil data transaksi untuk informasi tambahan
         $transaksi = Transaksi::findOrFail($idTransaksi);
-    
+
         return view('detail_transaksi', compact('detailTransaksi', 'transaksi'));
     }
 
@@ -36,7 +36,7 @@ class DetailTransaksiController extends Controller
         // Ambil produk dan gudang untuk form
         $produk = Produk::all();
         $gudang = Gudang::all();
-    
+
         return view('add_detail_transaksi', compact('idTransaksi', 'produk', 'gudang'));
     }
 
@@ -45,68 +45,68 @@ class DetailTransaksiController extends Controller
      */
     public function store(Request $request, string $idTransaksi)
     {
-       // Validate input data for produk and gudang
-    $request->validate([
-        'produk.*.idProduk' => 'required|exists:produk,idProduk|nullable', // Allow null for new produk
-        'produk.*.jumlahProduk' => 'required|integer|min:1',
-        'produk.*.idGudang' => 'required|exists:gudang,idGudang|nullable', // Allow null for new gudang
-    ]);
+        // Validate input data for produk and gudang
+        $request->validate([
+            'produk.*.idProduk' => 'required|exists:produk,idProduk|nullable', // Allow null for new produk
+            'produk.*.jumlahProduk' => 'required|integer|min:1',
+            'produk.*.idGudang' => 'required|exists:gudang,idGudang|nullable', // Allow null for new gudang
+        ]);
 
-    $transaksi = Transaksi::findOrFail($idTransaksi);
+        $transaksi = Transaksi::findOrFail($idTransaksi);
 
-    foreach ($request->produk as $produkInput) {
-        // Check if the product is new or existing
-        if (isset($produkInput['newProduk']) && !empty($produkInput['newProduk'])) {
-            // Create new produk if necessary
-            $produk = new Produk();
-            $produk->namaProduk = $produkInput['newProduk'];
-            $produk->hargaCash = $produkInput['hargaCash'] ?? 0; // Ensure hargaCash is provided
-            $produk->hargaTempo = $produkInput['hargaTempo'] ?? 0; // Ensure hargaTempo is provided
-            $produk->save();
-        } else {
-            // If produk is selected, find the existing one
-            $produk = Produk::find($produkInput['idProduk']);
+        foreach ($request->produk as $produkInput) {
+            // Check if the product is new or existing
+            if (isset($produkInput['newProduk']) && !empty($produkInput['newProduk'])) {
+                // Create new produk if necessary
+                $produk = new Produk();
+                $produk->namaProduk = $produkInput['newProduk'];
+                $produk->hargaCash = $produkInput['hargaCash'] ?? 0; // Ensure hargaCash is provided
+                $produk->hargaTempo = $produkInput['hargaTempo'] ?? 0; // Ensure hargaTempo is provided
+                $produk->save();
+            } else {
+                // If produk is selected, find the existing one
+                $produk = Produk::find($produkInput['idProduk']);
+            }
+
+            // Check if the gudang is new or existing
+            if (isset($produkInput['newGudang']) && !empty($produkInput['newGudang'])) {
+                // Create new gudang if necessary
+                $gudang = new Gudang();
+                $gudang->namaGudang = $produkInput['newGudang'];
+                $gudang->save();
+            } else {
+                // If gudang is selected, find the existing one
+                $gudang = Gudang::find($produkInput['idGudang']);
+            }
+
+            // Get the warehouse stock
+            $stokGudang = StokPerGudang::where('idProduk', $produk->idProduk)
+                ->where('idGudang', $gudang->idGudang)
+                ->first();
+
+            // Ensure enough stock is available
+            if ($stokGudang && $stokGudang->stok >= $produkInput['jumlahProduk']) {
+                // Create the detail transaksi entry
+                $detailTransaksi = new DetailTransaksi();
+                $detailTransaksi->idTransaksi = $transaksi->idTransaksi;
+                $detailTransaksi->idProduk = $produk->idProduk;
+                $detailTransaksi->jumlahProduk = $produkInput['jumlahProduk'];
+                $detailTransaksi->harga = $transaksi->tipePembayaran == 'cash' ? $produk->hargaCash : $produk->hargaTempo;
+                $detailTransaksi->idGudang = $gudang->idGudang;
+                $detailTransaksi->namaGudang = $gudang->namaGudang;  // Store the warehouse name
+                $detailTransaksi->save();
+
+                // Reduce stock for the selected product and warehouse
+                $stokGudang->stok -= $produkInput['jumlahProduk'];
+                $stokGudang->save();
+            } else {
+                return redirect()->route('detail_transaksi', ['idTransaksi' => $idTransaksi])
+                    ->with('error', 'Stok tidak cukup untuk produk: ' . $produk->namaProduk);
+            }
         }
 
-        // Check if the gudang is new or existing
-        if (isset($produkInput['newGudang']) && !empty($produkInput['newGudang'])) {
-            // Create new gudang if necessary
-            $gudang = new Gudang();
-            $gudang->namaGudang = $produkInput['newGudang'];
-            $gudang->save();
-        } else {
-            // If gudang is selected, find the existing one
-            $gudang = Gudang::find($produkInput['idGudang']);
-        }
-
-        // Get the warehouse stock
-        $stokGudang = StokPerGudang::where('idProduk', $produk->idProduk)
-                                    ->where('idGudang', $gudang->idGudang)
-                                    ->first();
-
-        // Ensure enough stock is available
-        if ($stokGudang && $stokGudang->stok >= $produkInput['jumlahProduk']) {
-            // Create the detail transaksi entry
-            $detailTransaksi = new DetailTransaksi();
-            $detailTransaksi->idTransaksi = $transaksi->idTransaksi;
-            $detailTransaksi->idProduk = $produk->idProduk;
-            $detailTransaksi->jumlahProduk = $produkInput['jumlahProduk'];
-            $detailTransaksi->harga = $transaksi->tipePembayaran == 'cash' ? $produk->hargaCash : $produk->hargaTempo;
-            $detailTransaksi->idGudang = $gudang->idGudang;
-            $detailTransaksi->namaGudang = $gudang->namaGudang;  // Store the warehouse name
-            $detailTransaksi->save();
-
-            // Reduce stock for the selected product and warehouse
-            $stokGudang->stok -= $produkInput['jumlahProduk'];
-            $stokGudang->save();
-        } else {
-            return redirect()->route('detail_transaksi', ['idTransaksi' => $idTransaksi])
-                             ->with('error', 'Stok tidak cukup untuk produk: ' . $produk->namaProduk);
-        }
-    }
-
-    return redirect()->route('detail_transaksi', ['idTransaksi' => $idTransaksi])
-                     ->with('success', 'Detail transaksi berhasil disimpan');
+        return redirect()->route('detail_transaksi', ['idTransaksi' => $idTransaksi])
+            ->with('success', 'Detail transaksi berhasil disimpan');
     }
 
     /**
@@ -114,12 +114,12 @@ class DetailTransaksiController extends Controller
      */
     public function show(string $id)
     {
-        $detailTransaksi = DetailTransaksi::with(['produk' => function($query) {
+        $detailTransaksi = DetailTransaksi::with(['produk' => function ($query) {
             $query->withTrashed(); // Include soft-deleted products
         }])
-        ->where('idTransaksi', $id)
-        ->get();
-    
+            ->where('idTransaksi', $id)
+            ->get();
+
         return view('detail_transaksi', compact('detailTransaksi'));
     }
 
@@ -151,8 +151,8 @@ class DetailTransaksiController extends Controller
         $gudang = Gudang::find($request->idGudang);
         $namaGudang = $gudang ? $gudang->namaGudang : '';
         $stokGudang = StokPerGudang::where('idProduk', $produk->idProduk)
-                                    ->where('idGudang', $request->idGudang)
-                                    ->first();
+            ->where('idGudang', $request->idGudang)
+            ->first();
 
         // Pastikan stok cukup
         if ($stokGudang && $stokGudang->stok >= $request->jumlahProduk) {
@@ -168,7 +168,7 @@ class DetailTransaksiController extends Controller
             $stokGudang->save();
 
             return redirect()->route('detail_transaksi', ['idTransaksi' => $detailTransaksi->idTransaksi])
-                            ->with('success', 'Detail transaksi berhasil diperbarui');
+                ->with('success', 'Detail transaksi berhasil diperbarui');
         } else {
             return back()->with('error', 'Stok tidak cukup untuk produk: ' . $produk->namaProduk);
         }
@@ -180,27 +180,27 @@ class DetailTransaksiController extends Controller
     public function destroy(string $idDetailTransaksi)
     {
         $detailTransaksi = DetailTransaksi::findOrFail($idDetailTransaksi);
-    $idTransaksi = $detailTransaksi->idTransaksi;
+        $idTransaksi = $detailTransaksi->idTransaksi;
 
-    $stokGudang = StokPerGudang::where('idProduk', $detailTransaksi->idProduk)
-                                ->where('idGudang', $detailTransaksi->idGudang)
-                                ->first();
+        $stokGudang = StokPerGudang::where('idProduk', $detailTransaksi->idProduk)
+            ->where('idGudang', $detailTransaksi->idGudang)
+            ->first();
 
-    if ($stokGudang) {
-        $stokGudang->stok += $detailTransaksi->jumlahProduk; // Kembalikan stok
-        $stokGudang->save();
-    }
+        if ($stokGudang) {
+            $stokGudang->stok += $detailTransaksi->jumlahProduk; // Kembalikan stok
+            $stokGudang->save();
+        }
 
-    $detailTransaksi->delete();
+        $detailTransaksi->delete();
 
-    // Cek apakah transaksi memiliki detail lain
-    $remainingDetails = DetailTransaksi::where('idTransaksi', $idTransaksi)->count();
+        // Cek apakah transaksi memiliki detail lain
+        $remainingDetails = DetailTransaksi::where('idTransaksi', $idTransaksi)->count();
 
-    if ($remainingDetails === 0) {
-        return redirect()->route('transaksi')->with('info', 'Semua detail transaksi telah dihapus.');
-    }
+        if ($remainingDetails === 0) {
+            return redirect()->route('transaksi')->with('info', 'Semua detail transaksi telah dihapus.');
+        }
 
-    return redirect()->route('detail_transaksi', ['idTransaksi' => $idTransaksi])
-                    ->with('success', 'Detail transaksi berhasil dihapus');
+        return redirect()->route('detail_transaksi', ['idTransaksi' => $idTransaksi])
+            ->with('success', 'Detail transaksi berhasil dihapus');
     }
 }

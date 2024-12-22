@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Transaksi extends Model
 {
@@ -11,6 +12,9 @@ class Transaksi extends Model
     protected $table = 'transaksi';
 
     protected $primaryKey = 'idTransaksi';
+
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'idToko',
@@ -27,6 +31,6 @@ class Transaksi extends Model
 
     public function toko()
     {
-        return $this->belongsTo(Toko::class, 'idToko', 'idToko');
+        return $this->belongsTo(Toko::class, 'idToko')->withTrashed();
     }
 }

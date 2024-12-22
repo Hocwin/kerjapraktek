@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('total_penjualan');
             $table->integer('total_profit');
             $table->integer('produk_terlaris');
-            $table->timestamp('periode'); // Could be monthly, yearly, etc.
+            $table->timestamp('periode');
             $table->timestamps();
 
             $table->foreign('idToko')->references('idToko')->on('toko')->onDelete('cascade');
