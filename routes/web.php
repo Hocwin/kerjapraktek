@@ -70,13 +70,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/transaksi/add', [TransaksiController::class, 'create'])->name('add_transaksi');
     Route::post('/transaksi/store', [TransaksiController::class, 'store'])->name('store_transaksi');
     Route::delete('/transaksi/delete/{idTransaksi}', [TransaksiController::class, 'destroy'])->name('proses_deletetransaksi');
+    Route::get('/transaksi/edit/{idTransaksi}', [TransaksiController::class, 'edit'])->name('edit_transaksi');
+    Route::put('/transaksi/edit/{idTransaksi}', [TransaksiController::class, 'update'])->name('update_transaksi');
 
     Route::get('/toko/edit/{idToko}', [TokoController::class, 'edit'])->name('edit_toko');
     Route::put('/toko/edit/{idToko}', [TokoController::class, 'update'])->name('update_toko');
     Route::delete('/toko/delete/{idToko}', [TokoController::class, 'destroy'])->name('delete_toko');
     Route::post('/toko/store', [TokoController::class, 'store'])->name('store_toko');
     Route::get('/toko/add', [TokoController::class, 'create'])->name('add_toko');
-    Route::get('/toko/{idToko}/detail', [TokoController::class, 'showDetails'])->name('detail_toko');
+    Route::get('/toko/{idToko}/detail', [TokoController::class, 'show'])->name('detail_toko');
     Route::put('/toko/restore/{idToko}', [TokoController::class, 'restore'])->name('restore_toko');
 
 

@@ -31,8 +31,8 @@
         </div>
 
         <div class="form-group">
-            <label for="tanggalTransaksi">Tanggal Transaksi</label>
-            <input type="date" name="tanggalTransaksi" class="form-control" required>
+            <label for="tanggalTransaksi">Tanggal & Jam Transaksi:</label>
+            <input type="datetime-local" name="tanggalTransaksi" id="tanggalTransaksi" class="form-control" required>
         </div>
 
         <div class="form-group">

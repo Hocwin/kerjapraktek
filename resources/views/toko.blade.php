@@ -3,7 +3,7 @@
 
 <style>
   .toko-container {
-    padding-top: 150px;
+    padding-top: 125px;
   }
 
   .toko-img {
@@ -22,13 +22,14 @@
 
   .add-btn-container {
     text-align: right;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
   }
 
   .add-btn,
   .edit-btn,
   .delete-btn,
-  .restore-btn {
+  .restore-btn,
+  .detail-btn {
     background-color: transparent;
     border: none;
     color: #007bff;
@@ -42,11 +43,19 @@
     color: #dc3545;
   }
 
+  .detail-btn {
+    color: rgb(220, 106, 53);
+  }
+
   .restore-btn {
     color: #28a745;
   }
 
   .delete-btn:hover {
+    color: #b02a37;
+  }
+
+  .detail-btn:hover {
     color: #b02a37;
   }
 
@@ -100,9 +109,8 @@
         <th>Lokasi</th>
         <th>Nomor Telepon</th>
         <th>Jam Operasional</th>
-        @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
+        <th>Sopir</th>
         <th>Aksi</th>
-        @endif
       </tr>
     </thead>
     <tbody>
@@ -113,8 +121,13 @@
         <td>{{ $item->alamatToko }}</td>
         <td>{{ $item->nomorTelepon }}</td>
         <td>{{ $item->jamOperasional }}</td>
-        @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
+        <td>{{ $item->namaSopir }}</td>
         <td class="aksi-btn">
+          <form method="GET" action="{{ route('detail_toko', ['idToko' => $item->idToko]) }}">
+            @csrf
+            <button type="submit" class="detail-btn">Detail</button>
+          </form>
+          @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
           <form method="GET" action="{{ route('edit_toko', ['idToko' => $item->idToko]) }}">
             @csrf
             <button type="submit" class="edit-btn">Edit</button>
@@ -124,8 +137,8 @@
             @method('DELETE')
             <button type="submit" class="delete-btn">Delete</button>
           </form>
+          @endif
         </td>
-        @endif
       </tr>
       @endforeach
     </tbody>

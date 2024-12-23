@@ -81,9 +81,12 @@ class TokoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $idToko)
     {
-        //
+        $toko = Toko::findOrFail($idToko);
+        $transaksi = Transaksi::where('idToko', $idToko)->with('detailTransaksi')->get();
+
+        return view('detail_toko', compact('toko', 'transaksi'));
     }
 
     /**
@@ -187,14 +190,6 @@ class TokoController extends Controller
         }
 
         return redirect()->route('toko')->with('error', 'Toko tidak ditemukan.');
-    }
-
-    public function showDetails($idToko)
-    {
-        $toko = Toko::findOrFail($idToko);
-        $transaksi = Transaksi::where('idToko', $idToko)->with('detailTransaksi')->get();
-
-        return view('detail_toko', compact('toko', 'transaksi'));
     }
 
     public function restore(string $idToko)

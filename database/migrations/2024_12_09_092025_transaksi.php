@@ -18,7 +18,7 @@ class Transaksi extends Migration
             $table->unsignedBigInteger('idToko')->index()->nullable()->constrained()->onDelete('cascade');
             $table->enum('tipePembayaran', ['cash', 'tempo']);
             $table->enum('status', ['lunas', 'belum lunas'])->default('belum lunas');
-            $table->timestamp('tanggalTransaksi')->useCurrent();
+            $table->dateTime('tanggalTransaksi')->useCurrent();
             $table->softDeletes();
             $table->timestamps();
 

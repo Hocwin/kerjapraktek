@@ -122,8 +122,14 @@
         <td class="{{ $item->status === 'lunas' ? 'status-lunas' : 'status-belum-lunas' }}">
           {{ ucfirst($item->status) }}
         </td>
-        <td>{{ $item->tanggalTransaksi }}</td>
+        <td>{{ \Carbon\Carbon::parse($item->tanggalTransaksi)->format('Y-m-d H:i') }}</td>
         <td class="aksi-btn">
+
+          <!-- Edit Button -->
+          <form method="GET" action="{{ route('edit_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
+            @csrf
+            <button type="submit" class="detail-btn">Edit</button>
+          </form>
           <!-- Detail Button -->
           <form method="GET" action="{{ route('detail_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
             @csrf

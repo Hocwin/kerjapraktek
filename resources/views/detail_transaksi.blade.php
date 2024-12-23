@@ -18,7 +18,7 @@
 
     <div class="mb-4">
         <p><strong>ID Transaksi:</strong> {{ $transaksi->idTransaksi }}</p>
-        <p><strong>Tanggal Transaksi:</strong> {{ $transaksi->tanggalTransaksi }}</p>
+        <p><strong>Tanggal Transaksi:</strong> {{ \Carbon\Carbon::parse($transaksi->tanggalTransaksi)->format('Y-m-d H:i') }}</p>
         <p><strong>Status:</strong> {{ $transaksi->status }}</p>
     </div>
 

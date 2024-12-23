@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Transaksi;
 use App\Models\Toko;
+use Carbon\Carbon;
 
 class TransaksiController extends Controller
 {
@@ -34,7 +35,7 @@ class TransaksiController extends Controller
         $request->validate([
             'idToko' => 'required',
             'tipePembayaran' => 'required|in:cash,tempo',
-            'tanggalTransaksi' => 'required|date',
+            'tanggalTransaksi' => 'required|date_format:Y-m-d\TH:i',
             'produk.*.idProduk' => 'required|exists:produk,idProduk',
             'produk.*.jumlahProduk' => 'required|integer|min:1',
         ]);
@@ -44,7 +45,7 @@ class TransaksiController extends Controller
         $transaksi->idToko = $request->idToko;
         $transaksi->tipePembayaran = $request->tipePembayaran;
         $transaksi->status = $request->status;
-        $transaksi->tanggalTransaksi = now();
+        $transaksi->tanggalTransaksi = $request->tanggalTransaksi;;
         $transaksi->save();
 
         // Setelah transaksi disimpan, lanjutkan ke DetailTransaksi
@@ -56,7 +57,13 @@ class TransaksiController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $transaksi = Transaksi::all()->map(function ($item) {
+            // Format 'tanggalTransaksi' to show only hours and minutes
+            $item->tanggalTransaksi = Carbon::parse($item->tanggalTransaksi)->format('Y-m-d\H:i'); // 'H:i' gives hour and minute in 24-hour format
+            return $item;
+        });
+
+        return view('transaksi', compact('transaksi'));
     }
 
     /**
@@ -64,7 +71,14 @@ class TransaksiController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $transaksi = Transaksi::with('toko')->find($id);
+        $toko = Toko::all();
+
+        if (!$transaksi) {
+            return redirect()->route('transaksi')->with('error', 'Transaksi tidak ditemukan.');
+        }
+
+        return view('edit_transaksi', compact('transaksi', 'toko'));
     }
 
     /**
@@ -72,7 +86,26 @@ class TransaksiController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'idToko' => 'required',
+            'tipePembayaran' => 'required|in:cash,tempo',
+            'tanggalTransaksi' => 'required|date_format:Y-m-d\H:i',
+            'status' => 'required|in:lunas,belum lunas',
+        ]);
+
+        $transaksi = Transaksi::find($id);
+
+        if (!$transaksi) {
+            return redirect()->route('transaksi')->with('error', 'Transaksi tidak ditemukan.');
+        }
+
+        $transaksi->idToko = $request->idToko;
+        $transaksi->tipePembayaran = $request->tipePembayaran;
+        $transaksi->status = $request->status;
+        $transaksi->tanggalTransaksi = $request->tanggalTransaksi;
+        $transaksi->save();
+
+        return redirect()->route('transaksi')->with('success', 'Transaksi berhasil diperbarui.');
     }
 
     /**
