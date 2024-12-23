@@ -20,6 +20,15 @@ class GudangController extends Controller
             ->whereNull('deleted_at') // Mengambil produk yang tidak dihapus
             ->get();
 
+        foreach ($gudangAktif as $gudang) {
+            foreach ($gudang->stokPerGudang as $stok) {
+                // Hitung total pengeluaran stok dari transaksi
+                $stok->pengeluaran = DetailTransaksi::where('idGudang', $gudang->idGudang)
+                    ->where('idProduk', $stok->idProduk)
+                    ->sum('jumlahProduk');
+            }
+        }
+
         $gudangTerhapus = Gudang::onlyTrashed()
             ->where('namaGudang', 'like', '%' . $request->search . '%')
             ->get();
