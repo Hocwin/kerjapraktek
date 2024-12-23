@@ -87,10 +87,10 @@ class TransaksiController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'idToko' => 'required',
+            'idToko' => 'required|exists:toko,idToko',
             'tipePembayaran' => 'required|in:cash,tempo',
-            'tanggalTransaksi' => 'required|date_format:Y-m-d\H:i',
             'status' => 'required|in:lunas,belum lunas',
+            'tanggalTransaksi' => 'required|date_format:Y-m-d\TH:i',
         ]);
 
         $transaksi = Transaksi::find($id);
@@ -102,10 +102,15 @@ class TransaksiController extends Controller
         $transaksi->idToko = $request->idToko;
         $transaksi->tipePembayaran = $request->tipePembayaran;
         $transaksi->status = $request->status;
-        $transaksi->tanggalTransaksi = $request->tanggalTransaksi;
-        $transaksi->save();
 
-        return redirect()->route('transaksi')->with('success', 'Transaksi berhasil diperbarui.');
+        // Gunakan tanggal baru jika diubah, atau tetap gunakan tanggal lama
+        $transaksi->tanggalTransaksi = $request->tanggalTransaksi ?: $transaksi->tanggalTransaksi;
+
+        if ($transaksi->save()) {
+            return redirect()->route('transaksi')->with('success', 'Transaksi berhasil diperbarui.');
+        } else {
+            return back()->with('error', 'Gagal memperbarui transaksi.');
+        }
     }
 
     /**

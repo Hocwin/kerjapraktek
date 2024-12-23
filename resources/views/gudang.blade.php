@@ -140,14 +140,14 @@
   <!-- Deleted Gudang Table -->
   @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
   <div class="table-container">
-    <h2 class="text-center text-secondary mb-3">Gudang Terhapus</h2>
+    <h2 class="text-left text-secondary mb-3">Gudang Terhapus</h2>
     <table class="table table-striped table-hover">
       <thead>
         <tr>
           <th>Gambar</th>
           <th>Nama Gudang</th>
           <th>Lokasi</th>
-          <th>Stok & Pemasukan</th>
+          <th>Stok</th>
           <th>Aksi</th>
         </tr>
       </thead>
@@ -166,7 +166,6 @@
                 <tr>
                   <th>Produk</th>
                   <th>Stok</th>
-                  <th>Pemasukan</th>
                 </tr>
               </thead>
               <tbody>
@@ -175,7 +174,6 @@
                 <tr>
                   <td>{{ $stok->produk->namaProduk }}</td>
                   <td>{{ $stok->stok }} sak</td>
-                  <td>{{ $stok->stokSekarang ?? 0 }} sak</td>
                 </tr>
                 @endif
                 @endforeach

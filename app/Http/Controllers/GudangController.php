@@ -26,6 +26,8 @@ class GudangController extends Controller
                 $stok->pengeluaran = DetailTransaksi::where('idGudang', $gudang->idGudang)
                     ->where('idProduk', $stok->idProduk)
                     ->sum('jumlahProduk');
+
+                $stok->pemasukan = $stok->pemasukan;
             }
         }
 
@@ -115,6 +117,9 @@ class GudangController extends Controller
             return redirect()->route('gudang')->with('error', 'Gudang tidak ditemukan.');
         }
 
+        // Simpan stok lama ke sesi untuk referensi
+        session(['stokLama' => $gudang->stokPerGudang->pluck('stok', 'idProduk')->toArray()]);
+
         return view('edit_gudang', ['gudang' => $gudang]);
     }
 
@@ -159,22 +164,28 @@ class GudangController extends Controller
         // Save the Gudang instance to the database
         $gudang->save();
 
-        // Update stok based on product ID
+        // Update stok dan pemasukan
         if ($request->has('stok')) {
-            foreach ($request->stok as $idProduk => $jumlahStok) {
-                // Find the stok record for the product
-                $stokGudang = $gudang->stokPerGudang->where('idProduk', $idProduk)->first();
+            foreach ($request->stok as $idProduk => $stokBaru) {
+                $stokGudang = $gudang->stokPerGudang()->where('idProduk', $idProduk)->first();
 
-                // If the product stock exists, update it, otherwise create a new record
+                // If there's no existing stock for this product, we assume previous stock was 0
+                $stokSebelumnya = $stokGudang ? $stokGudang->stok : 0;
+
+                // Calculate the new pemasukan
+                $pemasukan = max(0, $stokBaru - $stokSebelumnya);  // Positive change in stock is treated as pemasukan
+
                 if ($stokGudang) {
-                    // If a new stock value is provided, update it
-                    $stokGudang->stok = $jumlahStok ? $jumlahStok : $stokGudang->stok;
+                    // Update the stock and cumulative pemasukan
+                    $stokGudang->stok = $stokBaru;
+                    $stokGudang->pemasukan += $pemasukan; // Add the new pemasukan to the previous one
                     $stokGudang->save();
                 } else {
-                    // If no stock record exists, create a new one with the provided stock value
+                    // If there's no existing stock record, create a new one
                     $gudang->stokPerGudang()->create([
                         'idProduk' => $idProduk,
-                        'stok' => $jumlahStok ?: 0,  // If no stok is provided, set it to 0
+                        'stok' => $stokBaru,
+                        'pemasukan' => $pemasukan,  // Set the initial pemasukan value
                     ]);
                 }
             }

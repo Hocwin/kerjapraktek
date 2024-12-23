@@ -125,22 +125,16 @@
         <td>{{ \Carbon\Carbon::parse($item->tanggalTransaksi)->format('Y-m-d H:i') }}</td>
         <td class="aksi-btn">
 
-          <!-- Edit Button -->
-          <form method="GET" action="{{ route('edit_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
-            @csrf
-            <button type="submit" class="detail-btn">Edit</button>
-          </form>
           <!-- Detail Button -->
           <form method="GET" action="{{ route('detail_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
             @csrf
             <button type="submit" class="detail-btn">Detail</button>
           </form>
           @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-          <!-- Delete Button -->
-          <form method="POST" action="{{ route('proses_deletetransaksi', ['idTransaksi' => $item->idTransaksi]) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus transaksi ini?');">
+          <!-- Edit Button -->
+          <form method="GET" action="{{ route('edit_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
             @csrf
-            @method('DELETE')
-            <button type="submit" class="delete-btn">Delete</button>
+            <button type="submit" class="detail-btn">Edit</button>
           </form>
           @endif
         </td>

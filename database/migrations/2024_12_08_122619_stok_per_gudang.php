@@ -18,6 +18,7 @@ class StokPerGudang extends Migration
             $table->unsignedBigInteger('idGudang')->index()->nullable();
             $table->unsignedBigInteger('idProduk')->index()->nullable();
             $table->integer('stok');
+            $table->integer('pemasukan')->default(0);
             $table->timestamps();
 
             $table->foreign('idProduk')->references('idProduk')->on('produk');

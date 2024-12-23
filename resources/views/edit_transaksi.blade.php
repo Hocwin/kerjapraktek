@@ -39,7 +39,7 @@
         <div class="form-group">
             <label for="tanggalTransaksi">Tanggal & Jam Transaksi:</label>
             <input type="datetime-local" name="tanggalTransaksi" id="tanggalTransaksi" class="form-control"
-                value="{{ \Carbon\Carbon::parse($transaksi->tanggalTransaksi)->format('Y-m-d\TH:i') }}" required>
+                value="{{ old('tanggalTransaksi', \Carbon\Carbon::parse($transaksi->tanggalTransaksi)->format('Y-m-d\TH:i')) }}" required>
         </div>
 
         <button type="submit" class="btn btn-primary">Simpan</button>
