@@ -143,6 +143,14 @@ class GudangController extends Controller
             return redirect()->route('gudang')->with('error', 'Gudang tidak ditemukan.');
         }
 
+        foreach ($request->stok as $idProduk => $stokBaru) {
+            $stokGudang = $gudang->stokPerGudang()->where('idProduk', $idProduk)->first();
+
+            if ($stokGudang && $stokBaru < $stokGudang->stok) {
+                return redirect()->back()->with('error', "Stok untuk produk {$stokGudang->produk->namaProduk} tidak boleh kurang dari stok saat ini ({$stokGudang->stok} sak).");
+            }
+        }
+
         // Update Gudang properties
         $gudang->namaGudang = $request->namaGudang;
         $gudang->lokasi = $request->lokasi;

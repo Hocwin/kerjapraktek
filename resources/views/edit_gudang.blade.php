@@ -13,18 +13,21 @@
                 @endforeach
                 <label for="namaProduk">Nama Gudang</label>
                 <input type="text" name="namaGudang" id="namaGudang" class="form-control" value="{{$gudang->namaGudang}}">
-                <label for="hargaCash">Lokasi</label>
+                <label for="lokasi">Lokasi</label>
+                <input type="text" name="lokasi" id="lokasi" class="form-control" value="{{$gudang->lokasi}}">
 
-                <!-- Tambahkan Input untuk Stok -->
-                <label>Stok Produk</label>
-                <ul class="list-group">
-                    @foreach($gudang->stokPerGudang as $stok)
-                    <li class="list-group-item">
-                        {{ $stok->produk->namaProduk }}:
-                        <input type="number" name="stok[{{ $stok->idProduk }}]" class="form-control" value="{{ $stok->stok }}">
-                    </li>
-                    @endforeach
-                </ul>
+                <!-- Stok Produk -->
+                <div class="mb-3">
+                    <label class="form-label">Stok Produk</label>
+                    <ul class="list-group">
+                        @foreach($gudang->stokPerGudang as $stok)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ $stok->produk->namaProduk }}
+                            <input type="number" name="stok[{{ $stok->idProduk }}]" class="form-control w-50" value="{{ $stok->stok }}" min="{{ $stok->stok }}" required>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
 
                 <input type="text" name="lokasi" id="lokasi" class="form-control" value="{{$gudang->lokasi}}">
                 <label for="imageAsset">Gambar Gudang</label><br>

@@ -117,16 +117,6 @@
 @section('content')
 
 <div class="container transaksi-container">
-  <!-- Menempatkan tombol "Add" di bawah header tabel -->
-  <div class="add-btn-container">
-    <!-- Tombol Add (Only visible to admins) -->
-    @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-    <form method="GET" action="{{ route('add_transaksi') }}">
-      @csrf
-      <button type="submit" class="add-btn">Add Transaksi</button>
-    </form>
-    @endif
-  </div>
 
   <table class="table table-striped table-hover">
     <thead>
@@ -135,9 +125,6 @@
         <th>Tipe Pembayaran</th>
         <th>Status</th>
         <th>Tanggal Transaksi</th>
-        @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-        <th>Aksi</th>
-        @endif
       </tr>
     </thead>
     <tbody>
@@ -149,21 +136,6 @@
           {{ ucfirst($item->status) }}
         </td>
         <td>{{ $item->tanggalTransaksi }}</td>
-        <td class="aksi-btn">
-          <!-- Detail Button -->
-          <form method="GET" action="{{ route('detail_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
-            @csrf
-            <button type="submit" class="detail-btn">Detail</button>
-          </form>
-          @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-          <!-- Delete Button -->
-          <form method="POST" action="{{ route('proses_deletetransaksi', ['idTransaksi' => $item->idTransaksi]) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus transaksi ini?');">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="delete-btn">Delete</button>
-          </form>
-          @endif
-        </td>
       </tr>
       @endforeach
     </tbody>

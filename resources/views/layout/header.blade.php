@@ -69,6 +69,7 @@
         </div>
         <div class="offcanvas-body">
           <ul class="navbar-nav justify-content-center flex-grow-1 pe-3 mt-1">
+            @if (Auth::check())
             <li class="nav-item">
               <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('produk')}}">Product</a>
             </li>
@@ -92,6 +93,7 @@
               <input type="text" name="search" placeholder="Cari..." required>
               <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
+            @endif
           </ul>
         </div>
       </div>
