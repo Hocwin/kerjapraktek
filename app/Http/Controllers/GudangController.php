@@ -31,13 +31,8 @@ class GudangController extends Controller
             }
         }
 
-        $gudangTerhapus = Gudang::onlyTrashed()
-            ->where('namaGudang', 'like', '%' . $request->search . '%')
-            ->get();
-
         return view('gudang', [
             'gudangAktif' => $gudangAktif,
-            'gudangTerhapus' => $gudangTerhapus,
             'search' => $request->search
         ]);
     }
@@ -222,7 +217,7 @@ class GudangController extends Controller
         DetailTransaksi::where('idGudang', $idGudang)->update(['deleted_at' => now()]);
 
         // Redirect back to the Gudang index with a success message
-        return redirect()->route('gudang')->with('success', 'Gudang berhasil dihapus.');
+        return redirect()->route('trash')->with('success', 'Gudang berhasil dihapus.');
     }
 
     public function restore(string $idGudang)

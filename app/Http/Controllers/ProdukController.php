@@ -18,13 +18,8 @@ class ProdukController extends Controller
             ->whereNull('deleted_at') // Mengambil produk yang tidak dihapus
             ->get();
 
-        $produkTerhapus = Produk::onlyTrashed()
-            ->where('namaProduk', 'like', '%' . $request->search . '%')
-            ->get();
-
         return view('produk', [
             'produkAktif' => $produkAktif,
-            'produkTerhapus' => $produkTerhapus,
             'search' => $request->search
         ]);
     }
@@ -194,7 +189,7 @@ class ProdukController extends Controller
         // Soft delete produk
         $produk->delete();
 
-        return redirect()->route('produk')->with('success', 'Produk berhasil dihapus.');
+        return redirect()->route('trash')->with('success', 'Produk berhasil dihapus.');
     }
 
     public function restore(string $idProduk)

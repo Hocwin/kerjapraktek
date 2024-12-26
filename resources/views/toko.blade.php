@@ -143,40 +143,6 @@
       @endforeach
     </tbody>
   </table>
-
-  @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-  <h2>Toko Terhapus</h2>
-  <table class="table table-striped table-hover">
-    <thead>
-      <tr>
-        <th>Gambar</th>
-        <th>Nama Toko</th>
-        <th>Lokasi</th>
-        <th>Nomor Telepon</th>
-        <th>Jam Operasional</th>
-        <th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach ($tokoTerhapus as $item)
-      <tr>
-        <td><img src="{{ asset('storage/images/' . $item->imageAsset) }}" alt="{{ $item->namaToko }}" class="toko-img"></td>
-        <td>{{ $item->namaToko }}</td>
-        <td>{{ $item->alamatToko }}</td>
-        <td>{{ $item->nomorTelepon }}</td>
-        <td>{{ $item->jamOperasional }}</td>
-        <td class="aksi-btn restore-btn-container">
-          <form method="POST" action="{{ route('restore_toko', ['idToko' => $item->idToko]) }}">
-            @csrf
-            @method('PUT')
-            <button type="submit" class="restore-btn">Restore</button>
-          </form>
-        </td>
-      </tr>
-      @endforeach
-    </tbody>
-  </table>
-  @endif
 </div>
 
 @endsection

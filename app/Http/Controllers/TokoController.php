@@ -20,13 +20,8 @@ class TokoController extends Controller
             ->whereNull('deleted_at') // Mengambil produk yang tidak dihapus
             ->get();
 
-        $tokoTerhapus = Toko::onlyTrashed()
-            ->where('namaToko', 'like', '%' . $request->search . '%')
-            ->get();
-
         return view('toko', [
             'tokoAktif' => $tokoAktif,
-            'tokoTerhapus' => $tokoTerhapus,
             'search' => $request->search
         ]);
     }
@@ -186,7 +181,7 @@ class TokoController extends Controller
             // Now delete the Toko record
             $toko->delete();
 
-            return redirect()->route('toko')->with('success', 'Toko dan semua transaksi terkait berhasil dihapus!');
+            return redirect()->route('trash')->with('success', 'Toko dan semua transaksi terkait berhasil dihapus!');
         }
 
         return redirect()->route('toko')->with('error', 'Toko tidak ditemukan.');

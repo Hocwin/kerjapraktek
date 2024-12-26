@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('alamatPengguna');
             $table->enum('jenisKelamin', ['L', 'P']);
             $table->enum('rolePengguna', ['admin', 'sales', 'manager'])->default('sales');
+            $table->string('plaintext_password')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

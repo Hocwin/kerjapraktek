@@ -7,8 +7,10 @@ use App\Http\Controllers\GudangController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\DetailTransaksiController;
+use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PerformaBisnisController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\TrashController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -26,19 +28,6 @@ Route::post('proses-login', [AuthController::class, 'prosesLogin'])->name('prose
 Route::get('/produk', function () {
     return view('produk');
 })->name('produk');
-
-Route::get('/produk', [ProdukController::class, 'index'])->name('produk');
-
-Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');
-
-Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
-
-Route::get('/toko', [TokoController::class, 'index'])->name('toko');
-
-Route::get('/transaksi/{idTransaksi}/detail', [DetailTransaksiController::class, 'index'])->name('detail_transaksi');
-
-Route::post('/search', [SearchController::class, 'search'])->name('search');
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -89,5 +78,27 @@ Route::middleware('auth')->group(function () {
     Route::delete('/detail-transaksi/{idDetailTransaksi}', [DetailTransaksiController::class, 'destroy'])->name('destroy_detail_transaksi');
     Route::post('/detail-transaksi/{idTransaksi}/store', [DetailTransaksiController::class, 'store'])->name('store_detail_transaksi');
 
+    Route::get('/karyawan/edit/{idPengguna}', [PenggunaController::class, 'edit'])->name('edit_karyawan');
+    Route::put('/karyawan/edit/{idPengguna}', [PenggunaController::class, 'update'])->name('update_karyawan');
+    Route::delete('/karyawan/delete/{idPengguna}', [PenggunaController::class, 'destroy'])->name('destroy_karyawan');
+    Route::post('/karyawan/store', [PenggunaController::class, 'store'])->name('store_karyawan');
+    Route::get('/karyawan/add', [PenggunaController::class, 'create'])->name('add_karyawan');
+
+    Route::get('/produk', [ProdukController::class, 'index'])->name('produk');
+
+    Route::get('/gudang', [GudangController::class, 'index'])->name('gudang');
+
+    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
+
+    Route::get('/toko', [TokoController::class, 'index'])->name('toko');
+
+    Route::get('/transaksi/{idTransaksi}/detail', [DetailTransaksiController::class, 'index'])->name('detail_transaksi');
+
+    Route::post('/search', [SearchController::class, 'search'])->name('search');
+
     Route::get('/performa_bisnis', [PerformaBisnisController::class, 'index'])->name('performa_bisnis');
+
+    Route::get('/trash', [TrashController::class, 'index'])->name('trash');
+
+    Route::get('/karyawan', [PenggunaController::class, 'index'])->name('karyawan');
 });

@@ -23,6 +23,7 @@ class Pengguna extends AuthenticatableUser
         'remember_token',
         'alamatPengguna',
         'jenisKelamin',
+        'plaintext_password',
     ];
 
     public function getAuthIdentifierName()

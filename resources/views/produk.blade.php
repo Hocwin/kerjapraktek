@@ -145,40 +145,6 @@
       @endforeach
     </tbody>
   </table>
-
-  @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-  <h2>Produk Terhapus</h2>
-  <table class="table table-striped table-hover">
-    <thead>
-      <tr>
-        <th>Gambar</th>
-        <th>Nama Produk</th>
-        <th>Harga Cash</th>
-        <th>Harga Tempo</th>
-        <th>Harga Beli</th>
-        <th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach ($produkTerhapus as $item)
-      <tr>
-        <td><img src="{{ asset('storage/images/' . $item->imageAsset) }}" alt="{{ $item->namaProduk }}" class="produk-img"></td>
-        <td>{{ $item->namaProduk }}</td>
-        <td class="harga-cash">Rp. {{ number_format($item->hargaCash, 0, ',', '.') }}</td>
-        <td class="harga-tempo">Rp. {{ number_format($item->hargaTempo, 0, ',', '.') }}</td>
-        <td class="harga-beli">Rp. {{ number_format($item->hargaBeli, 0, ',', '.') }}</td>
-        <td class="aksi-btn restore-btn-container">
-          <form method="POST" action="{{ route('restore_product', ['idProduk' => $item->idProduk]) }}">
-            @csrf
-            @method('PUT')
-            <button type="submit" class="restore-btn">Restore</button>
-          </form>
-        </td>
-      </tr>
-      @endforeach
-    </tbody>
-  </table>
-  @endif
 </div>
 
 @endsection
