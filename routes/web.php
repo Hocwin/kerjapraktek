@@ -98,7 +98,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/performa_bisnis', [PerformaBisnisController::class, 'index'])->name('performa_bisnis');
 
-    Route::get('/trash', [TrashController::class, 'index'])->name('trash');
+    Route::get('/toko_blacklist', [TrashController::class, 'index'])->name('toko_blacklist');
+    Route::get('/produk_tidak_aktif', [TrashController::class, 'index'])->name('produk_tidak_aktif');
+    Route::get('/gudang_tidak_aktif', [TrashController::class, 'index'])->name('gudang_tidak_aktif');
 
     Route::get('/karyawan', [PenggunaController::class, 'index'])->name('karyawan');
 });

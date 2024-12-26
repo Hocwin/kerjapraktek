@@ -85,9 +85,6 @@
             <!-- Conditionally display "Performa Bisnis" only for admin or manager -->
             @if (Auth::check() && (Auth::user()->rolePengguna == 'admin' || Auth::user()->rolePengguna == 'manager'))
             <li class="nav-item">
-              <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('trash')}}">Trash</a>
-            </li>
-            <li class="nav-item">
               <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('karyawan')}}">Karyawan</a>
             </li>
             <li class="nav-item">

@@ -18,8 +18,8 @@
     /* Jarak antara tombol */
   }
 
+  .edit-btn,
   .detail-btn,
-  .delete-btn,
   .add-btn {
     background-color: transparent;
     border: none;
@@ -30,19 +30,11 @@
     text-decoration: underline;
   }
 
-  .detail-btn:hover,
-  .delete-btn:hover,
-  .add-btn:hover {
-    color: #0056b3;
-    text-decoration: none;
+  .detail-btn {
+    color: rgb(220, 106, 53);
   }
 
-  .delete-btn {
-    color: #dc3545;
-    /* Warna merah untuk tombol Delete */
-  }
-
-  .delete-btn:hover {
+  .detail-btn:hover {
     color: #b02a37;
   }
 
@@ -93,17 +85,16 @@
 @section('content')
 
 <div class="container transaksi-container">
-  <!-- Menempatkan tombol "Add" di bawah header tabel -->
+  <h2>Transaksi</h2>
   <div class="add-btn-container">
-    <!-- Tombol Add (Only visible to admins) -->
     @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
     <form method="GET" action="{{ route('add_transaksi') }}">
       @csrf
-      <button type="submit" class="add-btn">Add Transaksi</button>
+      <button type="submit" class="add-btn">Tambah Transaksi</button>
     </form>
     @endif
   </div>
-
+  <div class="table-responsive" style="height: 400px; overflow-y: scroll;">
   <table class="table table-striped table-hover">
     <thead>
       <tr>
@@ -124,17 +115,14 @@
         </td>
         <td>{{ \Carbon\Carbon::parse($item->tanggalTransaksi)->format('Y-m-d H:i') }}</td>
         <td class="aksi-btn">
-
-          <!-- Detail Button -->
           <form method="GET" action="{{ route('detail_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
             @csrf
             <button type="submit" class="detail-btn">Detail</button>
           </form>
           @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-          <!-- Edit Button -->
           <form method="GET" action="{{ route('edit_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
             @csrf
-            <button type="submit" class="detail-btn">Edit</button>
+            <button type="submit" class="edit-btn">Edit</button>
           </form>
           @endif
         </td>
@@ -142,6 +130,7 @@
       @endforeach
     </tbody>
   </table>
+  </div>
 </div>
 
 @endsection

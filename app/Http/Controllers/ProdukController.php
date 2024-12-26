@@ -188,8 +188,8 @@ class ProdukController extends Controller
 
         // Soft delete produk
         $produk->delete();
-
-        return redirect()->route('trash')->with('success', 'Produk berhasil dihapus.');
+        $page = ['page' => 'produk'];
+        return redirect()->route('produk_tidak_aktif')->with($page);
     }
 
     public function restore(string $idProduk)
@@ -204,7 +204,6 @@ class ProdukController extends Controller
 
         // Pulihkan produk
         $produk->restore();
-
         return redirect()->route('produk')->with('success', 'Produk berhasil dipulihkan.');
     }
 }
