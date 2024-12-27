@@ -138,14 +138,6 @@ class GudangController extends Controller
             return redirect()->route('gudang')->with('error', 'Gudang tidak ditemukan.');
         }
 
-        foreach ($request->stok as $idProduk => $stokBaru) {
-            $stokGudang = $gudang->stokPerGudang()->where('idProduk', $idProduk)->first();
-
-            if ($stokGudang && $stokBaru < $stokGudang->stok) {
-                return redirect()->back()->with('error', "Stok untuk produk {$stokGudang->produk->namaProduk} tidak boleh kurang dari stok saat ini ({$stokGudang->stok} sak).");
-            }
-        }
-
         // Update Gudang properties
         $gudang->namaGudang = $request->namaGudang;
         $gudang->lokasi = $request->lokasi;
@@ -177,28 +169,18 @@ class GudangController extends Controller
         // Save the Gudang instance to the database
         $gudang->save();
 
-        // Update stok dan pemasukan
-        if ($request->has('stok')) {
-            foreach ($request->stok as $idProduk => $stokBaru) {
+        if ($request->has('pemasukan')) {
+            foreach ($request->pemasukan as $idProduk => $jumlahPemasukan) {
                 $stokGudang = $gudang->stokPerGudang()->where('idProduk', $idProduk)->first();
-
-                // If there's no existing stock for this product, we assume previous stock was 0
-                $stokSebelumnya = $stokGudang ? $stokGudang->stok : 0;
-
-                // Calculate the new pemasukan
-                $pemasukan = max(0, $stokBaru - $stokSebelumnya);  // Positive change in stock is treated as pemasukan
-
                 if ($stokGudang) {
-                    // Update the stock and cumulative pemasukan
-                    $stokGudang->stok = $stokBaru;
-                    $stokGudang->pemasukan += $pemasukan; // Add the new pemasukan to the previous one
+                    $stokGudang->stok += $jumlahPemasukan;
+                    $stokGudang->pemasukan += $jumlahPemasukan;
                     $stokGudang->save();
                 } else {
-                    // If there's no existing stock record, create a new one
                     $gudang->stokPerGudang()->create([
                         'idProduk' => $idProduk,
-                        'stok' => $stokBaru,
-                        'pemasukan' => $pemasukan,  // Set the initial pemasukan value
+                        'stok' => $jumlahPemasukan,
+                        'pemasukan' => $jumlahPemasukan,
                     ]);
                 }
             }
