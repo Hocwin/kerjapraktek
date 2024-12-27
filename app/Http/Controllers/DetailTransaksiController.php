@@ -83,15 +83,17 @@ class DetailTransaksiController extends Controller
             $stokGudang = StokPerGudang::where('idProduk', $produk->idProduk)
                 ->where('idGudang', $gudang->idGudang)
                 ->first();
-
             // Ensure enough stock is available
             if ($stokGudang && $stokGudang->stok >= $produkInput['jumlahProduk']) {
                 // Create the detail transaksi entry
+                $hargaC = $produk->hargaCash;
+                $hargaT = $produk->hargaTempo;
                 $detailTransaksi = new DetailTransaksi();
                 $detailTransaksi->idTransaksi = $transaksi->idTransaksi;
                 $detailTransaksi->idProduk = $produk->idProduk;
                 $detailTransaksi->jumlahProduk = $produkInput['jumlahProduk'];
-                $detailTransaksi->harga = $transaksi->tipePembayaran == 'cash' ? $produk->hargaCash : $produk->hargaTempo;
+                $detailTransaksi->hargaC = $produk->hargaCash;
+                $detailTransaksi->hargaT = $produk->hargaTempo;
                 $detailTransaksi->idGudang = $gudang->idGudang;
                 $detailTransaksi->namaGudang = $gudang->namaGudang;  // Store the warehouse name
                 $detailTransaksi->save();
@@ -185,7 +187,8 @@ class DetailTransaksiController extends Controller
             // Update the detail transaksi record
             $detailTransaksi->idProduk = $request->idProduk;
             $detailTransaksi->jumlahProduk = $request->jumlahProduk;
-            $detailTransaksi->harga = $produk->hargaCash; // Or price according to payment type
+            $detailTransaksi->hargaC = $produk->hargaCash;
+            $detailTransaksi->hargaT = $produk->hargaTempo; // Or price according to payment type
             $detailTransaksi->idGudang = $request->idGudang;
             $detailTransaksi->namaGudang = $newGudang->namaGudang; // Update the warehouse name
             $detailTransaksi->save();

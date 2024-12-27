@@ -18,7 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('idGudang')->index()->nullable();
             $table->string('namaGudang')->nullable()->default('');
             $table->integer('jumlahProduk');
-            $table->integer('harga');
+            $table->integer('hargaC');
+            $table->integer('hargaT');
             $table->softDeletes();
             $table->timestamps();
 

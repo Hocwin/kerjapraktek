@@ -56,7 +56,7 @@
 @section('content')
 <div class="container trash-container">
     <!-- Deleted Gudang -->
-    <h2 class="section-title">Gudang Terhapus</h2>
+    <h2>Gudang Terhapus</h2>
     @if ($gudangTerhapus->isEmpty())
     <p class="empty-message">Tidak ada gudang terhapus.</p>
     @else
@@ -110,9 +110,6 @@
         </tbody>
     </table>
     @endif
-
-    <div class="btn-action">
-        <a href="{{route('gudang')}}">Kembali</a>
-    </div>
+    <a href="{{route('gudang')}}" class="btn btn-secondary d-inline-block mx-auto">>Kembali</a>
 </div>
 @endsection

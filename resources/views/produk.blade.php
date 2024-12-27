@@ -109,12 +109,12 @@
         @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
         <form method="GET" action="{{ route('add_produk') }}">
             @csrf
-            <button type="submit" class="add-btn">Tambah Produk</button>
+            <button type="submit" class="btn btn-primary">Tambah Produk</button>
         </form>
         <form method="GET" action="{{ route('produk_tidak_aktif') }}">
             @csrf
             <input type="hidden" name="page" value="produk">
-            <button type="submit" class="delete-btn">Produk Tidak Aktif</button>
+            <button type="submit" class="btn btn-danger">Produk Tidak Aktif</button>
         </form>
         @endif
     </div>
@@ -129,7 +129,7 @@
             <th>Harga Tempo</th>
             <th>Harga Beli</th>
             @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-            <th>Aksi</th>
+            <th class="text-center">Aksi</th>
             @endif
         </tr>
         </thead>
@@ -145,12 +145,12 @@
             <td class="aksi-btn">
             <form method="GET" action="{{ route('edit_product', ['idProduk' => $item->idProduk]) }}">
                 @csrf
-                <button type="submit" class="edit-btn">Edit</button>
+                <button type="submit" class="btn btn-primary">Edit</button>
             </form>
             <form method="POST" action="{{ route('destroy_product', ['idProduk' => $item->idProduk]) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="delete-btn">Delete</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
             </form>
             </td>
             @endif

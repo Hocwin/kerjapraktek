@@ -4,7 +4,7 @@
 @section('content')
 <div class="container" style="padding-top: 100px;">
     <h1 class="mb-4 text-center">Detail Transaksi</h1>
-
+    <div class="table-responsive" style="height: 420px; overflow-y: scroll;">
     <!-- Display Flash Message -->
     @if (session('success'))
     <div class="alert alert-success">
@@ -29,7 +29,7 @@
     </div>
     @endif
 
-    <div class="table-responsive">
+    <div class="table-responsive" style="height: 200px; overflow-y: scroll;">
         <table class="table table-striped table-bordered table-hover">
             <thead class="thead-dark">
                 <tr>
@@ -51,11 +51,18 @@
                     <td>{{ $detail->produk->namaProduk }}</td>
                     <td>{{ $detail->jumlahProduk }}</td>
                     <td>
-                        {{number_format($detail->harga, 0, ',', '.')}}
+                        @if ($transaksi->tipePembayaran == 'cash')
+                            {{number_format($detail->hargaC, 0, ',', '.')}}
+                        @else
+                            {{number_format($detail->hargaT, 0, ',', '.')}}
+                        @endif
                     </td>
                     <td>
+                        @if ($transaksi->tipePembayaran == 'cash')
+                        {{number_format($detail->jumlahProduk * $detail->hargaC, 0, ',', '.')}}
+                    @else
                         {{number_format($detail->jumlahProduk * $detail->harga, 0, ',', '.')}}
-                    </td>
+                    @endif
                     <td>{{ $detail->namaGudang }}</td>
                     @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
                     <td>
@@ -78,8 +85,8 @@
 
         </table>
     </div>
-
     <!-- Tombol Kembali -->
-    <a href="{{ route('transaksi') }}" class="btn btn-secondary btn-sm d-inline-block mx-auto">Kembali</a>
+    <a href="{{ route('transaksi') }}" class="btn btn-secondary d-inline-block mx-auto">Kembali</a>
+    </div>
 </div>
 @endsection

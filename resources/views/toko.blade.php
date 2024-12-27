@@ -98,12 +98,12 @@
     @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
     <form method="GET" action="{{ route('add_toko') }}">
       @csrf
-      <button type="submit" class="add-btn">Tambah Toko</button>
+      <button type="submit" class="btn btn-primary">Tambah Toko</button>
     </form>
     <form method="GET" action="{{ route('toko_blacklist') }}">
         @csrf
         <input type="hidden" name="page" value="toko">
-        <button type="submit" class="delete-btn">Blacklist</button>
+        <button type="submit" class="btn btn-danger">Blacklist</button>
     </form>
     @endif
   </div>
@@ -117,7 +117,7 @@
         <th>Nomor Telepon</th>
         <th>Jam Operasional</th>
         <th>Sopir</th>
-        <th>Aksi</th>
+        <th class="text-center">Aksi</th>
       </tr>
     </thead>
     <tbody>
@@ -132,17 +132,17 @@
         <td class="aksi-btn">
           <form method="GET" action="{{ route('detail_toko', ['idToko' => $item->idToko]) }}">
             @csrf
-            <button type="submit" class="detail-btn">Detail</button>
+            <button type="submit" class="btn btn-warning">Detail</button>
           </form>
           @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
           <form method="GET" action="{{ route('edit_toko', ['idToko' => $item->idToko]) }}">
             @csrf
-            <button type="submit" class="edit-btn">Edit</button>
+            <button type="submit" class="btn btn-primary">Edit</button>
           </form>
           <form method="POST" action="{{ route('delete_toko', ['idToko' => $item->idToko]) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus toko ini?');">
             @csrf
             @method('DELETE')
-            <button type="submit" class="delete-btn">Blacklist</button>
+            <button type="submit" class="btn btn-danger">Blacklist</button>
           </form>
           @endif
         </td>

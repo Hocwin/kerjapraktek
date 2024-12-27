@@ -117,12 +117,12 @@
         @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
             <form method="GET" action="{{ route('add_gudang') }} }}">
             @csrf
-            <button type="submit" class="add-btn">Tambah Gudang</button>
+            <button type="submit" class="btn btn-primary">Tambah Gudang</button>
             </form>
             <form method="GET" action="{{ route('gudang_tidak_aktif') }}">
                 @csrf
                 <input type="hidden" name="page" value="gudang">
-                <button type="submit" class="delete-btn">Gudang Tidak Aktif</button>
+                <button type="submit" class="btn btn-danger">Gudang Tidak Aktif</button>
             </form>
         @endif
     </div>
@@ -137,7 +137,7 @@
             <th>Lokasi</th>
             <th>Stok & Pemasukan</th>
             @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-            <th>Aksi</th>
+            <th >Aksi</th>
             @endif
             </tr>
         </thead>
@@ -179,12 +179,12 @@
                 @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
                 <form method="GET" action="{{ route('edit-gudang', ['idGudang' => $item->idGudang]) }}">
                     @csrf
-                    <button type="submit" class="edit-btn">Edit</button>
+                    <button type="submit" class="btn btn-primary">Edit</button>
                 </form>
                 <form method="POST" action="{{ route('destroy_gudang', ['idGudang' => $item->idGudang]) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus toko ini?');">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="delete-btn">Delete</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
                 @endif
             </td>
