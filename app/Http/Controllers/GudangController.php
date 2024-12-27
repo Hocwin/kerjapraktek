@@ -161,9 +161,13 @@ class GudangController extends Controller
             $file = $request->file('imageAsset');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
-            // Delete old image if exists
-            if ($gudang->imageAsset && Storage::exists('storage/images/' . $gudang->imageAsset)) {
-                Storage::delete('storage/images/' . $gudang->imageAsset);
+
+            if ($gudang->imageAsset != $filename) {
+                if (Storage::exists('images/' . $gudang->imageAsset)) {
+                    Storage::delete('images/' . $gudang->imageAsset);
+                }
+                $file->move('storage/images/', $filename);
+                $gudang->imageAsset = $filename;
             }
             // Save the new image
             $file->move('storage/images/', $filename);

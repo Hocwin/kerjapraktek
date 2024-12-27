@@ -146,8 +146,8 @@ class TokoController extends Controller
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
             if ($toko->imageAsset != $filename) {
-                if (Storage::exists($toko->idToko)) {
-                    Storage::delete($toko->idToko);
+                if (Storage::exists('images/' . $toko->imageAsset)) {
+                    Storage::delete('images/' . $toko->imageAsset);
                 }
                 $file->move('storage/images/', $filename);
                 $toko->imageAsset = $filename;

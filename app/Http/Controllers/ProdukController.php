@@ -63,7 +63,7 @@ class ProdukController extends Controller
             if ($produk->imageAsset && Storage::exists('images/' . $produk->imageAsset)) {
                 Storage::delete('images/' . $produk->imageAsset);
             }
-            
+
             $file = $request->file('imageAsset');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
@@ -162,8 +162,8 @@ class ProdukController extends Controller
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
             if ($produk->imageAsset != $filename) {
-                if (Storage::exists($produk->idProduk)) {
-                    Storage::delete($produk->idProduk);
+                if (Storage::exists('images/' . $produk->imageAsset)) {
+                    Storage::delete('images/' . $produk->imageAsset);
                 }
                 $file->move('storage/images/', $filename);
                 $produk->imageAsset = $filename;
