@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/gudang/edit/{idGudang}', [GudangController::class, 'edit'])->name('edit-gudang');
     Route::post('/gudang/edit/{idGudang}', [GudangController::class, 'update'])->name('proses-editgudang');
     Route::get('/gudang/add', [GudangController::class, 'create'])->name('add_gudang');
-    Route::post('gudang', [GudangController::class, 'store'])->name('store_gudang');
+    Route::post('gudang/store', [GudangController::class, 'store'])->name('store_gudang');
     Route::delete('/gudang/{idGudang}', [GudangController::class, 'destroy'])->name('destroy_gudang');
     Route::put('/gudang/restore/{idGudang}', [GudangController::class, 'restore'])->name('restore_gudang');
 
