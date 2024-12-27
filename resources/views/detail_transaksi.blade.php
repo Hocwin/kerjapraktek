@@ -51,18 +51,10 @@
                     <td>{{ $detail->produk->namaProduk }}</td>
                     <td>{{ $detail->jumlahProduk }}</td>
                     <td>
-                        @if ($transaksi->tipePembayaran == 'cash')
-                        {{ number_format($detail->produk->hargaCash, 0, ',', '.') }}
-                        @else
-                        {{ number_format($detail->produk->hargaTempo, 0, ',', '.') }}
-                        @endif
+                        {{number_format($detail->harga, 0, ',', '.')}}
                     </td>
                     <td>
-                        @if ($transaksi->tipePembayaran == 'cash')
-                        {{ number_format($detail->jumlahProduk * $detail->produk->hargaCash, 0, ',', '.') }}
-                        @else
-                        {{ number_format($detail->jumlahProduk * $detail->produk->hargaTempo, 0, ',', '.') }}
-                        @endif
+                        {{number_format($detail->jumlahProduk * $detail->harga, 0, ',', '.')}}
                     </td>
                     <td>{{ $detail->namaGudang }}</td>
                     @if (Auth::check() && Auth::user()->rolePengguna == 'admin')

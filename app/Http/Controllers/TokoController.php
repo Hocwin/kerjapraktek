@@ -185,8 +185,8 @@ class TokoController extends Controller
 
             // Now delete the Toko record
             $toko->delete();
-
-            return redirect()->route('trash')->with('success', 'Toko dan semua transaksi terkait berhasil dihapus!');
+            $page = ['page' => 'toko'];
+            return redirect()->route('toko_blacklist')->with($page);
         }
 
         return redirect()->route('toko')->with('error', 'Toko tidak ditemukan.');

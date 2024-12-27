@@ -31,7 +31,7 @@
 
 @section('content')
 <div class="container mt-5" style="padding-top: 80px;"> {{-- Add padding for spacing from the header --}}
-
+    <div class="table-responsive" style="height: 500px; overflow-y: scroll;">
     {{-- Store Search Results --}}
     @if($toko->isNotEmpty())
     <h3 class="mt-5 text-center">Toko</h3> {{-- Centered heading --}}
@@ -146,5 +146,6 @@
         <strong>Maaf!</strong> Tidak ada hasil pencarian yang sesuai untuk "{{ $query }}".
     </div>
     @endif
+</div>
 </div>
 @endsection

@@ -20,8 +20,10 @@
     align-items: center;
   }
 
-  .add-btn-container {
-    text-align: right;
+  .btn-container {
+    display: flex;
+    justify-content: right;
+    gap: 20px;
     margin-bottom: 5px;
   }
 
@@ -91,16 +93,21 @@
 @section('content')
 
 <div class="container toko-container">
-  <div class="add-btn-container">
+  <h2>Toko Aktif</h2>
+  <div class="btn-container">
     @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
     <form method="GET" action="{{ route('add_toko') }}">
       @csrf
-      <button type="submit" class="add-btn">Add Toko</button>
+      <button type="submit" class="add-btn">Tambah Toko</button>
+    </form>
+    <form method="GET" action="{{ route('toko_blacklist') }}">
+        @csrf
+        <input type="hidden" name="page" value="toko">
+        <button type="submit" class="delete-btn">Blacklist</button>
     </form>
     @endif
   </div>
-
-  <h2>Toko Aktif</h2>
+  <div class="table-responsive" style="height: 400px; overflow-y: scroll;">
   <table class="table table-striped table-hover">
     <thead>
       <tr>
@@ -135,7 +142,7 @@
           <form method="POST" action="{{ route('delete_toko', ['idToko' => $item->idToko]) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus toko ini?');">
             @csrf
             @method('DELETE')
-            <button type="submit" class="delete-btn">Delete</button>
+            <button type="submit" class="delete-btn">Blacklist</button>
           </form>
           @endif
         </td>
@@ -143,6 +150,7 @@
       @endforeach
     </tbody>
   </table>
+  </div>
 </div>
 
 @endsection
