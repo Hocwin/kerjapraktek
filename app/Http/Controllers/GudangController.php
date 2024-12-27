@@ -152,6 +152,12 @@ class GudangController extends Controller
 
         // Handle image upload if a new file is provided
         if ($request->hasFile('imageAsset')) {
+
+            // Hapus gambar lama jika ada
+            if ($gudang->imageAsset && Storage::exists('images/' . $gudang->imageAsset)) {
+                Storage::delete('images/' . $gudang->imageAsset);
+            }
+
             $file = $request->file('imageAsset');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;

@@ -58,6 +58,12 @@ class ProdukController extends Controller
         $produk->hargaBeli = $request->hargaBeli;
 
         if ($request->hasFile('imageAsset')) {
+
+            // Hapus gambar lama jika ada
+            if ($produk->imageAsset && Storage::exists('images/' . $produk->imageAsset)) {
+                Storage::delete('images/' . $produk->imageAsset);
+            }
+            
             $file = $request->file('imageAsset');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
