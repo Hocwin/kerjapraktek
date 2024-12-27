@@ -117,7 +117,7 @@ class DetailTransaksiController extends Controller
         $detailTransaksi = DetailTransaksi::with(['produk' => function ($query) {
             $query->withTrashed(); // Include soft-deleted products
         }])
-            ->where('idTransaksi', $id)
+            ->where('idTransaksi', $idTransaksi)
             ->get();
 
         return view('detail_transaksi', compact('detailTransaksi'));

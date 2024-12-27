@@ -29,13 +29,25 @@ class TrashController extends Controller
             ->where('namaToko', 'like', '%' . $request->search . '%')
             ->get();
 
+        $page = $request->input('page');
+        $page1 = session('page');
         // Tampilkan semua data di halaman trash
-        return view('trash', [
-            'produkTerhapus' => $produkTerhapus,
-            'gudangTerhapus' => $gudangTerhapus,
-            'tokoTerhapus' => $tokoTerhapus,
-            'search' => $request->search,
-        ]);
+        if($page === 'toko' || $page1 === 'toko'){
+            return view('toko_blacklist', [
+                'tokoTerhapus' => $tokoTerhapus,
+                'search' => $request->search,
+            ]);
+        } else if($page === 'produk' || $page1 === 'produk'){
+            return view('produk_tidak_aktif', [
+                'produkTerhapus' => $produkTerhapus,
+                'search' => $request->search,
+            ]);
+        } else if($page === 'gudang'|| $page1 === 'gudang'){
+            return view('gudang_tidak_aktif', [
+                'gudangTerhapus' => $gudangTerhapus,
+                'search' => $request->search,
+            ]);
+        }
     }
 
     /**

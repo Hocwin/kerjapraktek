@@ -216,8 +216,8 @@ class GudangController extends Controller
         // Hide related DetailTransaksi when Gudang is deleted
         DetailTransaksi::where('idGudang', $idGudang)->update(['deleted_at' => now()]);
 
-        // Redirect back to the Gudang index with a success message
-        return redirect()->route('trash')->with('success', 'Gudang berhasil dihapus.');
+        $page = ['page' => 'gudang'];
+        return redirect()->route('gudang_tidak_aktif')->with($page);
     }
 
     public function restore(string $idGudang)
