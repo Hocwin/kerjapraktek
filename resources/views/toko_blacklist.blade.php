@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Halaman Trash')
+@section('title', 'Halaman Toko Blacklist')
 
 <style>
     .trash-container {
@@ -57,7 +57,7 @@
 <div class="container trash-container">
 
     <!-- Deleted Toko -->
-    <h2 class="section-title">Toko Tidak Aktif</h2>
+    <h2>Toko Tidak Aktif</h2>
     @if ($tokoTerhapus->isEmpty())
     <p class="empty-message">Tidak ada toko terhapus.</p>
     @else
@@ -92,9 +92,6 @@
         </tbody>
     </table>
     @endif
-
-    <div class="btn-action">
-        <a href="{{route('toko')}}">Kembali</a>
-    </div>
+    <a href="{{route('toko')}}" class="btn btn-secondary d-inline-block mx-auto">Kembali</a>
 </div>
 @endsection

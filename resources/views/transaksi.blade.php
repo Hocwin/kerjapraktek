@@ -3,19 +3,16 @@
 
 <style>
   .transaksi-container {
-    padding-top: 150px;
+    padding-top: 125px;
     /* Padding atas untuk memberikan ruang antara header dan tabel */
   }
 
   .aksi-btn {
     display: flex;
     flex-direction: flex;
-    /* Stack buttons vertically */
     justify-content: center;
-    /* Center buttons horizontally */
     align-items: center;
     gap: 5px;
-    /* Jarak antara tombol */
   }
 
   .edit-btn,
@@ -90,7 +87,7 @@
     @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
     <form method="GET" action="{{ route('add_transaksi') }}">
       @csrf
-      <button type="submit" class="add-btn">Tambah Transaksi</button>
+      <button type="submit" class="btn btn-primary">Tambah Transaksi</button>
     </form>
     @endif
   </div>
@@ -102,7 +99,7 @@
         <th>Tipe Pembayaran</th>
         <th>Status</th>
         <th>Tanggal Transaksi</th>
-        <th>Aksi</th>
+        <th class="text-center">Aksi</th>
       </tr>
     </thead>
     <tbody>
@@ -117,12 +114,12 @@
         <td class="aksi-btn">
           <form method="GET" action="{{ route('detail_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
             @csrf
-            <button type="submit" class="detail-btn">Detail</button>
+            <button type="submit" class="btn btn-warning">Detail</button>
           </form>
           @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
           <form method="GET" action="{{ route('edit_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
             @csrf
-            <button type="submit" class="edit-btn">Edit</button>
+            <button type="submit" class="btn btn-primary">Edit</button>
           </form>
           @endif
         </td>

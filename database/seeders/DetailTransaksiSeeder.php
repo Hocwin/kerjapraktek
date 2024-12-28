@@ -98,8 +98,8 @@ class DetailTransaksiSeeder extends Seeder
         }
 
         // Tentukan harga berdasarkan tipe pembayaran
-        $harga = ($transaksi->tipePembayaran === 'cash') ? $produk->hargaCash : $produk->hargaTempo;
-
+        $hargaC = $produk->hargaCash;
+        $hargaT = $produk->hargaTempo;
         // Simpan detail transaksi
         DetailTransaksi::create([
             'idTransaksi' => $data['idTransaksi'],
@@ -107,7 +107,8 @@ class DetailTransaksiSeeder extends Seeder
             'idGudang' => $data['idGudang'],
             'namaGudang' => $namaGudang,
             'jumlahProduk' => $data['jumlahProduk'],
-            'harga' => $harga,
+            'hargaC' => $hargaC,
+            'hargaT' => $hargaT
         ]);
 
         // Kurangi stok di gudang

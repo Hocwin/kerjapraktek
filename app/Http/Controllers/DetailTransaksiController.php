@@ -83,15 +83,17 @@ class DetailTransaksiController extends Controller
             $stokGudang = StokPerGudang::where('idProduk', $produk->idProduk)
                 ->where('idGudang', $gudang->idGudang)
                 ->first();
-
             // Ensure enough stock is available
             if ($stokGudang && $stokGudang->stok >= $produkInput['jumlahProduk']) {
                 // Create the detail transaksi entry
+                $hargaC = $produk->hargaCash;
+                $hargaT = $produk->hargaTempo;
                 $detailTransaksi = new DetailTransaksi();
                 $detailTransaksi->idTransaksi = $transaksi->idTransaksi;
                 $detailTransaksi->idProduk = $produk->idProduk;
                 $detailTransaksi->jumlahProduk = $produkInput['jumlahProduk'];
-                $detailTransaksi->harga = $transaksi->tipePembayaran == 'cash' ? $produk->hargaCash : $produk->hargaTempo;
+                $detailTransaksi->hargaC = $produk->hargaCash;
+                $detailTransaksi->hargaT = $produk->hargaTempo;
                 $detailTransaksi->idGudang = $gudang->idGudang;
                 $detailTransaksi->namaGudang = $gudang->namaGudang;  // Store the warehouse name
                 $detailTransaksi->save();
@@ -167,7 +169,7 @@ class DetailTransaksiController extends Controller
                 $stokGudangLama->save();
             }
         }
-
+      
         // Pastikan stok cukup di gudang baru
         if ($stokGudangBaru && $stokGudangBaru->stok >= $request->jumlahProduk) {
             // Kurangi stok dari gudang baru
@@ -177,16 +179,17 @@ class DetailTransaksiController extends Controller
             return back()->with('error', 'Stok tidak cukup untuk produk: ' . $produkBaru->namaProduk);
         }
 
-        // Perbarui detail transaksi
-        $detailTransaksi->idProduk = $request->idProduk;
-        $detailTransaksi->jumlahProduk = $request->jumlahProduk;
-        $detailTransaksi->harga = $produkBaru->hargaCash; // Atau harga berdasarkan tipe pembayaran
-        $detailTransaksi->idGudang = $request->idGudang;
-        $detailTransaksi->namaGudang = $gudangBaru->namaGudang;
-        $detailTransaksi->save();
+        // Update the detail transaksi record
+            $detailTransaksi->idProduk = $request->idProduk;
+            $detailTransaksi->jumlahProduk = $request->jumlahProduk;
+            $detailTransaksi->hargaC = $produk->hargaCash;
+            $detailTransaksi->hargaT = $produk->hargaTempo; // Or price according to payment type
+            $detailTransaksi->idGudang = $request->idGudang;
+            $detailTransaksi->namaGudang = $newGudang->namaGudang; // Update the warehouse name
+            $detailTransaksi->save();
 
-        return redirect()->route('detail_transaksi', ['idTransaksi' => $detailTransaksi->idTransaksi])
-            ->with('success', 'Detail transaksi berhasil diperbarui');
+            return redirect()->route('detail_transaksi', ['idTransaksi' => $detailTransaksi->idTransaksi])
+                ->with('success', 'Detail transaksi berhasil diperbarui');
     }
 
     /**
