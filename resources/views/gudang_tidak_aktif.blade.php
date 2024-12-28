@@ -110,6 +110,6 @@
         </tbody>
     </table>
     @endif
-    <a href="{{route('gudang')}}" class="btn btn-secondary d-inline-block mx-auto">>Kembali</a>
+    <a href="{{route('gudang')}}" class="btn btn-secondary d-inline-block mx-auto">Kembali</a>
 </div>
 @endsection
