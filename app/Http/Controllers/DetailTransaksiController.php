@@ -169,7 +169,7 @@ class DetailTransaksiController extends Controller
                 $stokGudangLama->save();
             }
         }
-      
+
         // Pastikan stok cukup di gudang baru
         if ($stokGudangBaru && $stokGudangBaru->stok >= $request->jumlahProduk) {
             // Kurangi stok dari gudang baru
@@ -180,16 +180,16 @@ class DetailTransaksiController extends Controller
         }
 
         // Update the detail transaksi record
-            $detailTransaksi->idProduk = $request->idProduk;
-            $detailTransaksi->jumlahProduk = $request->jumlahProduk;
-            $detailTransaksi->hargaC = $produk->hargaCash;
-            $detailTransaksi->hargaT = $produk->hargaTempo; // Or price according to payment type
-            $detailTransaksi->idGudang = $request->idGudang;
-            $detailTransaksi->namaGudang = $newGudang->namaGudang; // Update the warehouse name
-            $detailTransaksi->save();
+        $detailTransaksi->idProduk = $request->idProduk;
+        $detailTransaksi->jumlahProduk = $request->jumlahProduk;
+        $detailTransaksi->hargaC = $produkBaru->hargaCash;
+        $detailTransaksi->hargaT = $produkBaru->hargaTempo; // Or price according to payment type
+        $detailTransaksi->idGudang = $request->idGudang;
+        $detailTransaksi->namaGudang = $gudangBaru->namaGudang; // Update the warehouse name
+        $detailTransaksi->save();
 
-            return redirect()->route('detail_transaksi', ['idTransaksi' => $detailTransaksi->idTransaksi])
-                ->with('success', 'Detail transaksi berhasil diperbarui');
+        return redirect()->route('detail_transaksi', ['idTransaksi' => $detailTransaksi->idTransaksi])
+            ->with('success', 'Detail transaksi berhasil diperbarui');
     }
 
     /**
