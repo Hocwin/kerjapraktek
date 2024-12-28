@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('content')
-<div class="container mt-5">
+<div class="container mt-5 pt-5">
     <h2>Edit Karyawan</h2>
     <form action="{{ route('update_karyawan', $pengguna->idPengguna) }}" method="POST">
         @csrf

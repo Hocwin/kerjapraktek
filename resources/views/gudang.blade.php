@@ -44,6 +44,7 @@
   .detail-btn {
     color: rgb(220, 106, 53);
   }
+
   .restore-btn {
     color: #28a745;
   }
@@ -129,9 +130,9 @@
 
     <div class="table-responsive" style="height: 400px; overflow-y: scroll;">
     <div class="table-container">
-        <table class="table table-striped table-hover">
+      <table class="table table-striped table-hover">
         <thead>
-            <tr>
+          <tr>
             <th>Gambar</th>
             <th>Nama Gudang</th>
             <th>Lokasi</th>
@@ -139,41 +140,41 @@
             @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
             <th >Aksi</th>
             @endif
-            </tr>
+          </tr>
         </thead>
         <tbody>
-            @foreach ($gudangAktif as $item)
-            <tr>
+          @foreach ($gudangAktif as $item)
+          <tr>
             <td><img src="{{ asset('storage/images/' . $item->imageAsset) }}" alt="{{ $item->namaGudang }}" class="gudang-img"></td>
             <td>{{ $item->namaGudang }}</td>
             <td>{{ $item->lokasi }}</td>
             <td>
-                @if($item->stokPerGudang->isEmpty())
-                <span class="stok-empty">Tidak ada data stok</span>
-                @else
-                <table class="stok-table">
+              @if($item->stokPerGudang->isEmpty())
+              <span class="stok-empty">Tidak ada data stok</span>
+              @else
+              <table class="stok-table">
                 <thead>
-                    <tr>
+                  <tr>
                     <th>Produk</th>
                     <th>Stok</th>
                     <th>Pemasukan</th>
                     <th>Pengeluaran</th>
-                    </tr>
+                  </tr>
                 </thead>
                 <tbody>
-                    @foreach ($item->stokPerGudang as $stok)
-                    @if ($stok->produk)
-                    <tr>
+                  @foreach ($item->stokPerGudang as $stok)
+                  @if ($stok->produk)
+                  <tr>
                     <td>{{ $stok->produk->namaProduk }}</td>
                     <td>{{ $stok->stok }} sak</td>
                     <td>{{ $stok->pemasukan ?? 0 }} sak</td>
                     <td>{{ $stok->pengeluaran ?? 0 }} sak</td>
-                    </tr>
-                    @endif
-                    @endforeach
+                  </tr>
+                  @endif
+                  @endforeach
                 </tbody>
-                </table>
-                @endif
+              </table>
+              @endif
             </td>
             <td class="aksi-btn">
                 @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
@@ -188,11 +189,11 @@
                 </form>
                 @endif
             </td>
-            </tr>
-            @endforeach
+          </tr>
+          @endforeach
         </tbody>
-        </table>
+      </table>
     </div>
-    </div>
+  </div>
 </div>
 @endsection

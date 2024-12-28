@@ -125,6 +125,7 @@
         <th>Tipe Pembayaran</th>
         <th>Status</th>
         <th>Tanggal Transaksi</th>
+        <th>Aksi</th>
       </tr>
     </thead>
     <tbody>
@@ -136,6 +137,12 @@
           {{ ucfirst($item->status) }}
         </td>
         <td>{{ $item->tanggalTransaksi }}</td>
+        <td class="aksi-btn">
+          <form method="GET" action="{{ route('detail_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
+            @csrf
+            <button type="submit" class="detail-btn">Detail</button>
+          </form>
+        </td>
       </tr>
       @endforeach
     </tbody>

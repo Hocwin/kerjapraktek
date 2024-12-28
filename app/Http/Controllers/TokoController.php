@@ -137,12 +137,17 @@ class TokoController extends Controller
         }
 
         if ($request->hasFile('imageAsset')) {
+
+            // Hapus gambar lama jika ada
+            if ($toko->imageAsset && Storage::exists('images/' . $toko->imageAsset)) {
+                Storage::delete('images/' . $toko->imageAsset);
+            }
             $file = $request->file('imageAsset');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
             if ($toko->imageAsset != $filename) {
-                if (Storage::exists($toko->idToko)) {
-                    Storage::delete($toko->idToko);
+                if (Storage::exists('images/' . $toko->imageAsset)) {
+                    Storage::delete('images/' . $toko->imageAsset);
                 }
                 $file->move('storage/images/', $filename);
                 $toko->imageAsset = $filename;
