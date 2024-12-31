@@ -2,10 +2,10 @@
 @section('title', 'Edit Product')
 
 @section('content')
-<div class="container mt-5">
+<div class="container mt-5 pt-5">
     <div class="row">
         <div class="col-4"></div>
-        <div class="col-4 border rounded pb-3 pt-3 mt-5">
+        <div class="col-4 border rounded pb-3 pt-3 mt-5" style="height: 850px;overflow-y: scroll;">
             <form action="{{ route('proses-editgudang', ['idGudang' => $gudang->idGudang]) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @foreach($errors->all() as $error)

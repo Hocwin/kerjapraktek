@@ -101,55 +101,55 @@
       <button type="submit" class="btn btn-primary">Tambah Toko</button>
     </form>
     <form method="GET" action="{{ route('toko_blacklist') }}">
-        @csrf
-        <input type="hidden" name="page" value="toko">
-        <button type="submit" class="btn btn-danger">Blacklist</button>
+      @csrf
+      <input type="hidden" name="page" value="toko">
+      <button type="submit" class="btn btn-danger">Daftar Blacklist</button>
     </form>
     @endif
   </div>
   <div class="table-responsive" style="height: 400px; overflow-y: scroll;">
-  <table class="table table-striped table-hover">
-    <thead>
-      <tr>
-        <th>Gambar</th>
-        <th>Nama Toko</th>
-        <th>Lokasi</th>
-        <th>Nomor Telepon</th>
-        <th>Jam Operasional</th>
-        <th>Sopir</th>
-        <th class="text-center">Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach ($tokoAktif as $item)
-      <tr>
-        <td><img src="{{ asset('storage/images/' . $item->imageAsset) }}" alt="{{ $item->namaToko }}" class="toko-img"></td>
-        <td>{{ $item->namaToko }}</td>
-        <td>{{ $item->alamatToko }}</td>
-        <td>{{ $item->nomorTelepon }}</td>
-        <td>{{ $item->jamOperasional }}</td>
-        <td>{{ $item->namaSopir }}</td>
-        <td class="aksi-btn">
-          <form method="GET" action="{{ route('detail_toko', ['idToko' => $item->idToko]) }}">
-            @csrf
-            <button type="submit" class="btn btn-warning">Detail</button>
-          </form>
-          @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-          <form method="GET" action="{{ route('edit_toko', ['idToko' => $item->idToko]) }}">
-            @csrf
-            <button type="submit" class="btn btn-primary">Edit</button>
-          </form>
-          <form method="POST" action="{{ route('delete_toko', ['idToko' => $item->idToko]) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus toko ini?');">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger">Blacklist</button>
-          </form>
-          @endif
-        </td>
-      </tr>
-      @endforeach
-    </tbody>
-  </table>
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Gambar</th>
+          <th>Nama Toko</th>
+          <th>Lokasi</th>
+          <th>Nomor Telepon</th>
+          <th>Jam Operasional</th>
+          <th>Sopir</th>
+          <th class="text-center">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach ($tokoAktif as $item)
+        <tr>
+          <td><img src="{{ asset('storage/images/' . $item->imageAsset) }}" alt="{{ $item->namaToko }}" class="toko-img"></td>
+          <td>{{ $item->namaToko }}</td>
+          <td>{{ $item->alamatToko }}</td>
+          <td>{{ $item->nomorTelepon }}</td>
+          <td>{{ $item->jamOperasional }}</td>
+          <td>{{ $item->namaSopir }}</td>
+          <td class="aksi-btn">
+            <form method="GET" action="{{ route('detail_toko', ['idToko' => $item->idToko]) }}">
+              @csrf
+              <button type="submit" class="btn btn-warning">Detail</button>
+            </form>
+            @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
+            <form method="GET" action="{{ route('edit_toko', ['idToko' => $item->idToko]) }}">
+              @csrf
+              <button type="submit" class="btn btn-primary">Edit</button>
+            </form>
+            <form method="POST" action="{{ route('delete_toko', ['idToko' => $item->idToko]) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus toko ini?');">
+              @csrf
+              @method('DELETE')
+              <button type="submit" class="btn btn-danger">Blacklist</button>
+            </form>
+            @endif
+          </td>
+        </tr>
+        @endforeach
+      </tbody>
+    </table>
   </div>
 </div>
 

@@ -1,5 +1,6 @@
 @extends('layout.master')
 @section('title', 'Profil')
+
 <style>
     * {
         margin: 0;
@@ -45,8 +46,8 @@
         font-family: roboto;
         padding: 25px;
         padding-top: 70px;
+        position: relative;
     }
-
 
     .profile-info td {
         padding-top: 15px;
@@ -57,7 +58,27 @@
         padding-top: 20px;
         font-size: 1rem;
     }
+
+    .edit-password-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        text-decoration: none;
+        /* Menghapus underline */
+    }
+
+    .edit-password-btn:hover {
+        background-color: #0056b3;
+    }
 </style>
+
 @section('content')
 <div class="container-profile">
     <div class="profile">
@@ -65,6 +86,8 @@
             <img src="https://img.freepik.com/free-vector/shopping-payment-online-process-computer-smartphone-tablet_1150-65523.jpg?size=626&ext=jpg&uid=R131304995&ga=GA1.2.137370369.1698152034&semt=sph" alt="">
         </div>
         <div class="profile-info">
+            <!-- Button to Edit Password -->
+            <a href="{{ route('gantiPassForm') }}" class="edit-password-btn">Edit Password</a>
             <table>
                 <tr>
                     <td>
@@ -77,17 +100,17 @@
                 <tr>
                     <td><i class="fa-solid fa-user"></i></td>
                     <th>Nama:</th>
-                    <td>{{Auth()->user()->namaPengguna}}</td>
+                    <td>{{ Auth::user()->namaPengguna }}</td>
                 </tr>
                 <tr>
                     <td><i class="fa-solid fa-envelope"></i></td>
                     <th>Email:</th>
-                    <td>{{Auth()->user()->emailPengguna}}</td>
+                    <td>{{ Auth::user()->emailPengguna }}</td>
                 </tr>
                 <tr>
                     <td><i class="fa-solid fa-address-book"></i></td>
                     <th>Address:</th>
-                    <td>{{Auth()->user()->alamatPengguna}}</td>
+                    <td>{{ Auth::user()->alamatPengguna }}</td>
                 </tr>
                 <tr>
                     <td colspan="3">
@@ -102,5 +125,4 @@
         </div>
     </div>
 </div>
-
-@endsection()
+@endsection

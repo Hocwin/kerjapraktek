@@ -4,7 +4,55 @@
 
 <style>
     .form-container {
-        padding-top: 150px;
+        margin-top: 125px;
+        max-width: 600px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h2 {
+        text-align: center;
+        color: #343a40;
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        color: #495057;
+    }
+
+    .form-control {
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+    }
+
+    .form-select {
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        border-color: #007bff;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        font-weight: bold;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
     }
 </style>
 
@@ -15,9 +63,11 @@
         @csrf
         @method('PUT')
 
+        <!-- Produk -->
         <div class="form-group">
             <label for="produk">Produk</label>
-            <select name="idProduk" class="form-control" required>
+            <select name="idProduk" id="produk" class="form-select" required>
+                <option value="">Pilih Produk</option>
                 @foreach ($produk as $item)
                 <option value="{{ $item->idProduk }}" {{ old('idProduk', $detailTransaksi->idProduk) == $item->idProduk ? 'selected' : '' }}>
                     {{ $item->namaProduk }}
@@ -26,14 +76,17 @@
             </select>
         </div>
 
+        <!-- Jumlah Produk -->
         <div class="form-group">
             <label for="jumlahProduk">Jumlah Produk</label>
-            <input type="number" name="jumlahProduk" class="form-control" required min="1" value="{{ old('jumlahProduk', $detailTransaksi->jumlahProduk) }}">
+            <input type="number" name="jumlahProduk" id="jumlahProduk" class="form-control" required min="1" value="{{ old('jumlahProduk', $detailTransaksi->jumlahProduk) }}">
         </div>
 
+        <!-- Gudang -->
         <div class="form-group">
             <label for="idGudang">Gudang</label>
-            <select name="idGudang" class="form-control" required>
+            <select name="idGudang" id="idGudang" class="form-select" required>
+                <option value="">Pilih Gudang</option>
                 @foreach ($gudang as $item)
                 <option value="{{ $item->idGudang }}" {{ old('idGudang', $detailTransaksi->idGudang) == $item->idGudang ? 'selected' : '' }}>
                     {{ $item->namaGudang }}
@@ -42,7 +95,8 @@
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-3">Update Detail Transaksi</button>
+        <!-- Tombol Update -->
+        <button type="submit" class="btn btn-primary w-100 mt-3">Update Detail Transaksi</button>
     </form>
 </div>
 @endsection

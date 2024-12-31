@@ -3,10 +3,12 @@
 
 <style>
   .transaksi-container {
-    padding-top: 150px;
+    margin-top: 150px;
     /* Padding atas untuk memberikan ruang antara header dan tabel */
     padding-bottom: 70px;
     /* Ensure space at the bottom to prevent overlap with the button */
+    height: 420px;
+    overflow-y: scroll;
   }
 
   .aksi-btn {

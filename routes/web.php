@@ -81,8 +81,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/karyawan/edit/{idPengguna}', [PenggunaController::class, 'edit'])->name('edit_karyawan');
     Route::put('/karyawan/edit/{idPengguna}', [PenggunaController::class, 'update'])->name('update_karyawan');
     Route::delete('/karyawan/delete/{idPengguna}', [PenggunaController::class, 'destroy'])->name('destroy_karyawan');
-    Route::post('/karyawan/store', [PenggunaController::class, 'store'])->name('store_karyawan');
     Route::get('/karyawan/add', [PenggunaController::class, 'create'])->name('add_karyawan');
+    Route::post('/karyawan/store', [PenggunaController::class, 'store'])->name('store_karyawan');
 
     Route::get('/produk', [ProdukController::class, 'index'])->name('produk');
 
@@ -103,4 +103,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/gudang_tidak_aktif', [TrashController::class, 'index'])->name('gudang_tidak_aktif');
 
     Route::get('/karyawan', [PenggunaController::class, 'index'])->name('karyawan');
+
+    Route::get('/edit_pass', [PenggunaController::class, 'gantiPassForm'])->name('gantiPassForm');
+    Route::post('/edit_pass/{idPengguna}/ganti-password', [PenggunaController::class, 'gantiPass'])->name('gantiPass');
 });

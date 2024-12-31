@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pengguna;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+
+use function Laravel\Prompts\password;
 
 class PenggunaController extends Controller
 {
@@ -36,7 +39,7 @@ class PenggunaController extends Controller
      */
     public function store(Request $request)
     {
-        if (!Auth::user() || Auth::user()->rolePengguna != 'admin' && Auth::user()->rolePengguna != 'admin') {
+        if (!Auth::user() || Auth::user()->rolePengguna != 'admin' && Auth::user()->rolePengguna != 'manager') {
             return redirect()->route('karyawan')->with('error', 'Access denied');
         }
 
@@ -59,8 +62,6 @@ class PenggunaController extends Controller
         $pengguna->rolePengguna = $request->rolePengguna;
         $pengguna->password = bcrypt($defaultPassword);
         $pengguna->plaintext_password = $defaultPassword;
-
-
         $pengguna->save();
 
         return redirect()->route('karyawan')->with('success', 'Password default berhasil disimpan.');
@@ -126,5 +127,53 @@ class PenggunaController extends Controller
         $pengguna->delete();
 
         return redirect()->route('karyawan')->with('success', 'Data pengguna berhasil dihapus.');
+    }
+
+    /**
+     * Show the form for changing password.
+     */
+    public function gantiPassForm()
+    {
+        // Get the authenticated user
+        $pengguna = Auth::user();
+        return view('edit_pass', compact('pengguna'));
+    }
+
+    /**
+     * Change the user's password.
+     */
+    /**
+     * Change the user's password.
+     */
+    public function gantiPass(Request $request, string $idPengguna)
+    {
+
+        if (!Auth::user()) {
+            return redirect()->route('login')->with('error', 'Anda harus login untuk mengubah kata sandi.');
+        }
+
+        $pengguna = Pengguna::findOrFail($idPengguna);
+
+        // Validasi input
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+
+        // Verifikasi password saat ini
+        if (!Hash::check($request->current_password, $pengguna->password)) {
+            return back()->withErrors(['current_password' => 'Kata sandi saat ini salah.']);
+        }
+
+        // Update password
+        try {
+            $pengguna->password = Hash::make($request->new_password); // Hash password baru
+            $pengguna->plaintext_password = $request->new_password; // Opsional: Kosongkan password plaintext
+            $pengguna->save(); // Simpan perubahan ke database
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage()]);
+        }
+
+        return redirect()->route('profile')->with('success', 'Kata sandi berhasil diperbarui.');
     }
 }
