@@ -114,10 +114,11 @@
 
             <label for="tahun">Tahun:</label>
             <select name="tahun" id="tahun">
-                @for ($i = 2020; $i <= 2024; $i++)
+                @for ($i = 2020; $i <= Carbon\Carbon::now()->year + 1; $i++)
                     <option value="{{ $i }}" {{ $i == $tahun ? 'selected' : '' }}>{{ $i }}</option>
                     @endfor
             </select>
+
 
             <button type="submit">Terapkan</button>
         </form>

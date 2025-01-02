@@ -142,7 +142,7 @@
         <td class="aksi-btn">
           <form method="GET" action="{{ route('detail_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
             @csrf
-            <button type="submit" class="detail-btn">Detail</button>
+            <button type="submit" class="btn btn-primary">Detail</button>
           </form>
         </td>
       </tr>
@@ -154,7 +154,7 @@
   <div class="back-btn-container">
     <form method="GET" action="{{ route('toko') }}"> <!-- Adjust the route to point to your Toko page -->
       @csrf
-      <button type="submit" class="back-btn">Kembali</button>
+      <button type="submit" class="btn btn-primary">Kembali</button>
     </form>
   </div>
 
