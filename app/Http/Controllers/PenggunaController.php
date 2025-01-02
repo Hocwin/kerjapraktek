@@ -52,7 +52,16 @@ class PenggunaController extends Controller
             'rolePengguna' => 'required|in:admin,sales,manager',
         ]);
 
-        $defaultPassword = Str::random(8);
+        // Tentukan kode unik berdasarkan role pengguna
+        $kode = match (strtolower($request->rolePengguna)) {
+            'manager' => '10',
+            'admin' => '11',
+            'sales' => '12',
+            default => '00', // Default jika role tidak sesuai
+        };
+
+        // Buat password default (kombinasi nama pengguna kecil tanpa spasi + role + kode)
+        $defaultPassword = str_replace(' ', '', strtolower($request->namaPengguna) . strtolower($request->rolePengguna) . $kode);
 
         $pengguna = new Pengguna();
         $pengguna->namaPengguna = $request->namaPengguna;
@@ -61,7 +70,6 @@ class PenggunaController extends Controller
         $pengguna->jenisKelamin = $request->jenisKelamin;
         $pengguna->rolePengguna = $request->rolePengguna;
         $pengguna->password = bcrypt($defaultPassword);
-        $pengguna->plaintext_password = $defaultPassword;
         $pengguna->save();
 
         return redirect()->route('karyawan')->with('success', 'Password default berhasil disimpan.');
@@ -129,9 +137,6 @@ class PenggunaController extends Controller
         return redirect()->route('karyawan')->with('success', 'Data pengguna berhasil dihapus.');
     }
 
-    /**
-     * Show the form for changing password.
-     */
     public function gantiPassForm()
     {
         // Get the authenticated user
@@ -139,12 +144,6 @@ class PenggunaController extends Controller
         return view('edit_pass', compact('pengguna'));
     }
 
-    /**
-     * Change the user's password.
-     */
-    /**
-     * Change the user's password.
-     */
     public function gantiPass(Request $request, string $idPengguna)
     {
 
