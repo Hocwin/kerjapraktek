@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Produk;
+use App\Models\Gudang;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,7 +30,7 @@ class ProdukController extends Controller
      */
     public function create()
     {
-        $gudangs = \App\Models\Gudang::all();
+        $gudangs = Gudang::all();
         return view('add_produk', compact('gudangs'));
     }
 
@@ -73,7 +74,7 @@ class ProdukController extends Controller
         $produk->save();
 
         // Tambahkan stok untuk setiap gudang
-        $gudangList = \App\Models\Gudang::all(); // Ambil semua gudang
+        $gudangList = Gudang::all(); // Ambil semua gudang
         foreach ($gudangList as $gudang) {
             // Periksa apakah ada stok yang dikirimkan untuk gudang ini
             $stok = $request->stok[$gudang->idGudang] ?? 0; // Jika tidak ada stok, set ke 0
