@@ -3,6 +3,12 @@
 @section('title', 'Tambah Transaksi')
 
 <style>
+    .container.form-container {
+        max-width: 500px;
+        margin: 110px auto;
+        padding: 20px;
+    }
+
     .form-container {
         margin-top: 125px;
         max-width: 600px;

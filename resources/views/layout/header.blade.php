@@ -10,12 +10,17 @@
   <title>Amelia Putratama Mandiri</title>
 
   <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
     .navbar {
       background-color: #D9EDEB;
       height: 70px;
-      margin: 20px;
       border-radius: 16px;
       padding: 0.5rem;
+      margin: 20px;
     }
 
     .navbar-brand {
@@ -53,15 +58,129 @@
     .nav-link.active {
       color: #000;
     }
+
+    /* Dropdown Menu Styling */
+    .navbar-nav .dropdown-menu {
+      position: absolute;
+      /* Tetap menjaga posisi dropdown */
+      top: 100%;
+      /* Posisi dropdown tepat di bawah tombol */
+      left: 0;
+      z-index: 1050;
+      display: none;
+      /* Hidden secara default */
+      background-color: #fff;
+      border-radius: 0.5rem;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      min-width: 10rem;
+      margin-top: 0.5rem;
+      transition: visibility 0.2s ease, opacity 0.2s ease;
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    /* Menampilkan dropdown saat parent di-hover */
+    .navbar-nav .dropdown:hover .dropdown-menu,
+    .navbar-nav .dropdown.show .dropdown-menu {
+      display: block;
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Menampilkan dropdown saat dropdown-menu di-hover */
+    .navbar-nav .dropdown-menu:hover {
+      display: block;
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Dropdown Items */
+    .navbar-nav .dropdown-item {
+      padding: 0.5rem 1rem;
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .navbar-nav .dropdown-item:hover {
+      background-color: #f8f9fa;
+      color: #009978;
+    }
+
+    /* Responsive Navbar */
+    @media (max-width: 768px) {
+      .navbar {
+        margin: 10;
+      }
+
+      .navbar-toggler {
+        margin-right: 15px;
+        border: none;
+        font-size: 1.25rem;
+      }
+
+      .offcanvas-header h5 {
+        font-size: 18px;
+      }
+
+      /* Dropdown Menu Styling */
+      .navbar-nav .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1050;
+        display: none;
+        background-color: #fff;
+        border-radius: 0.5rem;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        min-width: 10rem;
+        margin-top: 0.5rem;
+        transition: visibility 0.2s ease, opacity 0.2s ease;
+        visibility: hidden;
+        opacity: 0;
+      }
+
+      .navbar-nav .dropdown:hover .dropdown-menu,
+      .navbar-nav .dropdown.show .dropdown-menu {
+        display: block;
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .navbar-nav .dropdown-menu:hover {
+        display: block;
+        visibility: visible;
+        opacity: 1;
+      }
+
+      .navbar-nav .dropdown-item {
+        padding: 0.5rem 1rem;
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .navbar-nav .dropdown-item:hover {
+        background-color: #f8f9fa;
+        color: #009978;
+
+
+      }
+    }
   </style>
 </head>
 
 <body>
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg fixed-top">
-    <div class="container">
+    <div class="container-fluid">
       <a href="#"><img style="margin-right: 10px" src="https://cdn.discordapp.com/attachments/1022867386057101423/1120368429887660154/Logo.png" alt="" width="30px"></a>
       <a class="navbar-brand me-auto" href="#">Amelia Putratama Mandiri</a>
+
+      <button class="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
       <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar">
         <div class="offcanvas-header">
           <h5 class="offcanvas-title">Menu</h5>
@@ -87,7 +206,6 @@
               <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('karyawan')}}">Karyawan</a>
             </li>
             @endif
-            <!-- Conditionally display "Performa Bisnis" only for admin or manager -->
             @if (Auth::check() && (Auth::user()->rolePengguna == 'admin' || Auth::user()->rolePengguna == 'manager'))
             <li class="nav-item">
               <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('performa_bisnis')}}">Performa Bisnis</a>
@@ -102,11 +220,9 @@
           </ul>
         </div>
       </div>
+
       @if (!Auth::check())
       <a href="{{ route('login') }}" class="login-button">Login</a>
-      <button class="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
       @else
       <ul class="navbar-nav">
         <li class="nav-item dropdown">
@@ -125,6 +241,33 @@
   <!-- End Navbar -->
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+  <script>
+    document.querySelectorAll('.dropdown').forEach((dropdown) => {
+      let timeout;
+
+      dropdown.addEventListener('mouseenter', () => {
+        clearTimeout(timeout);
+        dropdown.classList.add('show');
+      });
+
+      dropdown.addEventListener('mouseleave', () => {
+        timeout = setTimeout(() => {
+          dropdown.classList.remove('show');
+        }, 300); // Jeda waktu sebelum menghilang
+      });
+
+      dropdown.querySelector('.dropdown-menu').addEventListener('mouseenter', () => {
+        clearTimeout(timeout); // Pastikan dropdown tidak menghilang saat berada di dalam menu
+      });
+
+      dropdown.querySelector('.dropdown-menu').addEventListener('mouseleave', () => {
+        timeout = setTimeout(() => {
+          dropdown.classList.remove('show');
+        }, 300); // Jeda waktu sebelum menghilang
+      });
+    });
+  </script>
 </body>
 
 </html>

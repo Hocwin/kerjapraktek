@@ -3,6 +3,12 @@
 @section('title', 'Edit Transaksi')
 
 <style>
+    .container.form-container {
+        max-width: 500px;
+        margin: 110px auto;
+        padding: 20px;
+    }
+
     .form-container {
         margin-top: 125px;
         max-width: 600px;
@@ -61,7 +67,6 @@
         <div class="form-group">
             <label for="idToko">Nama Toko</label>
             <select name="idToko" id="idToko" class="form-select" required>
-                <option value="">Pilih Toko</option>
                 @foreach($toko as $item)
                 <option value="{{ $item->idToko }}" {{ $transaksi->idToko == $item->idToko ? 'selected' : '' }}>
                     {{ $item->namaToko }}

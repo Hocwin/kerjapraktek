@@ -3,6 +3,12 @@
 @section('title', 'Edit Detail Transaksi')
 
 <style>
+    .container.form-container {
+        max-width: 500px;
+        margin: 110px auto;
+        padding: 20px;
+    }
+
     .form-container {
         margin-top: 125px;
         max-width: 600px;
@@ -59,6 +65,20 @@
 @section('content')
 <div class="container form-container">
     <h2>Edit Detail Transaksi</h2>
+
+    <!-- Error and Success Messages -->
+    @if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+    @endif
+
+    @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
+    
     <form method="POST" action="{{ route('update_detail_transaksi', ['idDetailTransaksi' => $detailTransaksi->idDetailTransaksi]) }}">
         @csrf
         @method('PUT')
@@ -67,7 +87,6 @@
         <div class="form-group">
             <label for="produk">Produk</label>
             <select name="idProduk" id="produk" class="form-select" required>
-                <option value="">Pilih Produk</option>
                 @foreach ($produk as $item)
                 <option value="{{ $item->idProduk }}" {{ old('idProduk', $detailTransaksi->idProduk) == $item->idProduk ? 'selected' : '' }}>
                     {{ $item->namaProduk }}
@@ -86,7 +105,6 @@
         <div class="form-group">
             <label for="idGudang">Gudang</label>
             <select name="idGudang" id="idGudang" class="form-select" required>
-                <option value="">Pilih Gudang</option>
                 @foreach ($gudang as $item)
                 <option value="{{ $item->idGudang }}" {{ old('idGudang', $detailTransaksi->idGudang) == $item->idGudang ? 'selected' : '' }}>
                     {{ $item->namaGudang }}

@@ -162,21 +162,34 @@ class DetailTransaksiController extends Controller
             ->where('idGudang', $detailTransaksi->idGudang)
             ->first();
 
-        // Kembalikan stok ke gudang lama hanya jika gudang atau produk berubah
+        // Hitung selisih jumlah produk
+        $selisihJumlah = $request->jumlahProduk - $detailTransaksi->jumlahProduk;
+
+        // Jika stok tidak cukup untuk perubahan
+        if ($stokGudangBaru && $selisihJumlah > 0 && $stokGudangBaru->stok < $selisihJumlah) {
+            return back()->with('error', 'Stok tidak cukup untuk produk: ' . $produkBaru->namaProduk);
+        }
+
+        // Jika gudang atau produk berubah, kembalikan stok lama ke gudang lama
         if ($detailTransaksi->idGudang != $request->idGudang || $detailTransaksi->idProduk != $request->idProduk) {
             if ($stokGudangLama) {
-                $stokGudangLama->stok += $detailTransaksi->jumlahProduk;
+                $stokGudangLama->stok += $detailTransaksi->jumlahProduk; // Kembalikan stok lama sepenuhnya
+                $stokGudangLama->save();
+            }
+        } else {
+            // Jika gudang dan produk sama, sesuaikan stok berdasarkan selisih jumlah produk
+            if ($stokGudangLama && $selisihJumlah != 0) {
+                $stokGudangLama->stok -= $selisihJumlah; // Kurangi/lebihkan stok sesuai selisih
                 $stokGudangLama->save();
             }
         }
 
-        // Pastikan stok cukup di gudang baru
-        if ($stokGudangBaru && $stokGudangBaru->stok >= $request->jumlahProduk) {
-            // Kurangi stok dari gudang baru
-            $stokGudangBaru->stok -= $request->jumlahProduk;
-            $stokGudangBaru->save();
-        } else {
-            return back()->with('error', 'Stok tidak cukup untuk produk: ' . $produkBaru->namaProduk);
+        // Kurangi stok dari gudang baru jika ada perubahan
+        if ($detailTransaksi->idGudang != $request->idGudang || $detailTransaksi->idProduk != $request->idProduk) {
+            if ($stokGudangBaru) {
+                $stokGudangBaru->stok -= $request->jumlahProduk; // Kurangi stok baru sepenuhnya
+                $stokGudangBaru->save();
+            }
         }
 
         // Update the detail transaksi record
@@ -191,6 +204,7 @@ class DetailTransaksiController extends Controller
         return redirect()->route('detail_transaksi', ['idTransaksi' => $detailTransaksi->idTransaksi])
             ->with('success', 'Detail transaksi berhasil diperbarui');
     }
+
 
     /**
      * Remove the specified resource from storage.
