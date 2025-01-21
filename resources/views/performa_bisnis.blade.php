@@ -116,7 +116,6 @@
                     @endfor
             </select>
 
-
             <button type="submit">Terapkan</button>
         </form>
     </div>
@@ -139,6 +138,18 @@
             <h2>Toko dengan Pembelian Terbanyak</h2>
             <canvas id="tokoBanyakPembelianChart"></canvas>
         </div>
+
+        <!-- Grafik Produk Terbanyak Terjual Per Toko -->
+        <div class="chart-container">
+            <h2>Produk Terbanyak Terjual Per Toko</h2>
+            <canvas id="produkTerlarisPerTokoChart"></canvas>
+        </div>
+
+        <!-- Grafik Gudang dengan Pengeluaran Terbesar -->
+        <div class="chart-container">
+            <h2>Gudang dengan Pengeluaran Terbesar</h2>
+            <canvas id="gudangPengeluaranTerbesarChart"></canvas>
+        </div>
     </div>
 
     <!-- Tombol Back ke Halaman Produk -->
@@ -147,48 +158,59 @@
     </div>
 
     <script>
+        // Data dari controller
         var keuntunganData = @json($keuntungan);
         var produkTerlarisData = @json($produkTerlaris);
         var tokoBanyakPembelianData = @json($tokoBanyakPembelian);
+        var produkTerlarisPerTokoData = @json($produkTerlarisPerToko);
+        var gudangPengeluaranTerbesarData = @json($gudangPengeluaranTerbesar);
+
+        // Fungsi untuk menangani data kosong
+        function handleEmptyData(data, canvasId, message) {
+            if (!data || data.length === 0) {
+                document.getElementById(canvasId).parentNode.innerHTML = `<p>${message}</p>`;
+                return false;
+            }
+            return true;
+        }
 
         // Grafik Keuntungan Per Toko
-        var ctx1 = document.getElementById('keuntunganChart').getContext('2d');
-        new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: keuntunganData.map(item => item.toko.namaToko),
-                datasets: [{
-                    label: 'Total Keuntungan',
-                    data: keuntunganData.map(item => item.totalKeuntungan),
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            }
-        });
+        if (handleEmptyData(keuntunganData, 'keuntunganChart', 'Data keuntungan tidak tersedia.')) {
+            new Chart(document.getElementById('keuntunganChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: keuntunganData.map(item => item.toko.namaToko),
+                    datasets: [{
+                        label: 'Total Keuntungan',
+                        data: keuntunganData.map(item => item.totalKeuntungan),
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y' // Membuat grafik horizontal
+                }
+            });
+        }
 
         // Grafik Produk Terbanyak Terjual
-        var ctx2 = document.getElementById('produkTerlarisChart').getContext('2d');
-        if (produkTerlarisData.length > 0) {
-            new Chart(ctx2, {
+        if (handleEmptyData(produkTerlarisData, 'produkTerlarisChart', 'Data produk tidak tersedia.')) {
+            new Chart(document.getElementById('produkTerlarisChart').getContext('2d'), {
                 type: 'pie',
                 data: {
                     labels: produkTerlarisData.map(item => item.produk.namaProduk),
                     datasets: [{
-                        label: 'Produk Terlaris',
                         data: produkTerlarisData.map(item => item.totalTerjual),
                         backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
                     }]
                 }
             });
-        } else {
-            document.getElementById('produkTerlarisChart').parentNode.innerHTML = '<p>Data produk tidak tersedia.</p>';
         }
 
         // Grafik Toko dengan Pembelian Terbanyak
-        var ctx3 = document.getElementById('tokoBanyakPembelianChart').getContext('2d');
-        if (tokoBanyakPembelianData.length > 0) {
-            new Chart(ctx3, {
+        if (handleEmptyData(tokoBanyakPembelianData, 'tokoBanyakPembelianChart', 'Data toko tidak tersedia.')) {
+            new Chart(document.getElementById('tokoBanyakPembelianChart').getContext('2d'), {
                 type: 'bar',
                 data: {
                     labels: tokoBanyakPembelianData.map(item => item.namaToko),
@@ -199,12 +221,82 @@
                         borderColor: 'rgba(153, 102, 255, 1)',
                         borderWidth: 1
                     }]
+                },
+                options: {
+                    indexAxis: 'y' // Membuat grafik horizontal
                 }
             });
-        } else {
-            document.getElementById('tokoBanyakPembelianChart').parentNode.innerHTML = '<p>Data toko tidak tersedia.</p>';
+        }
+
+        // Grafik Produk Terbanyak Terjual Per Toko
+        if (handleEmptyData(produkTerlarisPerTokoData, 'produkTerlarisPerTokoChart', 'Data produk per toko tidak tersedia.')) {
+            new Chart(document.getElementById('produkTerlarisPerTokoChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: produkTerlarisPerTokoData.map(item => `${item.namaToko} - ${item.namaProduk}`),
+                    datasets: [{
+                        label: 'Total Terjual',
+                        data: produkTerlarisPerTokoData.map(item => item.totalTerjual),
+                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y' // Membuat grafik horizontal
+                }
+            });
+        }
+
+        // Grafik Gudang dengan Pengeluaran Terbesar
+        if (handleEmptyData(gudangPengeluaranTerbesarData, 'gudangPengeluaranTerbesarChart', 'Data gudang tidak tersedia.')) {
+            new Chart(document.getElementById('gudangPengeluaranTerbesarChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: gudangPengeluaranTerbesarData.map(item => item.namaGudang),
+                    datasets: [{
+                        label: 'Total Pengeluaran',
+                        data: gudangPengeluaranTerbesarData.map(item => item.totalStokKeluar),
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)', // Warna bar
+                        borderColor: 'rgba(255, 99, 132, 1)', // Warna border
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Gudang'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Total Pengeluaran'
+                            }
+                        }
+                    }
+                }
+            });
         }
     </script>
+
     @else
     <h1>Anda tidak memiliki akses untuk melihat performa bisnis.</h1>
     @endif
