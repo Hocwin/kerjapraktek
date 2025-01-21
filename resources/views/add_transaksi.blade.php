@@ -73,7 +73,6 @@
     <form method="POST" action="{{ route('store_transaksi') }}">
         @csrf
 
-        <!-- Pilih Toko -->
         <div class="form-group">
             <label for="idToko">Toko</label>
             <select name="idToko" class="form-select" required>
@@ -83,7 +82,6 @@
             </select>
         </div>
 
-        <!-- Tipe Pembayaran -->
         <div class="form-group">
             <label for="tipePembayaran">Tipe Pembayaran</label>
             <select name="tipePembayaran" class="form-select" required>
@@ -92,13 +90,11 @@
             </select>
         </div>
 
-        <!-- Tanggal Transaksi -->
         <div class="form-group">
             <label for="tanggalTransaksi">Tanggal & Jam Transaksi</label>
             <input type="datetime-local" name="tanggalTransaksi" id="tanggalTransaksi" class="form-control" required>
         </div>
 
-        <!-- Status Pembayaran -->
         <div class="form-group">
             <label for="status">Status</label>
             <select name="status" class="form-select" required>
@@ -107,7 +103,6 @@
             </select>
         </div>
 
-        <!-- Tombol Submit -->
         <button type="submit" class="submit-btn w-100 mt-3">Simpan Transaksi</button>
     </form>
 </div>

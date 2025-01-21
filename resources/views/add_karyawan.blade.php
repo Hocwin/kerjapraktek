@@ -62,7 +62,6 @@
 <div class="container add-employee-container">
     <h2 class="text-center mb-4">Tambah Karyawan</h2>
 
-    <!-- Tampilkan Error Jika Ada -->
     @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
@@ -73,29 +72,24 @@
     </div>
     @endif
 
-    <!-- Form Tambah Karyawan -->
     <form action="{{ route('store_karyawan') }}" method="POST">
         @csrf
 
-        <!-- Nama Karyawan -->
         <div class="mb-3">
             <label for="namaPengguna" class="form-label">Nama Karyawan</label>
             <input type="text" class="form-control" id="namaPengguna" name="namaPengguna" placeholder="Masukkan nama" required>
         </div>
 
-        <!-- Email -->
         <div class="mb-3">
             <label for="emailPengguna" class="form-label">Email</label>
             <input type="email" class="form-control" id="emailPengguna" name="emailPengguna" placeholder="Masukkan email" required>
         </div>
 
-        <!-- Alamat -->
         <div class="mb-3">
             <label for="alamatPengguna" class="form-label">Alamat</label>
             <input type="text" class="form-control" id="alamatPengguna" name="alamatPengguna" placeholder="Masukkan alamat" required>
         </div>
 
-        <!-- Jenis Kelamin -->
         <div class="mb-3">
             <label for="jenisKelamin" class="form-label">Jenis Kelamin</label>
             <select class="form-select" id="jenisKelamin" name="jenisKelamin" required>
@@ -104,7 +98,6 @@
             </select>
         </div>
 
-        <!-- Role -->
         <div class="mb-3">
             <label for="rolePengguna" class="form-label">Role</label>
             <select class="form-select" id="rolePengguna" name="rolePengguna" required>
@@ -114,7 +107,6 @@
             </select>
         </div>
 
-        <!-- Tombol Submit -->
         <button type="submit" class="submit-btn">Tambah</button>
     </form>
 </div>

@@ -174,7 +174,7 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container-fluid">
-      <a href="#"><img style="margin-right: 10px" src="https://cdn.discordapp.com/attachments/1022867386057101423/1120368429887660154/Logo.png" alt="" width="30px"></a>
+      <a href="#"> <img style="margin-right: 10px" src="/storage/images/logo.png" alt="Logo" width="30px"></a>
       <a class="navbar-brand me-auto" href="#">Amelia Putratama Mandiri</a>
 
       <button class="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">

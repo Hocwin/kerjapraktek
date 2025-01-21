@@ -56,7 +56,6 @@
 @section('content')
 <div class="container trash-container">
 
-    <!-- Deleted Toko -->
     <h2>Toko Tidak Aktif</h2>
     @if ($tokoTerhapus->isEmpty())
     <p class="empty-message">Tidak ada toko terhapus.</p>

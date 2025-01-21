@@ -60,7 +60,7 @@ class StokPerGudangSeeder extends Seeder
         StokPerGudang::create([
             'idGudang' => 3,  // Gudang KM12
             'idProduk' => 1,  // Produk ID 1
-            'stok' => 1000,
+            'stok' => 5000,
             'pemasukan' => 0,
         ]);
 
@@ -74,7 +74,7 @@ class StokPerGudangSeeder extends Seeder
         StokPerGudang::create([
             'idGudang' => 3,  // Gudang KM12
             'idProduk' => 3,  // Produk ID 3
-            'stok' => 1000,
+            'stok' => 5000,
         ]);
 
         // Stok untuk Gudang dengan idGudang = 4

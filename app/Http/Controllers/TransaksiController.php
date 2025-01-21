@@ -12,10 +12,43 @@ class TransaksiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $transaksi = Transaksi::with(['toko', 'detailTransaksi.produk'])->get();
-        return view('transaksi', ['transaksi' => $transaksi]);
+        // Ambil filter dari query string
+        $filterToko = $request->input('toko'); // Nama toko
+        $filterBulan = $request->input('bulan'); // Bulan dalam format angka
+        $filterTahun = $request->input('tahun'); // Tahun dalam format angka
+
+        // Query dasar
+        $query = Transaksi::with(['toko', 'detailTransaksi.produk']);
+
+        // Filter berdasarkan nama toko
+        if (!empty($filterToko)) {
+            $query->whereHas('toko', function ($q) use ($filterToko) {
+                $q->where('namaToko', 'like', '%' . $filterToko . '%');
+            });
+        }
+
+        // Filter berdasarkan bulan dan tahun
+        if (!empty($filterBulan) || !empty($filterTahun)) {
+            $query->whereMonth('tanggalTransaksi', $filterBulan)
+                ->whereYear('tanggalTransaksi', $filterTahun);
+        }
+
+        // Eksekusi query
+        $transaksi = $query->get();
+
+        // Ambil data toko untuk dropdown filter
+        $toko = Toko::all();
+        $toko = Toko::orderBy('namaToko', 'asc')->get();
+
+        return view('transaksi', [
+            'transaksi' => $transaksi,
+            'toko' => $toko,
+            'filterToko' => $filterToko,
+            'filterBulan' => $filterBulan,
+            'filterTahun' => $filterTahun,
+        ]);
     }
 
     /**
@@ -24,6 +57,7 @@ class TransaksiController extends Controller
     public function create()
     {
         $toko = Toko::all(); // Pastikan Anda sudah membuat model Toko
+        $toko = Toko::orderBy('namaToko', 'asc')->get();
         return view('add_transaksi', ['toko' => $toko]);
     }
 

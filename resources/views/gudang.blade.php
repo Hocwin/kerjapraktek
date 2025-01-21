@@ -115,11 +115,13 @@
 <div class="container gudang-container">
   <h2>Gudang Aktif</h2>
   <div class="btn-container">
-    @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
+    @if (Auth::check() && Auth::user()->rolePengguna == 'manager')
     <form method="GET" action="{{ route('add_gudang') }}">
       @csrf
       <button type="submit" class="btn btn-primary">Tambah Gudang</button>
     </form>
+    @endif
+    @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
     <form method="GET" action="{{ route('gudang_tidak_aktif') }}">
       @csrf
       <input type="hidden" name="page" value="gudang">

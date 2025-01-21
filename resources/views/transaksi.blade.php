@@ -4,12 +4,11 @@
 <style>
   .transaksi-container {
     padding-top: 125px;
-    /* Padding atas untuk memberikan ruang antara header dan tabel */
   }
 
   .aksi-btn {
     display: flex;
-    flex-direction: flex;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 5px;
@@ -50,7 +49,6 @@
     margin-bottom: 20px;
   }
 
-  /* Memastikan footer tetap di bawah */
   footer {
     position: fixed;
     bottom: 0;
@@ -60,22 +58,17 @@
     background-color: #f8f9fa;
   }
 
-  /* Center the action buttons vertically under the column header */
   .table td {
     vertical-align: middle;
-    /* Center buttons vertically */
   }
 
   .table th,
   .table td {
     text-align: center;
-    /* Center text in table cells */
   }
 
-  /* Optional: To add space between the button and table rows */
   .table td.aksi-btn {
     padding-top: 10px;
-    /* Add some space between button and row */
   }
 </style>
 
@@ -83,6 +76,51 @@
 
 <div class="container transaksi-container">
   <h2>Transaksi</h2>
+
+  <!-- Filter Form -->
+  <form method="GET" action="{{ route('transaksi') }}" class="mb-4">
+    <div class="row">
+      <div class="col-md-4">
+        <label for="toko">Nama Toko</label>
+        <select name="toko" id="toko" class="form-select">
+          <option value="">Semua Toko</option>
+          @foreach ($toko as $t)
+          <option value="{{ $t->namaToko }}" {{ $filterToko == $t->namaToko ? 'selected' : '' }}>
+            {{ $t->namaToko }}
+          </option>
+          @endforeach
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label for="bulan">Bulan</label>
+        <select name="bulan" id="bulan" class="form-select">
+          <option value="">Semua Bulan</option>
+          @for ($i = 1; $i <= 12; $i++)
+            <option value="{{ $i }}" {{ $filterBulan == $i ? 'selected' : '' }}>
+            {{ \Carbon\Carbon::create()->month($i)->translatedFormat('F') }}
+            </option>
+            @endfor
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label for="tahun">Tahun</label>
+        <select name="tahun" id="tahun" class="form-select">
+          <option value="">Semua Tahun</option>
+          @for ($i = 2020; $i <= Carbon\Carbon::now()->year + 1; $i++)
+            <option value="{{ $i }}" {{ $i == $filterTahun ? 'selected' : '' }}>
+              {{ $i }}
+            </option>
+            @endfor
+        </select>
+      </div>
+      <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary">Filter</button>
+        <a href="{{ route('transaksi') }}" class="btn btn-secondary ms-2">Reset</a>
+      </div>
+    </div>
+  </form>
+
+  <!-- Tambah Transaksi Button -->
   <div class="add-btn-container">
     @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
     <form method="GET" action="{{ route('add_transaksi') }}">
@@ -91,42 +129,50 @@
     </form>
     @endif
   </div>
+
+  <!-- Transaksi Table -->
   <div class="table-responsive" style="height: 400px; overflow-y: scroll;">
-  <table class="table table-striped table-hover">
-    <thead>
-      <tr>
-        <th>Nama Toko</th>
-        <th>Tipe Pembayaran</th>
-        <th>Status</th>
-        <th>Tanggal Transaksi</th>
-        <th class="text-center">Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach ($transaksi as $item)
-      <tr>
-        <td>{{ $item->toko->namaToko }}</td>
-        <td>{{ ucfirst($item->tipePembayaran) }}</td>
-        <td class="{{ $item->status === 'lunas' ? 'status-lunas' : 'status-belum-lunas' }}">
-          {{ ucfirst($item->status) }}
-        </td>
-        <td>{{ \Carbon\Carbon::parse($item->tanggalTransaksi)->format('Y-m-d H:i') }}</td>
-        <td class="aksi-btn">
-          <form method="GET" action="{{ route('detail_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
-            @csrf
-            <button type="submit" class="btn btn-warning">Detail</button>
-          </form>
-          @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
-          <form method="GET" action="{{ route('edit_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
-            @csrf
-            <button type="submit" class="btn btn-primary">Edit</button>
-          </form>
-          @endif
-        </td>
-      </tr>
-      @endforeach
-    </tbody>
-  </table>
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Nama Toko</th>
+          <th>Tipe Pembayaran</th>
+          <th>Status</th>
+          <th>Tanggal Transaksi</th>
+          <th class="text-center">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        @forelse ($transaksi as $item)
+        <tr>
+          <td>{{ $item->toko->namaToko }}</td>
+          <td>{{ ucfirst($item->tipePembayaran) }}</td>
+          <td class="{{ $item->status === 'lunas' ? 'status-lunas' : 'status-belum-lunas' }}">
+            {{ ucfirst($item->status) }}
+          </td>
+          <td>{{ \Carbon\Carbon::parse($item->tanggalTransaksi)->format('Y-m-d H:i') }}</td>
+          <td class="aksi-btn">
+            <!-- Detail Button -->
+            <form method="GET" action="{{ route('detail_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
+              @csrf
+              <button type="submit" class="btn btn-warning">Detail</button>
+            </form>
+            <!-- Edit Button (Admin Only) -->
+            @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
+            <form method="GET" action="{{ route('edit_transaksi', ['idTransaksi' => $item->idTransaksi]) }}">
+              @csrf
+              <button type="submit" class="btn btn-primary">Edit</button>
+            </form>
+            @endif
+          </td>
+        </tr>
+        @empty
+        <tr>
+          <td colspan="5">Tidak ada transaksi yang ditemukan.</td>
+        </tr>
+        @endforelse
+      </tbody>
+    </table>
   </div>
 </div>
 

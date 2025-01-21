@@ -82,14 +82,12 @@
     vertical-align: middle;
   }
 
-  /* Styling for the restore button container */
   .restore-btn-container {
     justify-content: center;
     gap: 10px;
     align-items: center;
   }
 
-  /* Adjustments for responsive view */
   @media (max-width: 768px) {
     .produk-img {
       width: 80px;

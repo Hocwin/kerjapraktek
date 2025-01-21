@@ -18,6 +18,7 @@ class TokoController extends Controller
     {
         $tokoAktif = Toko::where('namaToko', 'like', '%' . $request->search . '%')
             ->whereNull('deleted_at') // Mengambil produk yang tidak dihapus
+            ->orderBy('namaToko', 'asc')
             ->get();
 
         return view('toko', [

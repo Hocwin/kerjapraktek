@@ -42,7 +42,6 @@
         margin-bottom: 20px;
     }
 
-    /* Mobile Responsiveness */
     @media (max-width: 768px) {
         .form-container {
             margin: 0 10px;

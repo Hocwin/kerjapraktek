@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title', 'Edit Product')
+@section('title', 'Edit Gudang')
 
 @section('content')
 <div class="container mt-5 pt-5">

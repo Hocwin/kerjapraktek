@@ -48,14 +48,12 @@
             margin-bottom: 20px;
         }
 
-        /* Responsif untuk ukuran layar lebih kecil */
         @media (max-width: 768px) {
             canvas {
                 height: 300px;
             }
         }
 
-        /* Button Style */
         .btn-back {
             display: inline-block;
             background-color: #007bff;
@@ -70,7 +68,6 @@
             background-color: #0056b3;
         }
 
-        /* Style untuk form */
         form {
             display: flex;
             justify-content: center;
@@ -185,7 +182,6 @@
                 }
             });
         } else {
-            // Handle the case where no valid products are available (soft-deleted)
             document.getElementById('produkTerlarisChart').parentNode.innerHTML = '<p>Data produk tidak tersedia.</p>';
         }
 
@@ -206,7 +202,6 @@
                 }
             });
         } else {
-            // Handle the case where no valid stores are available (soft-deleted)
             document.getElementById('tokoBanyakPembelianChart').parentNode.innerHTML = '<p>Data toko tidak tersedia.</p>';
         }
     </script>

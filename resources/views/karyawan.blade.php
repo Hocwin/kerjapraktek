@@ -3,7 +3,6 @@
 <style>
     .karyawan-container {
       padding-top: 125px;
-      /* Padding atas untuk memberikan ruang antara header dan tabel */
     }
 
     .aksi-btn {
@@ -49,7 +48,6 @@
       margin-bottom: 20px;
     }
 
-    /* Memastikan footer tetap di bawah */
     footer {
       position: fixed;
       bottom: 0;
@@ -59,22 +57,17 @@
       background-color: #f8f9fa;
     }
 
-    /* Center the action buttons vertically under the column header */
     .table td {
       vertical-align: middle;
-      /* Center buttons vertically */
     }
 
     .table th,
     .table td {
       text-align: center;
-      /* Center text in table cells */
     }
 
-    /* Optional: To add space between the button and table rows */
     .table td.aksi-btn {
       padding-top: 10px;
-      /* Add some space between button and row */
     }
   </style>
 

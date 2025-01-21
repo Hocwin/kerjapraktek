@@ -47,37 +47,32 @@
   <h2 class="text-center mb-4">Tambah Produk Baru</h2>
   <form method="POST" action="{{ route('store_product') }}" enctype="multipart/form-data">
     @csrf
-    <!-- Nama Produk -->
+
     <div class="form-group">
       <label for="namaProduk">Nama Produk</label>
       <input type="text" name="namaProduk" id="namaProduk" class="form-control" required>
     </div>
 
-    <!-- Harga Cash -->
     <div class="form-group">
       <label for="hargaCash">Harga Cash</label>
       <input type="number" name="hargaCash" id="hargaCash" class="form-control" required>
     </div>
 
-    <!-- Harga Tempo -->
     <div class="form-group">
       <label for="hargaTempo">Harga Tempo</label>
       <input type="number" name="hargaTempo" id="hargaTempo" class="form-control" required>
     </div>
 
-    <!-- Harga Beli -->
     <div class="form-group">
       <label for="hargaBeli">Harga Beli</label>
       <input type="number" name="hargaBeli" id="hargaBeli" class="form-control" required>
     </div>
 
-    <!-- Gambar Produk -->
     <div class="form-group">
       <label for="imageAsset">Gambar Produk</label>
       <input type="file" name="imageAsset" id="imageAsset" class="form-control" accept="image/*" required>
     </div>
 
-    <!-- Stok per Gudang -->
     <h5 class="mt-4">Stok per Gudang</h5>
     @foreach($gudangs as $gudang)
     <div class="form-group">
@@ -86,7 +81,6 @@
     </div>
     @endforeach
 
-    <!-- Tombol Submit -->
     <button type="submit" class="submit-btn mt-4 w-100">Simpan Produk</button>
   </form>
 </div>

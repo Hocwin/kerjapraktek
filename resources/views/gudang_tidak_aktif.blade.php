@@ -55,7 +55,6 @@
 
 @section('content')
 <div class="container trash-container">
-    <!-- Deleted Gudang -->
     <h2>Gudang Terhapus</h2>
     @if ($gudangTerhapus->isEmpty())
     <p class="empty-message">Tidak ada gudang terhapus.</p>

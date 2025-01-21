@@ -68,25 +68,21 @@
         @csrf
         @method('PUT')
 
-        <!-- Nama Karyawan -->
         <div class="form-group">
             <label for="namaPengguna">Nama Karyawan</label>
             <input type="text" class="form-control" id="namaPengguna" name="namaPengguna" value="{{ $pengguna->namaPengguna }}" required>
         </div>
 
-        <!-- Email -->
         <div class="form-group">
             <label for="emailPengguna">Email</label>
             <input type="email" class="form-control" id="emailPengguna" name="emailPengguna" value="{{ $pengguna->emailPengguna }}" required>
         </div>
 
-        <!-- Alamat -->
         <div class="form-group">
             <label for="alamatPengguna">Alamat</label>
             <input type="text" class="form-control" id="alamatPengguna" name="alamatPengguna" value="{{ $pengguna->alamatPengguna }}" required>
         </div>
 
-        <!-- Jenis Kelamin -->
         <div class="form-group">
             <label for="jenisKelamin">Jenis Kelamin</label>
             <select class="form-select" id="jenisKelamin" name="jenisKelamin" required>
@@ -95,7 +91,6 @@
             </select>
         </div>
 
-        <!-- Role -->
         <div class="form-group">
             <label for="rolePengguna">Role</label>
             <select class="form-select" id="rolePengguna" name="rolePengguna" required>
@@ -105,7 +100,6 @@
             </select>
         </div>
 
-        <!-- Tombol Submit -->
         <button type="submit" class="submit-btn w-100 mt-3">Simpan</button>
     </form>
 </div>

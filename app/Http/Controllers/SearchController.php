@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Produk;
 use App\Models\Gudang;
+use App\Models\Transaksi;
 use App\Models\Toko;
 
 class SearchController extends Controller
@@ -41,7 +42,17 @@ class SearchController extends Controller
             ->with(['stokPerGudang.produk'])
             ->get();
 
-        return view('search', compact('toko', 'produkAktif', 'gudang', 'query'));
+        // Cari di tabel Transaksi
+        $transaksi = Transaksi::with(['toko', 'detailTransaksi.produk'])
+            ->whereHas('toko', function ($q) use ($query) {
+                $q->where('namaToko', 'like', "%{$query}%");
+            })
+            ->orWhere('idTransaksi', 'like', "%{$query}%")
+            ->orWhere('tipePembayaran', 'like', "%{$query}%")
+            ->orWhere('status', 'like', "%{$query}%")
+            ->get();
+
+        return view('search', compact('toko', 'produkAktif', 'gudang', 'transaksi', 'query'));
     }
 
     /**

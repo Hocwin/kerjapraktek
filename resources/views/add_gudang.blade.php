@@ -50,7 +50,6 @@
 <div class="container add-warehouse-container">
     <h1 class="text-center mb-4">Tambah Gudang Baru</h1>
 
-    <!-- Tampilkan Error Jika Ada -->
     @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
@@ -61,29 +60,24 @@
     </div>
     @endif
 
-    <!-- Form Tambah Gudang -->
     <form action="{{ route('store_gudang') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        <!-- Nama Gudang -->
         <div class="form-group">
             <label for="namaGudang">Nama Gudang</label>
             <input type="text" name="namaGudang" id="namaGudang" class="form-control" required>
         </div>
 
-        <!-- Lokasi Gudang -->
         <div class="form-group">
             <label for="lokasi">Lokasi Gudang</label>
             <input type="text" name="lokasi" id="lokasi" class="form-control" required>
         </div>
 
-        <!-- Gambar Gudang -->
         <div class="form-group">
             <label for="imageAsset">Gambar Gudang (Opsional)</label>
             <input type="file" name="imageAsset" id="imageAsset" class="form-control" required>
         </div>
 
-        <!-- Stok Produk -->
         <h3>Stok Produk</h3>
         @foreach($produk as $item)
         <div class="form-group">
@@ -92,7 +86,6 @@
         </div>
         @endforeach
 
-        <!-- Tombol Submit -->
         <button type="submit" class="submit-btn w-100">Simpan Gudang</button>
     </form>
 </div>

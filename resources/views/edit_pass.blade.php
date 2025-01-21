@@ -4,7 +4,6 @@
 
 @section('content')
 <style>
-    /* Custom Styles */
     .form-container {
         margin-top: 125px;
         border: 1px solid #ddd;
@@ -43,7 +42,6 @@
         margin-bottom: 20px;
     }
 
-    /* Mobile Responsiveness */
     @media (max-width: 768px) {
         .form-container {
             margin: 0 10px;
@@ -71,24 +69,19 @@
             <form action="{{ route('gantiPass', $pengguna->idPengguna) }}" method="POST">
                 @csrf
 
-                <!-- Menampilkan Error -->
                 @foreach($errors->all() as $error)
                 <div class="alert alert-danger">{{ $error }}</div>
                 @endforeach
 
-                <!-- Kata Sandi Saat Ini -->
                 <label for="current_password">Kata Sandi Saat Ini</label>
                 <input type="password" name="current_password" id="current_password" class="form-control" required>
 
-                <!-- Kata Sandi Baru -->
                 <label for="new_password">Kata Sandi Baru</label>
                 <input type="password" name="new_password" id="new_password" class="form-control" required>
 
-                <!-- Konfirmasi Kata Sandi Baru -->
                 <label for="new_password_confirmation">Konfirmasi Kata Sandi Baru</label>
                 <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="form-control" required>
 
-                <!-- Tombol Submit -->
                 <button type="submit" class="btn btn-primary mt-3">Simpan Perubahan</button>
             </form>
         </div>

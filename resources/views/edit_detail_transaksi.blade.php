@@ -66,7 +66,6 @@
 <div class="container form-container">
     <h2>Edit Detail Transaksi</h2>
 
-    <!-- Error and Success Messages -->
     @if(session('error'))
     <div class="alert alert-danger">
         {{ session('error') }}
@@ -83,7 +82,6 @@
         @csrf
         @method('PUT')
 
-        <!-- Produk -->
         <div class="form-group">
             <label for="produk">Produk</label>
             <select name="idProduk" id="produk" class="form-select" required>
@@ -95,13 +93,11 @@
             </select>
         </div>
 
-        <!-- Jumlah Produk -->
         <div class="form-group">
             <label for="jumlahProduk">Jumlah Produk</label>
             <input type="number" name="jumlahProduk" id="jumlahProduk" class="form-control" required min="1" value="{{ old('jumlahProduk', $detailTransaksi->jumlahProduk) }}">
         </div>
 
-        <!-- Gudang -->
         <div class="form-group">
             <label for="idGudang">Gudang</label>
             <select name="idGudang" id="idGudang" class="form-select" required>
@@ -113,7 +109,6 @@
             </select>
         </div>
 
-        <!-- Tombol Update -->
         <button type="submit" class="btn btn-primary w-100 mt-3">Update Detail Transaksi</button>
     </form>
 </div>

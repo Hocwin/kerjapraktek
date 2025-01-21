@@ -71,14 +71,12 @@
     vertical-align: middle;
   }
 
-  /* Styling for the restore button container */
   .restore-btn-container {
     justify-content: center;
     gap: 10px;
     align-items: center;
   }
 
-  /* Adjustments for responsive view */
   @media (max-width: 768px) {
     .toko-img {
       width: 80px;
@@ -152,5 +150,19 @@
     </table>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const table = document.querySelector("table tbody");
+    const rows = Array.from(table.rows);
+    rows.sort((a, b) => {
+      const nameA = a.cells[1].textContent.trim().toLowerCase();
+      const nameB = b.cells[1].textContent.trim().toLowerCase();
+      return nameA.localeCompare(nameB);
+    });
+    rows.forEach(row => table.appendChild(row));
+  });
+</script>
+
 
 @endsection

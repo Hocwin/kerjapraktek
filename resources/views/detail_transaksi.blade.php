@@ -45,7 +45,6 @@
 <div class="container detail-container">
     <h1 class="mb-4 text-center">Detail Transaksi</h1>
 
-    <!-- Flash Message -->
     @if (session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
@@ -56,21 +55,18 @@
     </div>
     @endif
 
-    <!-- Informasi Transaksi -->
     <div class="mb-4">
         <p><strong>ID Transaksi:</strong> {{ $transaksi->idTransaksi }}</p>
         <p><strong>Tanggal Transaksi:</strong> {{ \Carbon\Carbon::parse($transaksi->tanggalTransaksi)->format('Y-m-d H:i') }}</p>
         <p><strong>Status:</strong> {{ $transaksi->status }}</p>
     </div>
 
-    <!-- Tombol Tambah Detail -->
     @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
     <div class="mb-3 text-left">
         <a href="{{ route('add_detail_transaksi', ['idTransaksi' => $transaksi->idTransaksi]) }}" class="btn btn-primary">Tambah Detail</a>
     </div>
     @endif
 
-    <!-- Tabel Detail Transaksi -->
     <div class="table-responsive">
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
@@ -119,7 +115,6 @@
         </table>
     </div>
 
-    <!-- Tombol Kembali -->
     <div class="text-left mt-4">
         <a href="{{ route('transaksi') }}" class="btn btn-secondary">Kembali</a>
     </div>
