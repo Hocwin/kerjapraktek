@@ -68,4 +68,15 @@ class AdminController extends Controller
 
         return redirect()->route('admin.showSetUserGudang')->with('success', 'Akses gudang pengguna berhasil dipindahkan.');
     }
+
+    public function deleteUserGudang($idPengguna, $idGudang)
+    {
+        $pengguna = Pengguna::findOrFail($idPengguna); // Temukan pengguna berdasarkan ID
+        $gudang = Gudang::findOrFail($idGudang); // Temukan gudang berdasarkan ID
+
+        // Hapus akses pengguna ke gudang tersebut
+        $pengguna->gudang()->detach($gudang); // Menghapus relasi tanpa menghapus data pengguna atau gudang
+
+        return redirect()->route('admin.showSetUserGudang')->with('success', 'Akses gudang pengguna berhasil dihapus.');
+    }
 }

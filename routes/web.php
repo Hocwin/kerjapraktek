@@ -113,4 +113,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/set-user-gudang', [AdminController::class, 'setUserGudang'])->name('admin.setUserGudang');
     Route::get('/admin/akses-gudang/edit/{idPengguna}', [AdminController::class, 'showEditUserGudang'])->name('admin.showEditUserGudang');
     Route::put('/admin/akses-gudang/update/{idPengguna}', [AdminController::class, 'updateUserGudang'])->name('admin.updateUserGudang');
+    Route::delete('/admin/akses-gudang/{idPengguna}/{idGudang}', [AdminController::class, 'deleteUserGudang'])->name('admin.deleteUserGudang');
 });

@@ -44,6 +44,15 @@
                 <td>
                     <!-- Tombol Edit Akses -->
                     <a href="{{ route('admin.showEditUserGudang', ['idPengguna' => $user->idPengguna]) }}" class="btn btn-warning">Edit Akses</a>
+
+                    <!-- Tombol Hapus Akses -->
+                    @foreach ($user->gudang as $gudang)
+                    <form action="{{ route('admin.deleteUserGudang', ['idPengguna' => $user->idPengguna, 'idGudang' => $gudang->idGudang]) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus akses ke gudang {{ $gudang->namaGudang }}?')">Hapus Akses</button>
+                    </form>
+                    @endforeach
                 </td>
             </tr>
             @empty
