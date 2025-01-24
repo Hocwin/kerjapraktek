@@ -97,6 +97,7 @@
                 <option value="admin" {{ $pengguna->rolePengguna == 'admin' ? 'selected' : '' }}>Admin</option>
                 <option value="sales" {{ $pengguna->rolePengguna == 'sales' ? 'selected' : '' }}>Sales</option>
                 <option value="manager" {{ $pengguna->rolePengguna == 'manager' ? 'selected' : '' }}>Manager</option>
+                <option value="gudang" {{ $pengguna->rolePengguna == 'admin_gudang' ? 'selected' : '' }}>Admin Gudang</option>
             </select>
         </div>
 

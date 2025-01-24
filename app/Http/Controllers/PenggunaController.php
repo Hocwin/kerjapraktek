@@ -49,7 +49,7 @@ class PenggunaController extends Controller
             'emailPengguna' => 'required|string|max:255',
             'alamatPengguna' => 'required|string|max:255',
             'jenisKelamin' => 'required|in:L,P',
-            'rolePengguna' => 'required|in:admin,sales,manager',
+            'rolePengguna' => 'required|in:admin,sales,manager,gudang',
         ]);
 
         // Tentukan kode unik berdasarkan role pengguna
@@ -57,6 +57,7 @@ class PenggunaController extends Controller
             'manager' => '10',
             'admin' => '11',
             'sales' => '12',
+            'gudang' => '13',
             default => '00', // Default jika role tidak sesuai
         };
 
@@ -107,7 +108,7 @@ class PenggunaController extends Controller
             'emailPengguna' => 'required|string|max:255',
             'alamatPengguna' => 'required|string|max:255',
             'jenisKelamin' => 'required|in:L,P',
-            'rolePengguna' => 'required|in:admin,sales,manager',
+            'rolePengguna' => 'required|in:admin,sales,manager,gudang',
         ]);
 
         $pengguna = Pengguna::findOrFail($idPengguna);

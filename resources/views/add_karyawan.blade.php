@@ -104,6 +104,7 @@
                 <option value="admin">Admin</option>
                 <option value="sales">Sales</option>
                 <option value="manager">Manager</option>
+                <option value="gudang">Admin Gudang</option>
             </select>
         </div>
 

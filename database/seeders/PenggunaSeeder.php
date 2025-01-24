@@ -42,6 +42,15 @@ class PenggunaSeeder extends Seeder
                 'jenisKelamin' => 'L',
                 'rolePengguna' => 'manager'
             ],
+            [
+                'idPengguna' => '4',
+                'namaPengguna' => 'Admin Gudang Perintis',
+                'emailPengguna' => 'gudangperintis@gmail.com',
+                'password' => Hash::make('1234567'),
+                'alamatPengguna' => 'Jalan Singa 123',
+                'jenisKelamin' => 'L',
+                'rolePengguna' => 'gudang'
+            ],
         ];
 
         foreach ($pengguna as $key => $value) {

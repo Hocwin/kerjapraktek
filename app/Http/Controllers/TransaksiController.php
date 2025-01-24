@@ -29,10 +29,14 @@ class TransaksiController extends Controller
             });
         }
 
-        // Filter berdasarkan bulan dan tahun
-        if (!empty($filterBulan) || !empty($filterTahun)) {
-            $query->whereMonth('tanggalTransaksi', $filterBulan)
-                ->whereYear('tanggalTransaksi', $filterTahun);
+        // Filter berdasarkan bulan
+        if (!empty($filterBulan)) {
+            $query->whereMonth('tanggalTransaksi', $filterBulan);
+        }
+
+        // Filter berdasarkan tahun
+        if (!empty($filterTahun)) {
+            $query->whereYear('tanggalTransaksi', $filterTahun);
         }
 
         // Eksekusi query

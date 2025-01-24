@@ -34,4 +34,9 @@ class Gudang extends Model
     {
         return $this->hasMany(DetailTransaksi::class, 'idGudang');
     }
+
+    public function pengguna()
+    {
+        return $this->belongsToMany(User::class, 'gudang_pengguna', 'idGudang', 'idPengguna');
+    }
 }

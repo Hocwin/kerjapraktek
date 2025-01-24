@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('alamatPengguna');
             $table->enum('jenisKelamin', ['L', 'P']);
-            $table->enum('rolePengguna', ['admin', 'sales', 'manager'])->default('sales');
+            $table->enum('rolePengguna', ['admin', 'sales', 'manager','gudang'])->default('sales');
             $table->string('plaintext_password')->nullable();
             $table->rememberToken();
             $table->timestamps();

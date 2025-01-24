@@ -55,4 +55,9 @@ class Pengguna extends AuthenticatableUser
     {
         return 'remember_token';
     }
+
+    public function gudang()
+    {
+        return $this->belongsToMany(Gudang::class, 'gudang_pengguna', 'idPengguna', 'idGudang');
+    }
 }

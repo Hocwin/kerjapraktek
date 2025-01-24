@@ -121,7 +121,7 @@
       <button type="submit" class="btn btn-primary">Tambah Gudang</button>
     </form>
     @endif
-    @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
+    @if (Auth::check() && Auth::user()->rolePengguna == 'manager')
     <form method="GET" action="{{ route('gudang_tidak_aktif') }}">
       @csrf
       <input type="hidden" name="page" value="gudang">
@@ -179,11 +179,13 @@
               @endif
             </td>
             <td class="aksi-btn">
-              @if (Auth::check() && Auth::user()->rolePengguna == 'admin')
+              @if (Auth::check() && Auth::user()->gudang->contains($item->idGudang))
               <form method="GET" action="{{ route('edit-gudang', ['idGudang' => $item->idGudang]) }}">
                 @csrf
                 <button type="submit" class="btn btn-primary">Edit</button>
               </form>
+              @endif
+              @if (Auth::check() && Auth::user()->rolePengguna == 'manager')
               <form method="POST" action="{{ route('destroy_gudang', ['idGudang' => $item->idGudang]) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus toko ini?');">
                 @csrf
                 @method('DELETE')

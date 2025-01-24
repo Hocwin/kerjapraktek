@@ -11,6 +11,7 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PerformaBisnisController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TrashController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -106,4 +107,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/edit_pass', [PenggunaController::class, 'gantiPassForm'])->name('gantiPassForm');
     Route::post('/edit_pass/{idPengguna}/ganti-password', [PenggunaController::class, 'gantiPass'])->name('gantiPass');
+
+    Route::get('/admin/set-user-gudang', [AdminController::class, 'showSetUserGudang'])->name('admin.showSetUserGudang');
+    Route::get('/admin/form-set-user-gudang', [AdminController::class, 'showFormSetUserGudang'])->name('admin.showFormSetUserGudang');
+    Route::post('/admin/set-user-gudang', [AdminController::class, 'setUserGudang'])->name('admin.setUserGudang');
+    Route::get('/admin/akses-gudang/edit/{idPengguna}', [AdminController::class, 'showEditUserGudang'])->name('admin.showEditUserGudang');
+    Route::put('/admin/akses-gudang/update/{idPengguna}', [AdminController::class, 'updateUserGudang'])->name('admin.updateUserGudang');
 });

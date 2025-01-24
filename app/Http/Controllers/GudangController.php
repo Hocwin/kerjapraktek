@@ -112,6 +112,10 @@ class GudangController extends Controller
             return redirect()->route('gudang')->with('error', 'Gudang tidak ditemukan.');
         }
 
+        if (!Auth::user()->gudang->contains($idGudang)) {
+            return redirect()->route('gudang')->with('error', 'Anda tidak memiliki izin untuk mengedit gudang ini.');
+        }
+
         // Simpan stok lama ke sesi untuk referensi
         session(['stokLama' => $gudang->stokPerGudang->pluck('stok', 'idProduk')->toArray()]);
 
@@ -123,8 +127,8 @@ class GudangController extends Controller
      */
     public function update(Request $request, string $idGudang)
     {
-        if (!Auth::user() || Auth::user()->rolePengguna != 'admin') {
-            return redirect()->route('gudang')->with('error', 'Access denied');
+        if (!Auth::user()->gudang->contains($idGudang)) {
+            return redirect()->route('gudang')->with('error', 'Anda tidak memiliki izin untuk mengedit gudang ini.');
         }
 
         $request->validate([

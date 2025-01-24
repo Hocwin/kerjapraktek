@@ -211,6 +211,11 @@
               <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('performa_bisnis')}}">Performa Bisnis</a>
             </li>
             @endif
+            @if (Auth::check() && (Auth::user()->rolePengguna == 'admin'))
+            <li class="nav-item">
+              <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('admin.showSetUserGudang')}}">Set User Gudang</a>
+            </li>
+            @endif
             <form class="d-flex mt-2" role="search" action="{{ route('search') }}" method="POST">
               @csrf
               <input type="text" name="search" placeholder="Cari..." required>
