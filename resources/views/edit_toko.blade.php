@@ -95,6 +95,17 @@
                 <label for="namaSopir">Nama Sopir</label>
                 <input type="text" name="namaSopir" id="namaSopir" class="form-control" value="{{ $toko->namaSopir }}" required>
 
+                <div class="form-group">
+                    <label for="idPengguna">Sales</label>
+                    <select class="form-control" id="idPengguna" name="idPengguna" required>
+                        @foreach ($sales as $salesItem)
+                        <option value="{{ $salesItem->idPengguna }}" {{ old('idPengguna', $toko->idPengguna) == $salesItem->idPengguna ? 'selected' : '' }}>
+                            {{ $salesItem->namaPengguna }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <!-- Gambar Toko -->
                 <label for="imageAsset">Gambar Toko</label><br>
                 <img src="{{ asset('/storage/images/' . $toko->imageAsset) }}" alt="current-image" class="w-100" style="max-width: 100px; object-fit: contain;">

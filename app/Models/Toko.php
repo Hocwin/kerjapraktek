@@ -21,6 +21,7 @@ class Toko extends Model
         'nomorTelepon',
         'jamOperasional',
         'namaSopir',
+        'idPengguna',
         'imageAsset'
     ];
 
@@ -30,5 +31,10 @@ class Toko extends Model
     public function transaksi()
     {
         return $this->hasMany(Transaksi::class, 'idToko', 'idToko');
+    }
+
+    public function pengguna()
+    {
+        return $this->belongsTo(Pengguna::class, 'idPengguna');
     }
 }

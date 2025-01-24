@@ -21,6 +21,7 @@ class TokoSeeder extends Seeder
                 'nomorTelepon' => '089638978165',
                 'jamOperasional' => '07.00 - 18.00',
                 'namaSopir' => 'Budi',
+                'idPengguna' => 2,
                 'imageAsset' => 'toko.jpeg'
             ],
             [
@@ -30,6 +31,7 @@ class TokoSeeder extends Seeder
                 'nomorTelepon' => '089638978165',
                 'jamOperasional' => '07.00 - 18.00',
                 'namaSopir' => 'Budi',
+                'idPengguna' => 5,
                 'imageAsset' => 'tokoa.jpeg'
             ],
             [
@@ -39,6 +41,7 @@ class TokoSeeder extends Seeder
                 'nomorTelepon' => '089638978165',
                 'jamOperasional' => '07.00 - 18.00',
                 'namaSopir' => 'Budi',
+                'idPengguna' => 6,
                 'imageAsset' => 'toko.jpeg'
             ],
             [
@@ -48,6 +51,7 @@ class TokoSeeder extends Seeder
                 'nomorTelepon' => '089638978165',
                 'jamOperasional' => '07.00 - 18.00',
                 'namaSopir' => 'Budi',
+                'idPengguna' => 2,
                 'imageAsset' => 'toko.jpeg'
             ],
             [
@@ -57,6 +61,7 @@ class TokoSeeder extends Seeder
                 'nomorTelepon' => '089638978165',
                 'jamOperasional' => '07.00 - 18.00',
                 'namaSopir' => 'Budi',
+                'idPengguna' => 5,
                 'imageAsset' => 'toko.jpeg'
             ],
             [
@@ -66,6 +71,7 @@ class TokoSeeder extends Seeder
                 'nomorTelepon' => '089638978165',
                 'jamOperasional' => '07.00 - 18.00',
                 'namaSopir' => 'Budi',
+                'idPengguna' => 6,
                 'imageAsset' => 'toko.jpeg'
             ],
             [
@@ -75,6 +81,7 @@ class TokoSeeder extends Seeder
                 'nomorTelepon' => '089638978165',
                 'jamOperasional' => '07.00 - 18.00',
                 'namaSopir' => 'Budi',
+                'idPengguna' => 2,
                 'imageAsset' => 'toko.jpeg'
             ],
             [
@@ -84,6 +91,7 @@ class TokoSeeder extends Seeder
                 'nomorTelepon' => '089638978165',
                 'jamOperasional' => '07.00 - 18.00',
                 'namaSopir' => 'Budi',
+                'idPengguna' => 5,
                 'imageAsset' => 'toko.jpeg'
             ],
             [
@@ -93,6 +101,7 @@ class TokoSeeder extends Seeder
                 'nomorTelepon' => '089638978165',
                 'jamOperasional' => '07.00 - 18.00',
                 'namaSopir' => 'Budi',
+                'idPengguna' => 6,
                 'imageAsset' => 'toko.jpeg'
             ],
             [
@@ -102,6 +111,7 @@ class TokoSeeder extends Seeder
                 'nomorTelepon' => '089638978165',
                 'jamOperasional' => '07.00 - 18.00',
                 'namaSopir' => 'Budi',
+                'idPengguna' => 2,
                 'imageAsset' => 'toko.jpeg'
             ],
             [
@@ -111,6 +121,7 @@ class TokoSeeder extends Seeder
                 'nomorTelepon' => '089638978165',
                 'jamOperasional' => '07.00 - 18.00',
                 'namaSopir' => 'Budi',
+                'idPengguna' => 5,
                 'imageAsset' => 'toko.jpeg'
             ]
         ];

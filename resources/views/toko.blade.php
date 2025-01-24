@@ -115,6 +115,7 @@
           <th>Nomor Telepon</th>
           <th>Jam Operasional</th>
           <th>Sopir</th>
+          <th>Nama Sales</th>
           <th class="text-center">Aksi</th>
         </tr>
       </thead>
@@ -127,6 +128,7 @@
           <td>{{ $item->nomorTelepon }}</td>
           <td>{{ $item->jamOperasional }}</td>
           <td>{{ $item->namaSopir }}</td>
+          <td>{{ $item->pengguna->namaPengguna }}</td>
           <td class="aksi-btn">
             <form method="GET" action="{{ route('detail_toko', ['idToko' => $item->idToko]) }}">
               @csrf

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Toko;
+use App\Models\Pengguna;
 use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
 use Illuminate\Support\Facades\Auth;
@@ -16,10 +17,21 @@ class TokoController extends Controller
      */
     public function index(request $request)
     {
-        $tokoAktif = Toko::where('namaToko', 'like', '%' . $request->search . '%')
+        $user = auth()->user();
+        if ($user->rolePengguna == 'sales') {
+            // Tampilkan toko dengan idPengguna yang sesuai dan pencarian nama toko
+            $tokoAktif = Toko::where('idPengguna', $user->idPengguna)
+                ->where('namaToko', 'like', '%' . $request->search . '%')
+                ->whereNull('deleted_at') // Hanya data yang tidak dihapus
+                ->orderBy('namaToko', 'asc')
+                ->get();
+        } else {
+            $tokoAktif = Toko::where('namaToko', 'like', '%' . $request->search . '%')
             ->whereNull('deleted_at') // Mengambil produk yang tidak dihapus
             ->orderBy('namaToko', 'asc')
-            ->get();
+            ->get();$tokos = Toko::all();
+        }
+
 
         return view('toko', [
             'tokoAktif' => $tokoAktif,
@@ -32,8 +44,9 @@ class TokoController extends Controller
      */
     public function create()
     {
+        $sales = Pengguna::where('rolePengguna', 'sales')->get();
         $toko = Toko::all();
-        return view('add_toko');
+        return view('add_toko', compact('sales'));
     }
 
     /**
@@ -52,8 +65,10 @@ class TokoController extends Controller
             'nomorTelepon' => 'required|string|max:15',
             'jamOperasional' => 'required|string|max:255',
             'namaSopir' => 'required|string|max:255',
+            'idPengguna' => 'required|exists:penggunas,idPengguna',
             'imageAsset' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi gambar
         ]);
+
 
         $toko = new Toko();
         $toko->namaToko = $request->namaToko;
@@ -61,6 +76,7 @@ class TokoController extends Controller
         $toko->nomorTelepon = $request->nomorTelepon;
         $toko->jamOperasional = $request->jamOperasional;
         $toko->namaSopir = $request->namaSopir;
+        $toko->idPengguna = $request->idPengguna;
 
         if ($request->hasFile('imageAsset')) {
             $file = $request->file('imageAsset');
@@ -91,11 +107,12 @@ class TokoController extends Controller
     public function edit($idToko)
     {
         $toko = Toko::findOrFail($idToko);
+        $sales = Pengguna::where('rolePengguna', 'sales')->get();
         // Cek apakah produk ditemukan
         if (!$toko) {
             return redirect()->route('toko')->with('error', 'Produk tidak ditemukan.');
         }
-        return view('edit_toko', compact('toko'));
+        return view('edit_toko', compact('toko', 'sales'));
     }
 
     /**
@@ -114,6 +131,7 @@ class TokoController extends Controller
             'nomorTelepon' => 'required',
             'jamOperasional' => 'required',
             'namaSopir' => 'required',
+            'idPengguna' => 'required|exists:penggunas,idPengguna'
         ]);
 
         $toko = Toko::find($idToko);
@@ -135,6 +153,10 @@ class TokoController extends Controller
 
         if ($toko->namaSopir != $request->namaSopir) {
             $toko->namaSopir = $request->namaSopir;
+        }
+
+        if ($toko->idPengguna != $request->idPengguna) {
+            $toko->idPengguna = $request->idPengguna;
         }
 
         if ($request->hasFile('imageAsset')) {

@@ -20,9 +20,12 @@ class Toko extends Migration
             $table->string('nomorTelepon');
             $table->string('jamOperasional');
             $table->string('namaSopir');
+            $table->unsignedBigInteger('idPengguna')->index()->nullable();
             $table->softDeletes();
             $table->string('imageAsset');
             $table->timestamps();
+
+            $table->foreign('idPengguna')->references('idPengguna')->on('penggunas');
         });
     }
 

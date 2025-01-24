@@ -70,7 +70,15 @@
             <label for="namaSopir">Nama Sopir</label>
             <input type="text" name="namaSopir" id="namaSopir" class="form-control" required>
         </div>
-
+        <div class="form-group">
+            <label for="idPengguna">Sales</label>
+            <select class="form-control" id="idPengguna" name="idPengguna" required>
+                <option value="" disabled selected>Pilih Sales</option>
+                @foreach ($sales as $salesItem)
+                    <option value="{{ $salesItem->idPengguna }}">{{ $salesItem->namaPengguna }}</option>
+                @endforeach
+            </select>
+        </div>
         <div class="form-group">
             <label for="imageAsset">Gambar Toko</label>
             <input type="file" name="imageAsset" id="imageAsset" class="form-control" required>

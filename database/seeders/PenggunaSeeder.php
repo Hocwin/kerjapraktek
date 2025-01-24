@@ -51,6 +51,24 @@ class PenggunaSeeder extends Seeder
                 'jenisKelamin' => 'L',
                 'rolePengguna' => 'gudang'
             ],
+            [
+                'idPengguna' => '5',
+                'namaPengguna' => 'Yunus',
+                'emailPengguna' => 'yunus@gmail.com',
+                'password' => Hash::make('1234567'),
+                'alamatPengguna' => 'Jalan Singa 123',
+                'jenisKelamin' => 'L',
+                'rolePengguna' => 'sales'
+            ],
+            [
+                'idPengguna' => '6',
+                'namaPengguna' => 'Hansen',
+                'emailPengguna' => 'hansen@gmail.com',
+                'password' => Hash::make('1234567'),
+                'alamatPengguna' => 'Jalan Singa 123',
+                'jenisKelamin' => 'L',
+                'rolePengguna' => 'sales'
+            ],
         ];
 
         foreach ($pengguna as $key => $value) {
