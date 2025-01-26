@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('jumlahProduk');
             $table->integer('hargaC');
             $table->integer('hargaT');
+            $table->decimal('diskon', 5, 2)->default(0);
             $table->softDeletes();
             $table->timestamps();
 

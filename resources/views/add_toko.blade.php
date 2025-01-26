@@ -72,7 +72,7 @@
         </div>
         <div class="form-group">
             <label for="idPengguna">Sales</label>
-            <select class="form-control" id="idPengguna" name="idPengguna" required>
+            <select class="form-select" id="idPengguna" name="idPengguna" required>
                 <option value="" disabled selected>Pilih Sales</option>
                 @foreach ($sales as $salesItem)
                     <option value="{{ $salesItem->idPengguna }}">{{ $salesItem->namaPengguna }}</option>

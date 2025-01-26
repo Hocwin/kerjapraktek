@@ -6,7 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Gudang;
 use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
+use App\Models\HistoriGudang;
+use App\Models\StokPerGudang;
+use App\Models\Produk;
+use App\Models\Pengguna;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class GudangController extends Controller
@@ -142,6 +147,8 @@ class GudangController extends Controller
             return redirect()->route('gudang')->with('error', 'Gudang tidak ditemukan.');
         }
 
+        $oldData = $gudang->toArray();
+
         // Update Gudang properties
         $gudang->namaGudang = $request->namaGudang;
         $gudang->lokasi = $request->lokasi;
@@ -174,25 +181,69 @@ class GudangController extends Controller
         $gudang->save();
 
         if ($request->has('pemasukan')) {
+            $changes = [];
             foreach ($request->pemasukan as $idProduk => $jumlahPemasukan) {
-                $stokGudang = $gudang->stokPerGudang()->where('idProduk', $idProduk)->first();
-                if ($stokGudang) {
-                    $stokGudang->stok += $jumlahPemasukan;
-                    $stokGudang->pemasukan += $jumlahPemasukan;
-                    $stokGudang->save();
-                } else {
-                    $gudang->stokPerGudang()->create([
+                if ($jumlahPemasukan !== null) { // Hanya proses pemasukan yang tidak null
+                    $stokGudang = $gudang->stokPerGudang()->where('idProduk', $idProduk)->first();
+                    if ($stokGudang) {
+                        // Update stok jika sudah ada
+                        $stokGudang->stok += $jumlahPemasukan;
+                        $stokGudang->pemasukan += $jumlahPemasukan;
+                        $stokGudang->save();
+                    } else {
+                        // Jika stok belum ada, buat data baru
+                        $gudang->stokPerGudang()->create([
+                            'idProduk' => $idProduk,
+                            'stok' => $jumlahPemasukan,
+                            'pemasukan' => $jumlahPemasukan,
+                        ]);
+                    }
+
+                    $changes[] = [
                         'idProduk' => $idProduk,
-                        'stok' => $jumlahPemasukan,
-                        'pemasukan' => $jumlahPemasukan,
-                    ]);
+                        'jumlahPemasukan' => $jumlahPemasukan,
+                    ];
                 }
             }
+
+            if ($request->has('retur')) {
+                foreach ($request->retur as $idProduk => $jumlahRetur) {
+                    if ($jumlahRetur !== null) {
+                        $stokGudang = $gudang->stokPerGudang()->where('idProduk', $idProduk)->first();
+                        $produk = Produk::find($idProduk); // Ambil data produk
+                        $hargaBeli = $produk ? $produk->hargaBeli : 0; // Ambil harga beli produk
+
+                        if ($stokGudang) {
+                            // Hitung total harga retur
+                            $totalHargaRetur = $jumlahRetur * $hargaBeli;
+
+                            // Simpan data retur ke stok gudang
+                            $stokGudang->retur = $jumlahRetur; // Set jumlah retur
+                            $stokGudang->totalHargaRetur = $totalHargaRetur; // Tambahkan total harga retur
+                            $stokGudang->save(); // Simpan perubahan ke database
+                        }
+                        $changes[] = [
+                            'idProduk' => $idProduk,
+                            'jumlahRetur' => $jumlahRetur,
+                            'hargaRetur' => $totalHargaRetur,
+                        ];
+                    }
+                }
+            }
+
+            // Menyimpan histori meskipun pemasukan kosong atau tidak ada perubahan
+            HistoriGudang::create([
+                'idGudang' => $gudang->idGudang,
+                'idPengguna' => Auth::user()->idPengguna,
+                'action' => 'update',
+                'details' => json_encode([
+                    'changes' => $changes,
+                ]),
+            ]);
+
+            return redirect()->route('gudang')->with('success', 'Gudang berhasil diperbarui.');
         }
-
-        return redirect()->route('gudang')->with('success', 'Gudang berhasil diperbarui.');
     }
-
     /**
      * Remove the specified resource from storage.
      */
@@ -245,5 +296,17 @@ class GudangController extends Controller
         }
 
         return redirect()->route('gudang')->with('success', 'Gudang berhasil dipulihkan.');
+    }
+
+    public function history($idGudang)
+    {
+        $histories = HistoriGudang::where('idGudang', $idGudang)
+            ->with('pengguna') // Pastikan pengguna dimuat
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('history', [
+            'histories' => $histories,
+        ]);
     }
 }

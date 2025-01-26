@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::post('gudang/store', [GudangController::class, 'store'])->name('store_gudang');
     Route::delete('/gudang/{idGudang}', [GudangController::class, 'destroy'])->name('destroy_gudang');
     Route::put('/gudang/restore/{idGudang}', [GudangController::class, 'restore'])->name('restore_gudang');
+    Route::get('/gudang/{idGudang}/history', [GudangController::class, 'history'])->name('gudang.history');
 
 
     Route::get('/transaksi/add', [TransaksiController::class, 'create'])->name('add_transaksi');

@@ -23,6 +23,7 @@ class DetailTransaksi extends Model
         'namaGudang',
         'jumlahProduk',
         'harga',
+        'diskon',
     ];
 
     public function transaksi()

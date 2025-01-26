@@ -45,71 +45,66 @@ class DetailTransaksiController extends Controller
      */
     public function store(Request $request, string $idTransaksi)
     {
-        // Validate input data for produk and gudang
+        // Validasi input data
         $request->validate([
-            'produk.*.idProduk' => 'required|exists:produk,idProduk|nullable', // Allow null for new produk
+            'produk.*.idProduk' => 'required|exists:produk,idProduk|nullable', // Produk baru atau lama
             'produk.*.jumlahProduk' => 'required|integer|min:1',
-            'produk.*.idGudang' => 'required|exists:gudang,idGudang|nullable', // Allow null for new gudang
+            'produk.*.idGudang' => 'required|exists:gudang,idGudang|nullable', // Gudang baru atau lama
+            'produk.*.diskon' => 'nullable|numeric|min:0|max:100', // Diskon dalam persen (0-100)
         ]);
 
         $transaksi = Transaksi::findOrFail($idTransaksi);
 
         foreach ($request->produk as $produkInput) {
-            // Check if the product is new or existing
-            if (isset($produkInput['newProduk']) && !empty($produkInput['newProduk'])) {
-                // Create new produk if necessary
-                $produk = new Produk();
-                $produk->namaProduk = $produkInput['newProduk'];
-                $produk->hargaCash = $produkInput['hargaCash'] ?? 0; // Ensure hargaCash is provided
-                $produk->hargaTempo = $produkInput['hargaTempo'] ?? 0; // Ensure hargaTempo is provided
-                $produk->save();
-            } else {
-                // If produk is selected, find the existing one
-                $produk = Produk::find($produkInput['idProduk']);
-            }
+            // Produk baru atau lama
+            $produk = isset($produkInput['newProduk']) && !empty($produkInput['newProduk'])
+                ? Produk::create([
+                    'namaProduk' => $produkInput['newProduk'],
+                    'hargaCash' => $produkInput['hargaCash'] ?? 0,
+                    'hargaTempo' => $produkInput['hargaTempo'] ?? 0,
+                ])
+                : Produk::findOrFail($produkInput['idProduk']);
 
-            // Check if the gudang is new or existing
-            if (isset($produkInput['newGudang']) && !empty($produkInput['newGudang'])) {
-                // Create new gudang if necessary
-                $gudang = new Gudang();
-                $gudang->namaGudang = $produkInput['newGudang'];
-                $gudang->save();
-            } else {
-                // If gudang is selected, find the existing one
-                $gudang = Gudang::find($produkInput['idGudang']);
-            }
+            // Gudang baru atau lama
+            $gudang = isset($produkInput['newGudang']) && !empty($produkInput['newGudang'])
+                ? Gudang::create(['namaGudang' => $produkInput['newGudang']])
+                : Gudang::findOrFail($produkInput['idGudang']);
 
-            // Get the warehouse stock
+            // Validasi stok gudang
             $stokGudang = StokPerGudang::where('idProduk', $produk->idProduk)
                 ->where('idGudang', $gudang->idGudang)
                 ->first();
-            // Ensure enough stock is available
-            if ($stokGudang && $stokGudang->stok >= $produkInput['jumlahProduk']) {
-                // Create the detail transaksi entry
-                $hargaC = $produk->hargaCash;
-                $hargaT = $produk->hargaTempo;
-                $detailTransaksi = new DetailTransaksi();
-                $detailTransaksi->idTransaksi = $transaksi->idTransaksi;
-                $detailTransaksi->idProduk = $produk->idProduk;
-                $detailTransaksi->jumlahProduk = $produkInput['jumlahProduk'];
-                $detailTransaksi->hargaC = $produk->hargaCash;
-                $detailTransaksi->hargaT = $produk->hargaTempo;
-                $detailTransaksi->idGudang = $gudang->idGudang;
-                $detailTransaksi->namaGudang = $gudang->namaGudang;  // Store the warehouse name
-                $detailTransaksi->save();
-
-                // Reduce stock for the selected product and warehouse
-                $stokGudang->stok -= $produkInput['jumlahProduk'];
-                $stokGudang->save();
-            } else {
+            if (!$stokGudang || $stokGudang->stok < $produkInput['jumlahProduk']) {
                 return redirect()->route('detail_transaksi', ['idTransaksi' => $idTransaksi])
                     ->with('error', 'Stok tidak cukup untuk produk: ' . $produk->namaProduk);
             }
+
+            // Hitung harga berdasarkan diskon (jika ada)
+            $diskon = $produkInput['diskon'] ?? $produk->diskon ?? 0;
+            $hargaCash = $produk->hargaCash - ($produk->hargaCash * $diskon / 100);
+            $hargaTempo = $produk->hargaTempo - ($produk->hargaTempo * $diskon / 100);
+
+            // Simpan detail transaksi
+            $detailTransaksi = new DetailTransaksi();
+            $detailTransaksi->idTransaksi = $transaksi->idTransaksi;
+            $detailTransaksi->idProduk = $produk->idProduk;
+            $detailTransaksi->jumlahProduk = $produkInput['jumlahProduk'];
+            $detailTransaksi->diskon = $diskon;
+            $detailTransaksi->hargaC = $hargaCash; // Harga cash setelah diskon
+            $detailTransaksi->hargaT = $hargaTempo; // Harga tempo setelah diskon
+            $detailTransaksi->idGudang = $gudang->idGudang;
+            $detailTransaksi->namaGudang = $gudang->namaGudang;
+            $detailTransaksi->save();
+
+            // Kurangi stok gudang
+            $stokGudang->stok -= $produkInput['jumlahProduk'];
+            $stokGudang->save();
         }
 
         return redirect()->route('detail_transaksi', ['idTransaksi' => $idTransaksi])
-            ->with('success', 'Detail transaksi berhasil disimpan');
+            ->with('success', 'Detail transaksi berhasil disimpan dengan diskon.');
     }
+
 
     /**
      * Display the specified resource.
@@ -146,6 +141,7 @@ class DetailTransaksiController extends Controller
             'idProduk' => 'required|exists:produk,idProduk',
             'jumlahProduk' => 'required|integer|min:1',
             'idGudang' => 'required|exists:gudang,idGudang',
+            'diskon' => 'nullable|numeric|min:0|max:100',
         ]);
 
         // Detail transaksi saat ini
@@ -191,12 +187,18 @@ class DetailTransaksiController extends Controller
                 $stokGudangBaru->save();
             }
         }
+        $diskon = $request->diskon ?? 0; // Ambil diskon dari produk (jika tidak ada, anggap 0%)
+
+        // Hitung harga berdasarkan diskon yang diambil dari produk
+        $hargaCash = $produkBaru->hargaCash - ($produkBaru->hargaCash * $diskon / 100);
+        $hargaTempo = $produkBaru->hargaTempo - ($produkBaru->hargaTempo * $diskon / 100);
 
         // Update the detail transaksi record
         $detailTransaksi->idProduk = $request->idProduk;
         $detailTransaksi->jumlahProduk = $request->jumlahProduk;
-        $detailTransaksi->hargaC = $produkBaru->hargaCash;
-        $detailTransaksi->hargaT = $produkBaru->hargaTempo; // Or price according to payment type
+        $detailTransaksi->diskon = $diskon; // Simpan diskon
+        $detailTransaksi->hargaC = $hargaCash; // Harga cash setelah diskon
+        $detailTransaksi->hargaT = $hargaTempo;
         $detailTransaksi->idGudang = $request->idGudang;
         $detailTransaksi->namaGudang = $gudangBaru->namaGudang; // Update the warehouse name
         $detailTransaksi->save();

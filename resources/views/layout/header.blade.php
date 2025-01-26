@@ -174,7 +174,7 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container-fluid">
-      <a href="#"> <img style="margin-right: 10px" src="/storage/images/logo.png" alt="Logo" width="30px"></a>
+      <a href="#"> <img style="margin-right: 5px" src="/storage/images/logo.png" alt="Logo" width="30px"></a>
       <a class="navbar-brand me-auto" href="#">Amelia Putratama Mandiri</a>
 
       <button class="navbar-toggler pe-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -190,7 +190,7 @@
           <ul class="navbar-nav justify-content-center flex-grow-1 pe-3 mt-1">
             @if (Auth::check())
             <li class="nav-item">
-              <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('produk')}}">Product</a>
+              <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('produk')}}">Produk</a>
             </li>
             <li class="nav-item">
               <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('toko')}}">Toko</a>
@@ -208,12 +208,12 @@
             @endif
             @if (Auth::check() && (Auth::user()->rolePengguna == 'admin' || Auth::user()->rolePengguna == 'manager'))
             <li class="nav-item">
-              <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('performa_bisnis')}}">Performa Bisnis</a>
+              <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('performa_bisnis')}}">Performa</a>
             </li>
             @endif
-            @if (Auth::check() && (Auth::user()->rolePengguna == 'admin'))
+            @if (Auth::check() && (Auth::user()->rolePengguna == 'manager'))
             <li class="nav-item">
-              <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('admin.showSetUserGudang')}}">Set User Gudang</a>
+              <a style="margin-top: 5px" class="nav-link mx-lg-2" href="{{route('admin.showSetUserGudang')}}">Akses</a>
             </li>
             @endif
             <form class="d-flex mt-2" role="search" action="{{ route('search') }}" method="POST">

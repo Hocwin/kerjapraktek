@@ -22,11 +22,24 @@
                         @foreach($gudang->stokPerGudang as $stok)
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             {{ $stok->produk->namaProduk }}
-                            <input type="number" name="pemasukan[{{ $stok->idProduk }}]" class="form-control w-50" min="0" placeholder="Input pemasukan">
+                            <input type="number" name="pemasukan[{{ $stok->idProduk }}]" class="form-control w-50" min="0" placeholder="Input pemasukan" required>
                         </li>
                         @endforeach
                     </ul>
                 </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Retur Produk</label>
+                    <ul class="list-group">
+                        @foreach($gudang->stokPerGudang as $stok)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ $stok->produk->namaProduk }}
+                            <input type="number" name="retur[{{ $stok->idProduk }}]" class="form-control w-50" min="0" placeholder="Input retur">
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+
 
                 <input type="text" name="lokasi" id="lokasi" class="form-control" value="{{$gudang->lokasi}}">
                 <label for="imageAsset">Gambar Gudang</label><br>

@@ -97,7 +97,7 @@
 
                 <div class="form-group">
                     <label for="idPengguna">Sales</label>
-                    <select class="form-control" id="idPengguna" name="idPengguna" required>
+                    <select class="form-select" id="idPengguna" name="idPengguna" required>
                         @foreach ($sales as $salesItem)
                         <option value="{{ $salesItem->idPengguna }}" {{ old('idPengguna', $toko->idPengguna) == $salesItem->idPengguna ? 'selected' : '' }}>
                             {{ $salesItem->namaPengguna }}

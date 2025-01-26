@@ -77,7 +77,7 @@
         {{ session('success') }}
     </div>
     @endif
-    
+
     <form method="POST" action="{{ route('update_detail_transaksi', ['idDetailTransaksi' => $detailTransaksi->idDetailTransaksi]) }}">
         @csrf
         @method('PUT')
@@ -107,6 +107,12 @@
                 </option>
                 @endforeach
             </select>
+        </div>
+
+        <div class="form-group">
+            <label for="diskon">Diskon (%)</label>
+            <input type="number" name="diskon" id="diskon" class="form-control" min="0" max="100" value="{{ old('diskon', $detailTransaksi->diskon) }}">
+            <small class="form-text text-muted">Masukkan diskon dalam persen (0-100).</small>
         </div>
 
         <button type="submit" class="btn btn-primary w-100 mt-3">Update Detail Transaksi</button>
