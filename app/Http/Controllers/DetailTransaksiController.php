@@ -24,8 +24,9 @@ class DetailTransaksiController extends Controller
 
         // Ambil data transaksi untuk informasi tambahan
         $transaksi = Transaksi::findOrFail($idTransaksi);
+        $toko = $transaksi->toko;
 
-        return view('detail_transaksi', compact('detailTransaksi', 'transaksi'));
+        return view('detail_transaksi', compact('detailTransaksi', 'transaksi', 'toko'));
     }
 
     /**

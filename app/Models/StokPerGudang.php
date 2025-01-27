@@ -13,7 +13,7 @@ class StokPerGudang extends Model
     protected $table = 'stok_per_gudang';
     protected $primaryKey = 'idStok';
 
-    protected $fillable = ['idGudang', 'idProduk', 'stok', 'pemasukan','retur', 'totalHaargaRetur'];
+    protected $fillable = ['idGudang', 'idProduk', 'stok', 'pemasukan','retur', 'totalHargaRetur','gambarBukti','totalPemasukan'];
 
     // Relasi dengan produk
     public function produk()

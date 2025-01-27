@@ -144,7 +144,7 @@
                 <tr>
                   <td>{{ $stok->produk->namaProduk }}</td>
                   <td>{{ $stok->stok }} sak</td>
-                  <td>{{ $stok->pemasukan ?? 0 }} sak</td>
+                  <td>{{ $stok->totalPemasukan ?? 0 }} sak</td>
                   <td>{{ $stok->pengeluaran ?? 0 }} sak</td>
                   <td>{{ $stok->retur ?? 0 }} sak</td>
                   <td>Rp {{ number_format($stok->totalHargaRetur ?? 0, 0, ',', '.') }}</td>
@@ -162,6 +162,12 @@
               <button type="submit" class="btn-action btn-primary">Edit</button>
             </form>
             @endif
+            @if (Auth::check() && Auth::user()->gudang->contains($item->idGudang))
+            <form method="GET" action="{{ route('input-gudang', ['idGudang' => $item->idGudang]) }}">
+              @csrf
+              <button type="submit" class="btn-action btn-primary">Input</button>
+            </form>
+            @endif
             @if (Auth::check() && Auth::user()->rolePengguna == 'manager')
             <form method="POST" action="{{ route('destroy_gudang', ['idGudang' => $item->idGudang]) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus toko ini?');">
               @csrf
@@ -173,6 +179,12 @@
             <form method="GET" action="{{ route('gudang.history', ['idGudang' => $item->idGudang]) }}">
               @csrf
               <button type="submit" class="btn btn-secondary">Histori</button>
+            </form>
+            @endif
+            @if (Auth::check() && Auth::user()->gudang->contains($item->idGudang) || Auth::user()->rolePengguna == 'manager' || Auth::user()->rolePengguna == 'admin')
+            <form method="GET" action="{{ route('retur', ['idGudang' => $item->idGudang]) }}">
+              @csrf
+              <button type="submit" class="btn btn-secondary">Retur</button>
             </form>
             @endif
           </td>

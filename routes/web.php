@@ -56,6 +56,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/gudang/{idGudang}', [GudangController::class, 'destroy'])->name('destroy_gudang');
     Route::put('/gudang/restore/{idGudang}', [GudangController::class, 'restore'])->name('restore_gudang');
     Route::get('/gudang/{idGudang}/history', [GudangController::class, 'history'])->name('gudang.history');
+    Route::get('/gudang/input/{idGudang}', [GudangController::class, 'edit_input'])->name('input-gudang');
+    Route::post('/gudang/input/{idGudang}', [GudangController::class, 'input'])->name('proses-inputgudang');
+    Route::get('/gudang/{idGudang}/retur', [GudangController::class, 'index_retur'])->name('retur');
 
 
     Route::get('/transaksi/add', [TransaksiController::class, 'create'])->name('add_transaksi');
